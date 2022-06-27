@@ -43,8 +43,8 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 
 import grondag.wit.Wit;
-import grondag.wit.block.WitSpeciesBlock;
 import grondag.wit.storage.StorageBlock;
+import grondag.wit.storage.block.StorageSpeciesBlock;
 import grondag.xm.api.block.XmBlockState;
 import grondag.xm.api.block.XmProperties;
 import grondag.xm.api.collision.CollisionDispatcher;
@@ -54,7 +54,7 @@ import grondag.xm.api.connect.species.SpeciesProperty;
 import grondag.xm.api.connect.world.BlockTest;
 import grondag.xm.api.connect.world.BlockTestContext;
 
-public class PipeBlock extends WitSpeciesBlock {
+public class PipeBlock extends StorageSpeciesBlock {
 	public final boolean hasGlow;
 
 	public PipeBlock(Block.Properties settings, FabricBlockEntityTypeBuilder.Factory<? extends BlockEntity> beFactory, boolean hasGlow) {

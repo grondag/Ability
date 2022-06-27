@@ -32,8 +32,8 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 
-import grondag.wit.block.AbstractFunctionalBlock;
 import grondag.wit.storage.TickableBlockEntity;
+import grondag.wit.storage.block.AbstractFunctionalBlock;
 
 public class CreativeCrateBlock extends AbstractFunctionalBlock {
 	public CreativeCrateBlock(Block.Properties settings, FabricBlockEntityTypeBuilder.Factory<? extends BlockEntity> beFactory) {

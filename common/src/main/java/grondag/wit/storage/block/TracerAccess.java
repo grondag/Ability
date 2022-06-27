@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package grondag.wit.block;
+package grondag.wit.storage.block;
 
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;

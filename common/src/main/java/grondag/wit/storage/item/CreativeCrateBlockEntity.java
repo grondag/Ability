@@ -35,8 +35,8 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import grondag.fluidity.api.article.ArticleType;
 import grondag.fluidity.wip.api.transport.CarrierProvider;
 import grondag.fluidity.wip.api.transport.CarrierSession;
-import grondag.wit.block.CarrierSessionBlockEntity;
 import grondag.wit.storage.TickableBlockEntity;
+import grondag.wit.storage.block.CarrierSessionBlockEntity;
 
 public class CreativeCrateBlockEntity extends CarrierSessionBlockEntity implements TickableBlockEntity {
 	protected final boolean isOutput;

@@ -38,8 +38,8 @@ import net.minecraft.world.phys.Vec3;
 import net.fabricmc.fabric.api.block.BlockAttackInteractionAware;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 
-import grondag.wit.block.TracerAccess;
 import grondag.wit.packet.BinActionC2S;
+import grondag.wit.storage.block.TracerAccess;
 import grondag.xm.api.block.XmProperties;
 import grondag.xm.api.util.WorldHelper;
 import grondag.xm.orientation.api.FaceCorner;

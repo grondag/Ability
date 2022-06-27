@@ -37,7 +37,7 @@ import grondag.fluidity.api.storage.Store;
 import grondag.fluidity.base.storage.AbstractAggregateStore;
 import grondag.fluidity.base.storage.AbstractStore;
 import grondag.fluidity.base.storage.ForwardingStore;
-import grondag.wit.block.CarrierSessionBlockEntity;
+import grondag.wit.storage.block.CarrierSessionBlockEntity;
 import grondag.wit.varia.Base32Namer;
 
 @SuppressWarnings("rawtypes")

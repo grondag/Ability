@@ -46,12 +46,12 @@ import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityT
 
 import grondag.fluidity.api.storage.Store;
 import grondag.wit.Wit;
-import grondag.wit.block.WitSpeciesBlock;
-import grondag.wit.block.NeighboredBlockEntity;
+import grondag.wit.storage.block.NeighboredBlockEntity;
+import grondag.wit.storage.block.StorageSpeciesBlock;
 import grondag.xm.api.block.XmProperties;
 import grondag.xm.api.connect.species.SpeciesProperty;
 
-public abstract class StorageBlock extends WitSpeciesBlock {
+public abstract class StorageBlock extends StorageSpeciesBlock {
 	public static final ResourceLocation CONTENTS = ShulkerBoxBlock.CONTENTS;
 
 	public StorageBlock(Block.Properties settings, FabricBlockEntityTypeBuilder.Factory<? extends BlockEntity> beFactory) {

@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package grondag.wit.block;
+package grondag.wit.storage.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -29,7 +29,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 
-public class AbstractFunctionalBlock extends WitBlock {
+public class AbstractFunctionalBlock extends StorageBlock {
 	public AbstractFunctionalBlock(Properties settings, FabricBlockEntityTypeBuilder.Factory<? extends BlockEntity> beFactory) {
 		super(settings, beFactory);
 	}

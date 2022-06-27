@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package grondag.wit.block;
+package grondag.wit.storage.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

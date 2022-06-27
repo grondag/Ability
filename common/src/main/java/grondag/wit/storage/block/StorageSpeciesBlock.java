@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package grondag.wit.block;
+package grondag.wit.storage.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -36,10 +36,10 @@ import grondag.xm.api.connect.species.SpeciesFunction;
 import grondag.xm.api.connect.species.SpeciesMode;
 import grondag.xm.api.connect.species.SpeciesProperty;
 
-public class WitSpeciesBlock extends WitBlock {
+public class StorageSpeciesBlock extends StorageBlock {
 	protected final SpeciesFunction speciesFunc;
 
-	public WitSpeciesBlock(Properties settings, FabricBlockEntityTypeBuilder.Factory<? extends BlockEntity> beFactory, SpeciesFunction speciesFunc) {
+	public StorageSpeciesBlock(Properties settings, FabricBlockEntityTypeBuilder.Factory<? extends BlockEntity> beFactory, SpeciesFunction speciesFunc) {
 		super(settings, beFactory);
 		this.speciesFunc = speciesFunc;
 	}
