@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "id": "wit",
+  "version": "${version}",
+  "name": "Wit",
+  "description": "What if magic is real and so are the laws of thermodynamics? Also, what if it is all very silly?",
+  "authors": [
+    "Grondag"
+  ],
+  "contact": {
+    "homepage": "https://minecraft.curseforge.com/projects/wit",
+    "sources": "https://github.com/grondag/wit"
+  },
+  "license": "LGPL-3.0",
+  "icon": "assets/facility/facility_icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [ "grondag.wit.WitFabric" ],
+    "client": [ "grondag.wit.client.WitFabricClient" ],
+    "rei_client": [ "grondag.wit.compat.rei.WitReiPlugin" ],
+    "modmenu": [ "grondag.wit.client.ModMenuHelper" ]
+  },
+  "mixins": [
+    {
+      "config": "wit.client.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=0.14.6",
+    "minecraft": ">=1.19",
+    "java": ">=17",
+    "architectury": ">=5.4.15"
+  },
+  "accessWidener": "wit.accesswidener"
+}
