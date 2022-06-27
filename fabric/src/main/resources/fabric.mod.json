@@ -12,7 +12,7 @@
     "sources": "https://github.com/grondag/wit"
   },
   "license": "LGPL-3.0",
-  "icon": "assets/facility/facility_icon.png",
+  "icon": "assets/wit/wit_icon.png",
 
   "environment": "*",
   "entrypoints": {

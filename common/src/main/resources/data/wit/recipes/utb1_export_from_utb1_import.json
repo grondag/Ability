@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "wit:utb1_intake"
+    }
+  ],
+  "result": {
+    "item": "wit:utb1_export",
+    "count": 1
+  }
+}

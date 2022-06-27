@@ -18,6 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+package grondag.wit.transport.buffer;
+
 //package grondag.wit.transport.buffer;
 //
 //import java.util.function.Consumer;

@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "wit:bin_4x"
+    },
+    {
+      "item": "wit:bin_4x"
+    },
+    {
+      "item": "wit:bin_4x"
+    },
+    {
+      "item": "wit:bin_4x"
+    }
+  ],
+  "result": {
+    "item": "wit:bin_1x",
+    "count": 4
+  }
+}

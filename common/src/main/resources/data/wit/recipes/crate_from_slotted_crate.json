@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "wit:slotted_crate"
+    }
+  ],
+  "result": {
+    "item": "wit:crate",
+    "count": 1
+  }
+}
