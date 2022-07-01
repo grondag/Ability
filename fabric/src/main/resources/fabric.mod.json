@@ -1,29 +1,29 @@
 {
   "schemaVersion": 1,
-  "id": "wit",
+  "id": "ab",
   "version": "${version}",
-  "name": "Wit",
+  "name": "Ability",
   "description": "What if magic is real and so are the laws of thermodynamics? Also, what if it is all very silly?",
   "authors": [
     "Grondag"
   ],
   "contact": {
-    "homepage": "https://minecraft.curseforge.com/projects/wit",
-    "sources": "https://github.com/grondag/wit"
+    "homepage": "https://minecraft.curseforge.com/projects/ab",
+    "sources": "https://github.com/grondag/ability"
   },
   "license": "LGPL-3.0",
-  "icon": "assets/wit/wit_icon.png",
+  "icon": "assets/ab/ability_icon.png",
 
   "environment": "*",
   "entrypoints": {
-    "main": [ "grondag.wit.WitFabric" ],
-    "client": [ "grondag.wit.client.WitFabricClient" ],
-    "rei_client": [ "grondag.wit.compat.rei.WitReiPlugin" ],
-    "modmenu": [ "grondag.wit.client.ModMenuHelper" ]
+    "main": [ "grondag.ab.AbilityFabric" ],
+    "client": [ "grondag.ab.client.AbilityFabricClient" ],
+    "rei_client": [ "grondag.abcompat.rei.AbilityReiPlugin" ],
+    "modmenu": [ "grondag.ab.client.ModMenuHelper" ]
   },
   "mixins": [
     {
-      "config": "wit.client.json",
+      "config": "ab.client.json",
       "environment": "client"
     }
   ],
@@ -33,5 +33,5 @@
     "java": ">=17",
     "architectury": ">=5.4.15"
   },
-  "accessWidener": "wit.accesswidener"
+  "accessWidener": "ab.accesswidener"
 }

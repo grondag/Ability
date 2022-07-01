@@ -1,12 +1,12 @@
 
 project.group = 'grondag'
 ext.author = 'Grondag'
-ext.title = 'wit'
-ext.mod_name = 'wit'
+ext.title = 'Ability'
+ext.mod_name = 'ab'
 ext.mod_version = '0.1'
 
 ext.github_repository_owner = 'grondag'
-ext.github_repository = 'wit'
+ext.github_repository = 'ability'
 
 ext.curseforge_id = '637017'
 //ext.modrinth_id = ''
@@ -14,4 +14,4 @@ ext.release_type = 'beta'
 
 ext.build_fat_jar = false
 ext.build_forge = false
-ext.accesswidener = 'src/main/resources/wit.accesswidener'
+ext.accesswidener = 'src/main/resources/ab.accesswidener'

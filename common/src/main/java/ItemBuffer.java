@@ -1,5 +1,5 @@
 /*
- * This file is part of Wit and is licensed to the project under
+ * This file is part of Ability and is licensed to the project under
  * terms that are compatible with the GNU Lesser General Public License.
  * See the NOTICE file distributed with this work for additional information
  * regarding copyright ownership and licensing.
@@ -18,14 +18,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-//package grondag.wit.transport.buffer;
+//package grondag.ab.transport.buffer;
 //
 //import java.util.function.Consumer;
 //
 //import net.minecraft.nbt.CompoundTag;
 //
-//import grondag.wit.transport.handler.TransportCarrierContext;
-//import grondag.wit.transport.storage.TransportStorageContext;
+//import grondag.ab.transport.handler.TransportCarrierContext;
+//import grondag.ab.transport.storage.TransportStorageContext;
 //import grondag.fluidity.api.article.Article;
 //import grondag.fluidity.api.storage.ArticleFunction;
 //import grondag.fluidity.api.transact.Transaction;
