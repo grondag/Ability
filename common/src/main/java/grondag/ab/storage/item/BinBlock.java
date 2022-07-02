@@ -38,7 +38,7 @@ import net.minecraft.world.phys.Vec3;
 import net.fabricmc.fabric.api.block.BlockAttackInteractionAware;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 
-import grondag.ab.packet.BinActionC2S;
+import grondag.ab.storage.BinActionC2S;
 import grondag.ab.storage.block.TracerAccess;
 import grondag.xm.api.block.XmProperties;
 import grondag.xm.api.util.WorldHelper;

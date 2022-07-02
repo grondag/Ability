@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package grondag.ab.ux;
+package grondag.ab.storage.ux;
 
 import dev.architectury.registry.menu.ExtendedMenuProvider;
 import org.jetbrains.annotations.Nullable;
@@ -35,8 +35,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 import grondag.ab.Ability;
-import grondag.ab.init.MenuTypes;
 import grondag.ab.storage.StorageBlockEntity;
+import grondag.ab.storage.init.MenuTypes;
 import grondag.ab.storage.item.CrateBlockEntity;
 import grondag.fluidity.api.storage.Store;
 import grondag.fluidity.base.synch.DiscreteStorageServerDelegate;

@@ -49,13 +49,13 @@ import net.minecraft.world.level.material.MaterialColor;
 
 import io.vram.modkeys.api.ModKey;
 
-import grondag.ab.init.BinBlocks;
-import grondag.ab.init.CrateBlocks;
-import grondag.ab.init.MenuTypes;
-import grondag.ab.init.PipeBlocks;
-import grondag.ab.init.TankBlocks;
-import grondag.ab.init.Textures;
-import grondag.ab.packet.BinActionC2S;
+import grondag.ab.storage.BinActionC2S;
+import grondag.ab.storage.init.BinBlocks;
+import grondag.ab.storage.init.CrateBlocks;
+import grondag.ab.storage.init.MenuTypes;
+import grondag.ab.storage.init.PipeBlocks;
+import grondag.ab.storage.init.TankBlocks;
+import grondag.ab.storage.init.Textures;
 import grondag.ab.varia.Base32Namer;
 import grondag.ab.varia.WorldTaskManager;
 import grondag.fluidity.impl.article.ArticleTypeRegistryImpl;

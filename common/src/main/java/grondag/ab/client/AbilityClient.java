@@ -36,11 +36,11 @@ import io.vram.frex.api.world.BlockEntityRenderData;
 import io.vram.modkeys.api.client.ModKeyBinding;
 
 import grondag.ab.Ability;
-import grondag.ab.init.BinBlocks;
-import grondag.ab.init.CrateBlocks;
-import grondag.ab.init.MenuTypes;
-import grondag.ab.init.TankBlocks;
-import grondag.ab.ux.WitBaseContainerMenu;
+import grondag.ab.storage.init.BinBlocks;
+import grondag.ab.storage.init.CrateBlocks;
+import grondag.ab.storage.init.MenuTypes;
+import grondag.ab.storage.init.TankBlocks;
+import grondag.ab.storage.ux.WitBaseContainerMenu;
 import grondag.fluidity.base.synch.DiscreteStorageServerDelegate;
 
 public abstract class AbilityClient {

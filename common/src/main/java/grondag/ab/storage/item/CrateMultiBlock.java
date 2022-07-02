@@ -22,7 +22,7 @@ package grondag.ab.storage.item;
 
 import java.util.function.Function;
 
-import grondag.ab.init.CrateBlocks;
+import grondag.ab.storage.init.CrateBlocks;
 import grondag.fluidity.api.article.ArticleType;
 import grondag.fluidity.api.multiblock.MultiBlockManager;
 import grondag.fluidity.api.storage.Store;

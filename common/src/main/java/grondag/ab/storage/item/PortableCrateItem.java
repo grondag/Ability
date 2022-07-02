@@ -41,7 +41,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 
 import grondag.ab.storage.PortableStore;
-import grondag.ab.ux.CrateItemContainerMenu;
+import grondag.ab.storage.ux.CrateItemContainerMenu;
 import grondag.fluidity.api.storage.Store;
 
 public class PortableCrateItem extends BlockItem {

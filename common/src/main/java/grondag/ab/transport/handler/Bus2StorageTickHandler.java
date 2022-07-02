@@ -20,7 +20,7 @@
 
 package grondag.ab.transport.handler;
 
-import grondag.ab.transport.storage.TransportStorageContext;
+import grondag.ab.transport.util.TransportStorageContext;
 import grondag.fluidity.api.article.Article;
 import grondag.fluidity.api.storage.ArticleFunction;
 import grondag.fluidity.api.transact.Transaction;

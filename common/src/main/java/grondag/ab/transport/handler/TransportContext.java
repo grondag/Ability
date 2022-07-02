@@ -21,7 +21,7 @@
 package grondag.ab.transport.handler;
 
 import grondag.ab.transport.buffer.TransportBuffer;
-import grondag.ab.transport.storage.TransportStorageContext;
+import grondag.ab.transport.util.TransportStorageContext;
 
 public interface TransportContext {
 	TransportBuffer buffer();

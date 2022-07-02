@@ -49,7 +49,7 @@ import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityT
 
 import grondag.ab.storage.PortableStore;
 import grondag.ab.storage.StorageBlock;
-import grondag.ab.ux.CrateContainerMenu;
+import grondag.ab.storage.ux.CrateContainerMenu;
 import grondag.fluidity.api.storage.Store;
 import grondag.fluidity.base.article.StoredDiscreteArticle;
 import grondag.fluidity.base.storage.discrete.AbstractDiscreteStore;

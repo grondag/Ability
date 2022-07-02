@@ -18,33 +18,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package grondag.ab.init;
+package grondag.ab.transport.util;
 
-import dev.architectury.registry.menu.MenuRegistry;
+import grondag.fluidity.api.storage.Store;
 
-import net.minecraft.world.inventory.MenuType;
-
-import grondag.ab.Ability;
-import grondag.ab.ux.CrateContainerMenu;
-import grondag.ab.ux.CrateItemContainerMenu;
-
-public abstract class MenuTypes {
-	private MenuTypes() { }
-
-	private static MenuType<CrateContainerMenu> crateBlockMenuType;
-
-	public static MenuType<CrateContainerMenu> crateBlockMenuType() {
-		return crateBlockMenuType;
+public class MissingStorageContext extends FluidityStorageContext {
+	private MissingStorageContext() {
+		store = Store.EMPTY;
 	}
 
-	private static MenuType<CrateItemContainerMenu> crateItemMenuType;
+	public static final FluidityStorageContext INSTANCE = new MissingStorageContext();
 
-	public static MenuType<CrateItemContainerMenu> crateItemMenuType() {
-		return crateItemMenuType;
+	@Override
+	protected Store store() {
+		return Store.EMPTY;
 	}
 
-	public static void initialize() {
-		crateBlockMenuType = Ability.menuType(CrateContainerMenu.ID, MenuRegistry.ofExtended(CrateContainerMenu::createFromPacket));
-		crateItemMenuType = Ability.menuType(CrateItemContainerMenu.ID, MenuRegistry.ofExtended(CrateItemContainerMenu::createFromPacket));
+	@Override
+	public boolean prepareForTick() {
+		return false;
 	}
 }

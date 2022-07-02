@@ -27,7 +27,7 @@ import net.minecraft.world.item.ItemStack;
 
 import grondag.ab.transport.UtbHelper;
 import grondag.ab.transport.handler.TransportCarrierContext;
-import grondag.ab.transport.storage.TransportStorageContext;
+import grondag.ab.transport.util.TransportStorageContext;
 import grondag.fluidity.api.article.Article;
 import grondag.fluidity.api.article.ArticleType;
 import grondag.fluidity.api.fraction.Fraction;

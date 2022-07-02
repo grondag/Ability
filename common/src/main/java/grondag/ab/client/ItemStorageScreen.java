@@ -31,7 +31,7 @@ import net.minecraft.world.inventory.Slot;
 import net.fabricmc.loader.api.FabricLoader;
 
 import grondag.ab.AbilityConfig;
-import grondag.ab.ux.WitBaseContainerMenu;
+import grondag.ab.storage.ux.WitBaseContainerMenu;
 import grondag.ab.ux.client.AbstractSimpleContainerScreen;
 import grondag.ab.ux.client.GuiUtil;
 import grondag.ab.ux.client.ScreenRenderContext;

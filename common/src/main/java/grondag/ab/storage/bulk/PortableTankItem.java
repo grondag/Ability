@@ -57,8 +57,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 
 import grondag.ab.Ability;
-import grondag.ab.init.TankBlocks;
 import grondag.ab.storage.PortableStore;
+import grondag.ab.storage.init.TankBlocks;
 import grondag.fluidity.api.article.Article;
 import grondag.fluidity.api.article.ArticleType;
 import grondag.fluidity.api.fraction.Fraction;

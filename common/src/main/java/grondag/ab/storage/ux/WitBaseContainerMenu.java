@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package grondag.ab.ux;
+package grondag.ab.storage.ux;
 
 import java.util.List;
 
