@@ -18,7 +18,7 @@
   "entrypoints": {
     "main": [ "grondag.ab.AbilityFabric" ],
     "client": [ "grondag.ab.client.AbilityFabricClient" ],
-    "rei_client": [ "grondag.abcompat.rei.AbilityReiPlugin" ],
+    "rei_client": [ "grondag.ab.compat.rei.AbilityReiPlugin" ],
     "modmenu": [ "grondag.ab.client.ModMenuHelper" ]
   },
   "mixins": [
