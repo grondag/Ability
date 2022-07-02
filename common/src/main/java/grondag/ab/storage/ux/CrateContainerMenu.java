@@ -35,7 +35,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 import grondag.ab.Ability;
-import grondag.ab.storage.StorageBlockEntity;
+import grondag.ab.storage.block.StorageBlockEntity;
 import grondag.ab.storage.init.MenuTypes;
 import grondag.ab.storage.item.CrateBlockEntity;
 import grondag.fluidity.api.storage.Store;

@@ -34,17 +34,17 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType.BlockEntitySupplier;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 
 import grondag.ab.Ability;
-import grondag.ab.storage.StorageBlock;
-import grondag.ab.storage.block.StorageSpeciesBlock;
+import grondag.ab.storage.block.PersistentStorageBlock;
+import grondag.ab.storage.block.SpeciesStorageBlock;
 import grondag.xm.api.block.XmBlockState;
 import grondag.xm.api.block.XmProperties;
 import grondag.xm.api.collision.CollisionDispatcher;
@@ -54,10 +54,10 @@ import grondag.xm.api.connect.species.SpeciesProperty;
 import grondag.xm.api.connect.world.BlockTest;
 import grondag.xm.api.connect.world.BlockTestContext;
 
-public class PipeBlock extends StorageSpeciesBlock {
+public class PipeBlock extends SpeciesStorageBlock {
 	public final boolean hasGlow;
 
-	public PipeBlock(Block.Properties settings, FabricBlockEntityTypeBuilder.Factory<? extends BlockEntity> beFactory, boolean hasGlow) {
+	public PipeBlock(Block.Properties settings, BlockEntitySupplier<? extends BlockEntity> beFactory, boolean hasGlow) {
 		super(settings, beFactory, SpeciesProperty.speciesForBlockType(PipeBlock.class));
 		this.hasGlow = hasGlow;
 	}
@@ -86,7 +86,7 @@ public class PipeBlock extends StorageSpeciesBlock {
 		if (toState.getBlock() instanceof PipeBlock) {
 			return canConnectSelf(fromState, ctx.fromPos(), toState, ctx.toPos());
 		} else {
-			return toState.getBlock() instanceof StorageBlock;
+			return toState.getBlock() instanceof PersistentStorageBlock;
 		}
 	}
 

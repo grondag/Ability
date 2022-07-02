@@ -28,7 +28,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-import grondag.ab.storage.StorageBlockEntity;
+import grondag.ab.storage.block.StorageBlockEntity;
 import grondag.fluidity.api.article.ArticleType;
 import grondag.fluidity.api.multiblock.MultiBlockManager;
 import grondag.fluidity.base.storage.AbstractStore;

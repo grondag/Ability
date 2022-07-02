@@ -24,7 +24,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
-import grondag.ab.storage.StorageBlock;
+import grondag.ab.storage.block.PersistentStorageBlock;
 import grondag.ab.transport.PipeBlock;
 import grondag.xm.api.block.XmProperties;
 import grondag.xm.api.connect.state.SimpleJoinState;
@@ -41,7 +41,7 @@ public abstract class PipeModifiers {
 
 		// join should already be handled, so we just need to check if neighbors are storage blocks
 		for (final Direction face : BasePipeModel.FACES) {
-			if (join.isJoined(face) && neighbors.blockState(face).getBlock() instanceof StorageBlock) {
+			if (join.isJoined(face) && neighbors.blockState(face).getBlock() instanceof PersistentStorageBlock) {
 				bits |= 1 << face.ordinal();
 			}
 		}

@@ -37,12 +37,11 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.BlockEntityType.BlockEntitySupplier;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.BlockHitResult;
-
-import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 
 import grondag.ab.storage.TickableBlockEntity;
 import grondag.ab.transport.PipeBlock;
@@ -58,7 +57,7 @@ public class ItemMoverBlock extends PipeBlock {
 		return fromState.getValue(XmProperties.FACE) == ctx.toFace() || canConnect(ctx);
 	};
 
-	public ItemMoverBlock(Block.Properties settings, FabricBlockEntityTypeBuilder.Factory<? extends BlockEntity> beFactory, boolean hasGlow) {
+	public ItemMoverBlock(Block.Properties settings, BlockEntitySupplier<? extends BlockEntity> beFactory, boolean hasGlow) {
 		super(settings, beFactory, hasGlow);
 	}
 

@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package grondag.ab.storage;
+package grondag.ab.storage.block;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,25 +37,22 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ShulkerBoxBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType.BlockEntitySupplier;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 
-import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
-
 import grondag.ab.Ability;
-import grondag.ab.storage.block.NeighboredBlockEntity;
-import grondag.ab.storage.block.StorageSpeciesBlock;
 import grondag.fluidity.api.storage.Store;
 import grondag.xm.api.block.XmProperties;
 import grondag.xm.api.connect.species.SpeciesProperty;
 
-public abstract class StorageBlock extends StorageSpeciesBlock {
+public abstract class PersistentStorageBlock extends SpeciesStorageBlock {
 	public static final ResourceLocation CONTENTS = ShulkerBoxBlock.CONTENTS;
 
-	public StorageBlock(Block.Properties settings, FabricBlockEntityTypeBuilder.Factory<? extends BlockEntity> beFactory) {
-		super(settings, beFactory, SpeciesProperty.speciesForBlockType(StorageBlock.class));
+	public PersistentStorageBlock(Block.Properties settings, BlockEntitySupplier<? extends BlockEntity> beFactory) {
+		super(settings, beFactory, SpeciesProperty.speciesForBlockType(PersistentStorageBlock.class));
 	}
 
 	@Override

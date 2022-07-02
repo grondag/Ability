@@ -25,10 +25,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType.BlockEntitySupplier;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
-
-import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 
 import grondag.ab.Ability;
 import grondag.xm.api.connect.species.Species;
@@ -36,10 +35,10 @@ import grondag.xm.api.connect.species.SpeciesFunction;
 import grondag.xm.api.connect.species.SpeciesMode;
 import grondag.xm.api.connect.species.SpeciesProperty;
 
-public class StorageSpeciesBlock extends StorageBlock {
+public abstract class SpeciesStorageBlock extends StorageBlock {
 	protected final SpeciesFunction speciesFunc;
 
-	public StorageSpeciesBlock(Properties settings, FabricBlockEntityTypeBuilder.Factory<? extends BlockEntity> beFactory, SpeciesFunction speciesFunc) {
+	public SpeciesStorageBlock(Properties settings, BlockEntitySupplier<? extends BlockEntity> beFactory, SpeciesFunction speciesFunc) {
 		super(settings, beFactory);
 		this.speciesFunc = speciesFunc;
 	}

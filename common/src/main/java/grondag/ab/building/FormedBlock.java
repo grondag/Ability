@@ -18,35 +18,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package grondag.ab.storage.block;
+package grondag.ab.building;
 
-import java.util.List;
-
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.ChatFormatting;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType.BlockEntitySupplier;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.PushReaction;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import grondag.ab.storage.block.StorageBlockEntity;
+import grondag.xm.api.modelstate.primitive.PrimitiveState;
 
-public abstract class StorageBlock extends Block implements EntityBlock {
+public class FormedBlock extends Block implements EntityBlock {
 	protected final BlockEntitySupplier<? extends BlockEntity> beFactory;
+	protected final PrimitiveState defaultModelState;
 
-	public StorageBlock(Properties settings, BlockEntitySupplier<? extends BlockEntity> beFactory) {
+	protected FormedBlock(Properties settings, BlockEntitySupplier<? extends BlockEntity> beFactory, PrimitiveState defaultModelState) {
 		super(settings);
 		this.beFactory = beFactory;
+		this.defaultModelState = defaultModelState.toImmutable();
 	}
 
 	@Override
@@ -55,18 +50,20 @@ public abstract class StorageBlock extends Block implements EntityBlock {
 	}
 
 	@Override
-	public PushReaction getPistonPushReaction(BlockState blockState) {
-		return PushReaction.DESTROY;
-	}
+	public void playerWillDestroy(Level world, BlockPos blockPos, BlockState blockState, Player playerEntity) {
+		// Drop in creative mode
+		if (!playerEntity.isCreative() && !world.isClientSide) {
+			final BlockEntity blockEntity = world.getBlockEntity(blockPos);
 
-	@Override
-	@Environment(EnvType.CLIENT)
-	public void appendHoverText(ItemStack itemStack, @Nullable BlockGetter blockView, List<Component> list, TooltipFlag tooltipContext) {
-		super.appendHoverText(itemStack, blockView, list, tooltipContext);
-		final String[] lines = I18n.get(getDescriptionId() + ".desc").split(";");
-
-		for (final String line : lines) {
-			list.add(Component.literal(line).withStyle(ChatFormatting.GREEN));
+			if (blockEntity instanceof StorageBlockEntity) {
+				final ItemStack itemStack = new ItemStack(this);
+				blockEntity.saveToItem(itemStack);
+				final ItemEntity itemEntity = new ItemEntity(world, blockPos.getX() + 0.5D, blockPos.getY() + 0.5D, blockPos.getZ() + 0.5D, itemStack);
+				itemEntity.setDefaultPickUpDelay();
+				world.addFreshEntity(itemEntity);
+			}
 		}
+
+		super.playerWillDestroy(world, blockPos, blockState, playerEntity);
 	}
 }

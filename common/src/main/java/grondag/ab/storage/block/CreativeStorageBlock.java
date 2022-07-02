@@ -25,12 +25,11 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType.BlockEntitySupplier;
 import net.minecraft.world.level.block.state.BlockState;
 
-import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
-
-public class AbstractFunctionalBlock extends StorageBlock {
-	public AbstractFunctionalBlock(Properties settings, FabricBlockEntityTypeBuilder.Factory<? extends BlockEntity> beFactory) {
+public abstract class CreativeStorageBlock extends StorageBlock {
+	public CreativeStorageBlock(Properties settings, BlockEntitySupplier<? extends BlockEntity> beFactory) {
 		super(settings, beFactory);
 	}
 

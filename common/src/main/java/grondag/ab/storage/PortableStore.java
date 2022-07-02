@@ -23,6 +23,7 @@ package grondag.ab.storage;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 
+import grondag.ab.storage.block.StorageBlockEntity;
 import grondag.fluidity.api.device.ItemComponentContext;
 import grondag.fluidity.api.storage.Store;
 import grondag.fluidity.base.storage.AbstractPortableStore;

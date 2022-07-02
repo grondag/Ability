@@ -30,13 +30,13 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType.BlockEntitySupplier;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
 import net.fabricmc.fabric.api.block.BlockAttackInteractionAware;
-import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 
 import grondag.ab.storage.BinActionC2S;
 import grondag.ab.storage.block.TracerAccess;
@@ -49,7 +49,7 @@ public class BinBlock extends CrateBlock implements BlockAttackInteractionAware 
 	public final int divisionLevel;
 	public final boolean isCreative;
 
-	public BinBlock(Block.Properties settings, FabricBlockEntityTypeBuilder.Factory<? extends BlockEntity> beFactory, int divisionLevel, boolean isCreative) {
+	public BinBlock(Block.Properties settings, BlockEntitySupplier<? extends BlockEntity> beFactory, int divisionLevel, boolean isCreative) {
 		super(settings, beFactory);
 		this.divisionLevel = divisionLevel;
 		this.isCreative = isCreative;

@@ -31,7 +31,7 @@ import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
-import grondag.ab.storage.StorageBlockEntity;
+import grondag.ab.storage.block.StorageBlockEntity;
 
 @Environment(EnvType.CLIENT)
 public class StorageBlockRenderer<T extends StorageBlockEntity<?, ?>> implements BlockEntityRenderer<T> {

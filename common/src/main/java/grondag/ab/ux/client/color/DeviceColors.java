@@ -18,11 +18,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package grondag.ab.varia;
+package grondag.ab.ux.client.color;
 
-import grondag.ab.ux.client.color.ColorUtil;
-
-public class WitColors {
+public class DeviceColors {
 	public static final int[] BASE = new int[16];
 	public static final int[] HIGHLIGHT = new int[16];
 	public static final int[] GLOW = new int[16];

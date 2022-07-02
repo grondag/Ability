@@ -40,16 +40,16 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType.BlockEntitySupplier;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.block.BlockAttackInteractionAware;
-import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 
 import grondag.ab.storage.PortableStore;
-import grondag.ab.storage.StorageBlock;
+import grondag.ab.storage.block.PersistentStorageBlock;
 import grondag.ab.storage.item.CrateBlockEntity;
 import grondag.fluidity.api.storage.Store;
 import grondag.fluidity.base.article.StoredDiscreteArticle;
@@ -57,10 +57,10 @@ import grondag.fluidity.base.storage.discrete.AbstractDiscreteStore;
 import grondag.xm.api.connect.species.SpeciesProperty;
 import grondag.xm.api.connect.world.BlockTest;
 
-public class TankBlock extends StorageBlock implements BlockAttackInteractionAware {
+public class TankBlock extends PersistentStorageBlock implements BlockAttackInteractionAware {
 	public final boolean isCreative;
 
-	public TankBlock(Block.Properties settings, FabricBlockEntityTypeBuilder.Factory<? extends BlockEntity> beFactory, boolean isCreative) {
+	public TankBlock(Block.Properties settings, BlockEntitySupplier<? extends BlockEntity> beFactory, boolean isCreative) {
 		super(settings, beFactory);
 		this.isCreative = isCreative;
 	}

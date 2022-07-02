@@ -40,15 +40,15 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType.BlockEntitySupplier;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 
 import grondag.ab.storage.PortableStore;
-import grondag.ab.storage.StorageBlock;
+import grondag.ab.storage.block.PersistentStorageBlock;
 import grondag.ab.storage.ux.CrateContainerMenu;
 import grondag.fluidity.api.storage.Store;
 import grondag.fluidity.base.article.StoredDiscreteArticle;
@@ -56,11 +56,11 @@ import grondag.fluidity.base.storage.discrete.AbstractDiscreteStore;
 import grondag.xm.api.connect.species.SpeciesProperty;
 import grondag.xm.api.connect.world.BlockTest;
 
-public class CrateBlock extends StorageBlock {
+public class CrateBlock extends PersistentStorageBlock {
 	// ugly but works
 	public PortableCrateItem portableItem;
 
-	public CrateBlock(Block.Properties settings, FabricBlockEntityTypeBuilder.Factory<? extends BlockEntity> beFactory) {
+	public CrateBlock(Block.Properties settings, BlockEntitySupplier<? extends BlockEntity> beFactory) {
 		super(settings, beFactory);
 	}
 

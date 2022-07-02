@@ -26,17 +26,16 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.BlockEntityType.BlockEntitySupplier;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
-import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
-
 import grondag.ab.storage.TickableBlockEntity;
-import grondag.ab.storage.block.AbstractFunctionalBlock;
+import grondag.ab.storage.block.CreativeStorageBlock;
 
-public class CreativeCrateBlock extends AbstractFunctionalBlock {
-	public CreativeCrateBlock(Block.Properties settings, FabricBlockEntityTypeBuilder.Factory<? extends BlockEntity> beFactory) {
+public class CreativeCrateBlock extends CreativeStorageBlock {
+	public CreativeCrateBlock(Block.Properties settings, BlockEntitySupplier<? extends BlockEntity> beFactory) {
 		super(settings, beFactory);
 	}
 

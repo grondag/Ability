@@ -36,7 +36,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandler;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 
-import grondag.ab.storage.StorageBlockEntity;
+import grondag.ab.storage.block.StorageBlockEntity;
 import grondag.fluidity.api.article.ArticleType;
 import grondag.fluidity.api.multiblock.MultiBlockManager;
 import grondag.fluidity.base.storage.AbstractStore;

@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package grondag.ab.storage;
+package grondag.ab.storage.block;
 
 import java.util.function.Supplier;
 
@@ -31,7 +31,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-import grondag.ab.storage.block.CarrierSessionBlockEntity;
+import grondag.ab.storage.StorageClientState;
 import grondag.ab.varia.Base32Namer;
 import grondag.fluidity.api.multiblock.MultiBlockManager;
 import grondag.fluidity.api.multiblock.MultiBlockMember;

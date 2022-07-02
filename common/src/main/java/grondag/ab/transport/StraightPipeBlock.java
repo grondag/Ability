@@ -23,16 +23,15 @@ package grondag.ab.transport;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType.BlockEntitySupplier;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
-
-import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 
 import grondag.ab.Ability;
 import grondag.xm.api.block.XmProperties;
 
 public class StraightPipeBlock extends PipeBlock {
-	public StraightPipeBlock(Block.Properties settings, FabricBlockEntityTypeBuilder.Factory<? extends BlockEntity> beFactory, boolean hasGlow) {
+	public StraightPipeBlock(Block.Properties settings, BlockEntitySupplier<? extends BlockEntity> beFactory, boolean hasGlow) {
 		super(settings, beFactory, hasGlow);
 	}
 

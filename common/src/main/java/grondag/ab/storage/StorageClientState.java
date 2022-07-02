@@ -21,6 +21,7 @@
 package grondag.ab.storage;
 
 import grondag.ab.AbilityConfig;
+import grondag.ab.storage.block.StorageBlockEntity;
 
 @SuppressWarnings("rawtypes")
 public class StorageClientState<T extends StorageBlockEntity> {

@@ -20,7 +20,7 @@
 
 package grondag.ab.transport.model;
 
-import grondag.ab.varia.WitColors;
+import grondag.ab.ux.client.color.DeviceColors;
 import grondag.xm.api.paint.VertexProcessor;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.texture.XmTextures;
@@ -30,24 +30,24 @@ public abstract class PipePaints {
 	private PipePaints() { }
 
 	private static final int CABLE_BASE = 0xFF2E373E;
-	private static final int CABLE_COLOR = WitColors.BASE[0];
-	private static final int CABLE_HIGHLIGHT_COLOR = WitColors.HIGHLIGHT[0];
+	private static final int CABLE_COLOR = DeviceColors.BASE[0];
+	private static final int CABLE_HIGHLIGHT_COLOR = DeviceColors.HIGHLIGHT[0];
 	private static final int CONNECTOR_OUTSIDE_COLOR = 0xFF404050;
 	private static final int CONNECTOR_FACE_COLOR = 0xFF303030;
 
 	static final VertexProcessor HIGHLIGHT_COLOR = (poly, modelState, surface, paint, textureIndex) -> {
 		if (BasePipeModel.hasGlow(modelState)) {
-			poly.colorAll(textureIndex, WitColors.GLOW[modelState.species()]);
+			poly.colorAll(textureIndex, DeviceColors.GLOW[modelState.species()]);
 			poly.emissive(textureIndex, true);
 			poly.disableDiffuse(textureIndex, true);
 			poly.disableAo(textureIndex, true);
 		} else {
-			poly.colorAll(textureIndex, WitColors.HIGHLIGHT[modelState.species()]);
+			poly.colorAll(textureIndex, DeviceColors.HIGHLIGHT[modelState.species()]);
 		}
 	};
 
 	static final VertexProcessor BASE_COLOR = (poly, modelState, surface, paint, textureIndex) -> {
-		poly.colorAll(textureIndex, WitColors.BASE[modelState.species()]);
+		poly.colorAll(textureIndex, DeviceColors.BASE[modelState.species()]);
 	};
 
 	public static final XmPaint CABLE = XmPaint.finder()

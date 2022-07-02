@@ -94,6 +94,7 @@ public abstract class AbstractSimpleScreen extends Screen implements ScreenRende
 		}
 	}
 
+	// WIP: should not need this if add controls as renderable widgets
 	protected void drawControls(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 		final List<? extends GuiEventListener> children = children();
 		final int limit = children.size();
