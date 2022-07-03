@@ -49,6 +49,7 @@ import net.minecraft.world.level.material.MaterialColor;
 
 import io.vram.modkeys.api.ModKey;
 
+import grondag.ab.building.Building;
 import grondag.ab.storage.BinActionC2S;
 import grondag.ab.storage.init.BinBlocks;
 import grondag.ab.storage.init.CrateBlocks;
@@ -95,6 +96,7 @@ public abstract class Ability {
 		TankBlocks.initialize();
 		ArticleTypeRegistryImpl.initialize();
 		NetworkManager.registerReceiver(NetworkManager.c2s(), BinActionC2S.ID, BinActionC2S::accept);
+		Building.initialize();
 
 		ITEMS.register();
 		BLOCKS.register();

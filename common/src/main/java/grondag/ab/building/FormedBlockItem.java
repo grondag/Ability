@@ -84,7 +84,7 @@ public class FormedBlockItem extends BlockItem {
 
 		final CompoundTag tag = getBlockEntityData(stack);
 
-		if (tag.contains(FormedBlockEntity.TAG_MODEL_STATE)) {
+		if (tag != null && tag.contains(FormedBlockEntity.TAG_MODEL_STATE)) {
 			return (MutablePrimitiveState) ModelState.fromTag(tag.getCompound(FormedBlockEntity.TAG_MODEL_STATE), PaintIndex.forWorld(world));
 		} else {
 			return ((FormedBlock) getBlock()).defaultModelState.mutableCopy();
@@ -115,7 +115,7 @@ public class FormedBlockItem extends BlockItem {
 //		}
 //	}
 
-	public static final BiFunction<ItemStack, Level, MutableModelState> HS_ITEM_MODEL_FUNCTION  = (s, w) -> {
+	public static final BiFunction<ItemStack, Level, MutableModelState> FORMED_BLOCK_ITEM_MODEL_FUNCTION  = (s, w) -> {
 		if (s.getItem() instanceof FormedBlockItem) {
 			return ((FormedBlockItem) s.getItem()).readModelState(s, w);
 		}

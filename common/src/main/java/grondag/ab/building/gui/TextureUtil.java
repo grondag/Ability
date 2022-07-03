@@ -20,12 +20,17 @@
 
 package grondag.ab.building.gui;
 
+import org.lwjgl.opengl.GL11;
+
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.BufferUploader;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat.Mode;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.world.inventory.InventoryMenu;
 
@@ -34,30 +39,26 @@ import grondag.xm.api.texture.TextureSet;
 
 public class TextureUtil {
 	public static BufferBuilder setupRendering(ScreenRenderContext renderContext) {
-		renderContext.minecraft().getTextureManager().bindForSetup(InventoryMenu.BLOCK_ATLAS);
-		renderContext.minecraft().getTextureManager().getTexture(InventoryMenu.BLOCK_ATLAS).setFilter(false, false);
+		final var textureManager = Minecraft.getInstance().getTextureManager();
+		textureManager.bindForSetup(InventoryMenu.BLOCK_ATLAS);
+		textureManager.getTexture(InventoryMenu.BLOCK_ATLAS).setFilter(false, false);
+		RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
+		RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
+		RenderSystem.setShaderColor(1, 1, 1, 1);
+		RenderSystem.disableDepthTest();
 		RenderSystem.enableTexture();
 		RenderSystem.enableBlend();
-		//RenderSystem.disableAlphaTest();
-		RenderSystem.defaultBlendFunc();
-		//RenderSystem.shadeModel(GL21.GL_SMOOTH);
-		//RenderSystem.color4f(1, 1, 1, 1);
+		RenderSystem.blendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
 
-		final Tesselator tessellator = Tesselator.getInstance();
-		final BufferBuilder vertexbuffer = tessellator.getBuilder();
-
+		final BufferBuilder vertexbuffer = Tesselator.getInstance().getBuilder();
 		vertexbuffer.begin(Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
-
 		return vertexbuffer;
 	}
 
 	public static void tearDownRendering() {
-		Tesselator.getInstance().end();
-		//RenderSystem.color4f(1, 1, 1, 1);
-		//RenderSystem.shadeModel(GL21.GL_FLAT);
+		BufferUploader.drawWithShader(Tesselator.getInstance().getBuilder().end());
 		RenderSystem.disableBlend();
-		//RenderSystem.enableAlphaTest();
-		RenderSystem.disableTexture();
+		RenderSystem.enableDepthTest();
 	}
 
 	public static void bufferTexture(BufferBuilder vertexBuffer, double left, double top, int itemSize, int color, TextureSet item) {
@@ -67,9 +68,9 @@ public class TextureUtil {
 
 		final float u0 = sprite.getU0();
 		final float u1 = u0 + (sprite.getU1() - u0) / item.scale().sliceCount;
-
 		final float v0 = sprite.getV0();
 		final float v1 = v0 + (sprite.getV1() - v0) / item.scale().sliceCount;
+
 		final int a = (color >> 24) & 0xFF;
 		final int r = (color >> 16) & 0xFF;
 		final int g = (color >> 8) & 0xFF;

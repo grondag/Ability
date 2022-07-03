@@ -71,6 +71,8 @@ public class ModelPreview extends AbstractControl<ModelPreview> {
 		}
 
 		modelState = XmItem.modelState(Minecraft.getInstance().level, stack);
+
+		assert modelState != null;
 	}
 
 	public AbstractPrimitiveModelState<?, ?, ?> modelState() {

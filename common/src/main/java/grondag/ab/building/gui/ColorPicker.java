@@ -51,10 +51,13 @@ import it.unimi.dsi.fastutil.ints.IntConsumer;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.BufferUploader;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat.Mode;
+
+import net.minecraft.client.renderer.GameRenderer;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -117,13 +120,11 @@ public class ColorPicker extends AbstractControl<ColorPicker> {
 	protected void drawContent(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 		RenderSystem.disableTexture();
 		RenderSystem.enableBlend();
-		//RenderSystem.disableAlphaTest();
 		RenderSystem.defaultBlendFunc();
-		//RenderSystem.shadeModel(GL21.GL_SMOOTH);
+		RenderSystem.disableTexture();
+		RenderSystem.setShader(GameRenderer::getPositionColorShader);
 
-		final Tesselator tesselator = Tesselator.getInstance();
-		final BufferBuilder vertexbuffer = tesselator.getBuilder();
-
+		final BufferBuilder vertexbuffer = Tesselator.getInstance().getBuilder();
 		vertexbuffer.begin(Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
 
 		final float xStep = width * ARC_DEGREES / 360F;
@@ -215,11 +216,8 @@ public class ColorPicker extends AbstractControl<ColorPicker> {
 			vertexbuffer.vertex(cx0, ly0, 0.0D).color(r, g, b, 0xFF).endVertex();
 		}
 
-		tesselator.end();
-		//RenderSystem.color4f(1, 1, 1, 1);
-		//RenderSystem.shadeModel(GL21.GL_FLAT);
+		BufferUploader.drawWithShader(vertexbuffer.end());
 		RenderSystem.disableBlend();
-		//RenderSystem.enableAlphaTest();
 		RenderSystem.enableTexture();
 	}
 

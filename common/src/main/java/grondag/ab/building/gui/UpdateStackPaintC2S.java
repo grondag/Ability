@@ -20,6 +20,7 @@
 
 package grondag.ab.building.gui;
 
+import dev.architectury.networking.NetworkManager;
 import dev.architectury.networking.NetworkManager.PacketContext;
 import io.netty.buffer.Unpooled;
 
@@ -32,7 +33,6 @@ import net.minecraft.world.item.ItemStack;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 
 import grondag.ab.Ability;
 import grondag.ab.building.FormedBlockItem;
@@ -48,7 +48,7 @@ public class UpdateStackPaintC2S {
 			final FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
 			buf.writeBoolean(hand == InteractionHand.OFF_HAND);
 			state.toBytes(buf);
-			ClientPlayNetworking.send(IDENTIFIER, buf);
+			NetworkManager.sendToServer(IDENTIFIER, buf);
 		}
 	}
 

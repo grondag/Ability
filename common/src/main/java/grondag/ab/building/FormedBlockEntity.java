@@ -30,6 +30,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.api.modelstate.primitive.MutablePrimitiveState;
 import grondag.xm.api.modelstate.primitive.PrimitiveState;
+import grondag.xm.api.modelstate.primitive.PrimitiveStateFunction;
 import grondag.xm.api.modelstate.primitive.PrimitiveStateMutator;
 import grondag.xm.api.paint.PaintIndex;
 
@@ -114,4 +115,20 @@ public class FormedBlockEntity extends BlockEntity {
 		public ClientboundBlockEntityDataPacket getUpdatePacket() {
 			return ClientboundBlockEntityDataPacket.create(this);
 		}
+
+		public static final PrimitiveStateFunction STATE_ACCESS_FUNC = (state, world, pos, refresh) -> {
+			if (state.getBlock() instanceof FormedBlock) {
+				if (world != null && pos != null) {
+					final BlockEntity be = world.getBlockEntity(pos);
+
+					if (be != null) {
+						return ((FormedBlockEntity) world.getBlockEntity(pos)).getModelState(refresh);
+					}
+				}
+
+				return ((FormedBlock) state.getBlock()).defaultModelState.mutableCopy();
+			}
+
+			return null;
+		};
 }

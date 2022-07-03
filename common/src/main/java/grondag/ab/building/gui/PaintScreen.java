@@ -272,6 +272,8 @@ public class PaintScreen extends AbstractSimpleScreen {
 	}
 
 	private void readMaterial() {
+		assert modelPreview.modelState() != null : "Invalid state in PaintScreen - missing model state";
+
 		final XmPaint paint = modelPreview.modelState().paint(0);
 		final int depth = paint.textureDepth();
 

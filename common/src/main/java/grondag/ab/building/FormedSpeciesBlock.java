@@ -18,11 +18,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package grondag.ab.storage.block;
+package grondag.ab.building;
 
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType.BlockEntitySupplier;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
@@ -32,13 +31,13 @@ import grondag.xm.api.connect.species.Species;
 import grondag.xm.api.connect.species.SpeciesFunction;
 import grondag.xm.api.connect.species.SpeciesMode;
 import grondag.xm.api.connect.species.SpeciesProperty;
+import grondag.xm.api.modelstate.primitive.PrimitiveState;
 
-public abstract class SpeciesStorageBlock extends StorageBlock {
-	protected final SpeciesFunction speciesFunc;
+public class FormedSpeciesBlock extends FormedBlock {
+	private final SpeciesFunction speciesFunc = SpeciesProperty.speciesForBlock(this);
 
-	public SpeciesStorageBlock(Properties settings, BlockEntitySupplier<? extends BlockEntity> beFactory, SpeciesFunction speciesFunc) {
-		super(settings, beFactory);
-		this.speciesFunc = speciesFunc;
+	protected FormedSpeciesBlock(Properties settings, BlockEntitySupplier<FormedBlockEntity> beFactory, PrimitiveState defaultModelState) {
+		super(settings, beFactory, defaultModelState);
 	}
 
 	@Override
