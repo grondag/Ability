@@ -29,6 +29,7 @@ import org.lwjgl.glfw.GLFW;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.core.SectionPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
@@ -41,6 +42,7 @@ import grondag.ab.storage.init.CrateBlocks;
 import grondag.ab.storage.init.MenuTypes;
 import grondag.ab.storage.init.TankBlocks;
 import grondag.ab.storage.ux.WitBaseContainerMenu;
+import grondag.ab.varia.SafeBlockRenderUpdate;
 import grondag.fluidity.base.synch.DiscreteStorageServerDelegate;
 
 public abstract class AbilityClient {
@@ -72,6 +74,11 @@ public abstract class AbilityClient {
 
 		// Useful when fussing with the color scheme...
 		// InvalidateRenderStateCallback.EVENT.register(WitColors::init);
+
+		SafeBlockRenderUpdate.PROXY = p -> Minecraft.getInstance().levelRenderer.setSectionDirty(
+				SectionPos.blockToSectionCoord(p.getX()),
+				SectionPos.blockToSectionCoord(p.getY()),
+				SectionPos.blockToSectionCoord(p.getZ()));
 	}
 
 	private static <E extends BlockEntity> void registerBeType(BlockEntityType<E> type, BlockEntityRendererProvider<E> blockEntityRendererFactory) {

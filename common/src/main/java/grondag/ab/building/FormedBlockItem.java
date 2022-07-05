@@ -22,8 +22,12 @@ package grondag.ab.building;
 
 import java.util.function.BiFunction;
 
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -32,6 +36,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 
 import grondag.ab.building.gui.PaintScreen;
 import grondag.xm.api.modelstate.ModelState;
@@ -93,27 +98,28 @@ public class FormedBlockItem extends BlockItem {
 
 	public void writeModelState(ItemStack stack, MutablePrimitiveState modelState) {
 		assert stack.getItem() == this;
-		BlockItem.getBlockEntityData(stack).put(FormedBlockEntity.TAG_MODEL_STATE, modelState.toTag());
+		var tag = BlockItem.getBlockEntityData(stack);
+
+		if (tag == null) {
+			tag = new CompoundTag();
+			tag.put(FormedBlockEntity.TAG_MODEL_STATE, modelState.toTag());
+			BlockItem.setBlockEntityData(stack, Building.CUBE_BLOCK_ENTITY_TYPE, tag);
+		} else {
+			tag.put(FormedBlockEntity.TAG_MODEL_STATE, modelState.toTag());
+		}
 	}
 
-//	@Override
-//	protected boolean postPlacement(BlockPos pos, Level world, @Nullable Player player, ItemStack stack, BlockState state) {
-//		if (world.isClient) {
-//			final CompoundTag compoundTag = stack.getSubTag("BlockEntityTag");
-//
-//			if (compoundTag != null) {
-//				final BlockEntity blockEntity = world.getBlockEntity(pos);
-//
-//				if (blockEntity != null && blockEntity instanceof final HsBlockEntity be) {
-//					be.setModelStateState(readModelState(stack, world));
-//				}
-//			}
-//
-//			return false;
-//		} else {
-//			return writeTagToBlockEntity(world, player, pos, stack);
-//		}
-//	}
+	// parent method only marks the BE for save on server, doesn't send client refresh, so we do that here
+	@Override
+	protected boolean updateCustomBlockEntityTag(BlockPos blockPos, Level level, @Nullable Player player, ItemStack itemStack, BlockState blockState) {
+		final var result = super.updateCustomBlockEntityTag(blockPos, level, player, itemStack, blockState);
+
+		if (!level.isClientSide) {
+			((ServerLevel) level).getChunkSource().blockChanged(blockPos);
+		}
+
+		return result;
+	}
 
 	public static final BiFunction<ItemStack, Level, MutableModelState> FORMED_BLOCK_ITEM_MODEL_FUNCTION  = (s, w) -> {
 		if (s.getItem() instanceof FormedBlockItem) {

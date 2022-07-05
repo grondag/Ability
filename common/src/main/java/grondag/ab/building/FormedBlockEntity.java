@@ -27,6 +27,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
+import grondag.ab.varia.SafeBlockRenderUpdate;
 import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.api.modelstate.primitive.MutablePrimitiveState;
 import grondag.xm.api.modelstate.primitive.PrimitiveState;
@@ -91,12 +92,19 @@ public class FormedBlockEntity extends BlockEntity {
 			super.load(tag);
 
 			if (tag.contains(TAG_MODEL_STATE)) {
+				final var newModelState = (MutablePrimitiveState) ModelState.fromTag(tag.getCompound(TAG_MODEL_STATE), PaintIndex.forWorld(level));
+
 				// PERF can copy instead of allocate?
 				if (modelState != null) {
+					// Skip check when is null because that is initial load and render refresh will happen anyway
+					if (level.isClientSide() && !modelState.equals(newModelState)) {
+						SafeBlockRenderUpdate.PROXY.updateBlockRender(worldPosition);
+					}
+
 					modelState.release();
 				}
 
-				modelState = (MutablePrimitiveState) ModelState.fromTag(tag.getCompound(TAG_MODEL_STATE), PaintIndex.forWorld(level));
+				modelState = newModelState;
 			}
 		}
 
