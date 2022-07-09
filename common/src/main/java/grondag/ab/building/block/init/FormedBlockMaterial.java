@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package grondag.ab.building;
+package grondag.ab.building.block.init;
 
 import com.google.common.collect.ImmutableList;
 
@@ -33,60 +33,60 @@ import grondag.xm.api.texture.XmTextures;
 import grondag.xm.api.texture.core.CoreTextures;
 import grondag.xm.api.texture.unstable.UnstableTextures;
 
-public record BuildingMaterial (
+public record FormedBlockMaterial (
 		String code, SoundType sound, boolean hyper, boolean needsTool, boolean clear, float hardness, float resistance,
 		Material material,
 		XmPaint paint
 ) {
-	public static final BuildingMaterial VIRTUAL = new BuildingMaterial(
+	public static final FormedBlockMaterial VIRTUAL = new FormedBlockMaterial(
 		"virtual", SoundType.SNOW, false, false, false, 0.0f, 0.0f,
 		new Material.Builder(MaterialColor.NONE).replaceable().noCollider().nonSolid().build(),
 		XmPaint.finder().texture(0, XmTextures.TILE_NOISE_SUBTLE).textureColor(0, BlockColors.DEFAULT_WHITE_RGB).find()
 	);
 
-	public static final BuildingMaterial DURAFOAM = new BuildingMaterial(
+	public static final FormedBlockMaterial DURAFOAM = new FormedBlockMaterial(
 		"dfoam", SoundType.SNOW, false, false, false, 10.0f, 200.0f,
 		new Material.Builder(MaterialColor.CLAY).build(),
 		XmPaint.finder().texture(0, XmTextures.TILE_NOISE_SUBTLE).textureColor(0, 0XFFE0E0D0).find()
 	);
 
-	public static final BuildingMaterial DURACRETE = new BuildingMaterial(
+	public static final FormedBlockMaterial DURACRETE = new FormedBlockMaterial(
 		"dcrete", SoundType.STONE, false, false, false, 20.0f, 1200.0f,
 		new Material.Builder(MaterialColor.STONE).build(),
 		XmPaint.finder().texture(0, CoreTextures.BIGTEX_SANDSTONE).textureColor(0, 0XFFA0A0A0).find()
 	);
 
-	public static final BuildingMaterial DURAGLASS = new BuildingMaterial(
+	public static final FormedBlockMaterial DURAGLASS = new FormedBlockMaterial(
 		"dglass", SoundType.GLASS, false, false, true, 18.0f, 1000.0f,
 		new Material.Builder(MaterialColor.NONE).build(),
 		XmPaint.finder().texture(0, XmTextures.TILE_NOISE_SUBTLE).textureColor(0, 0X80E0E0F0).find()
 	);
 
-	public static final BuildingMaterial DURAWOOD = new BuildingMaterial(
+	public static final FormedBlockMaterial DURAWOOD = new FormedBlockMaterial(
 		"dwood", SoundType.WOOD, false, false, false, 10.0f, 600.0f,
 		new Material.Builder(MaterialColor.WOOD).build(),
 		XmPaint.finder().texture(0, UnstableTextures.BIGTEX_WOOD).textureColor(0, 0XFFE0E080).find()
 	);
 
-	public static final BuildingMaterial DURASTEEL = new BuildingMaterial(
+	public static final FormedBlockMaterial DURASTEEL = new FormedBlockMaterial(
 		"dsteel", SoundType.METAL, false, false, false, 25.0f, 1400.0f,
 		new Material.Builder(MaterialColor.METAL).build(),
 		XmPaint.finder().texture(0, XmTextures.TILE_NOISE_SUBTLE).textureColor(0, 0XFF8080A0).find()
 	);
 
-	public static final BuildingMaterial HYPERCRETE = new BuildingMaterial(
+	public static final FormedBlockMaterial HYPERCRETE = new FormedBlockMaterial(
 		"hcrete", SoundType.STONE, false, false, false, -1.0F, 3600000.0F,
 		new Material.Builder(MaterialColor.STONE).notPushable().build(),
 		XmPaint.finder().texture(0, CoreTextures.BIGTEX_SANDSTONE).textureColor(0, BlockColors.DEFAULT_WHITE_RGB).find()
 	);
 
-	public static final BuildingMaterial HYPERGLASS = new BuildingMaterial(
+	public static final FormedBlockMaterial HYPERGLASS = new FormedBlockMaterial(
 		"hglass", SoundType.GLASS, false, false, true, -1.0F, 3600000.0F,
 		new Material.Builder(MaterialColor.NONE).notPushable().build(),
 		XmPaint.finder().texture(0, XmTextures.TILE_NOISE_SUBTLE).textureColor(0, BlockColors.DEFAULT_WHITE_RGB).find()
 	);
 
-	public static final BuildingMaterial HYPERSTEEL = new BuildingMaterial(
+	public static final FormedBlockMaterial HYPERSTEEL = new FormedBlockMaterial(
 		"hsteel", SoundType.METAL, false, false, false, -1.0F, 3600000.0F,
 		new Material.Builder(MaterialColor.METAL).notPushable().build(),
 		XmPaint.finder().texture(0, XmTextures.TILE_NOISE_SUBTLE).textureColor(0, BlockColors.DEFAULT_WHITE_RGB).find()
@@ -94,7 +94,7 @@ public record BuildingMaterial (
 
 	private static final float HYPER_SLIP = 0.989F;
 
-	public static final ImmutableList<BuildingMaterial> ALL = ImmutableList.of(DURAFOAM, DURAGLASS, DURACRETE, DURAWOOD, DURASTEEL);
+	public static final ImmutableList<FormedBlockMaterial> ALL = ImmutableList.of(DURAFOAM, DURAGLASS, DURACRETE, DURAWOOD, DURASTEEL);
 
 	public Block.Properties settings() {
 		final var result = Block.Properties.of(material())

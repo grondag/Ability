@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package grondag.ab.building;
+package grondag.ab.building.placement;
 
 import java.util.function.BiFunction;
 
@@ -34,6 +34,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
+import grondag.ab.building.block.base.BlockModelStateProvider;
+import grondag.ab.building.block.base.FormedBlockEntity;
 import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.api.modelstate.primitive.MutablePrimitiveState;

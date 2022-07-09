@@ -35,7 +35,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
 import grondag.ab.Ability;
-import grondag.ab.building.BlockPlacementTool;
+import grondag.ab.building.placement.BlockPlacementTool;
 import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.api.paint.PaintIndex;
 

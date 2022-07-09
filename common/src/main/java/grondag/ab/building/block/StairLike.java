@@ -18,38 +18,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package grondag.ab.building;
-
-import static net.minecraft.world.level.block.StairBlock.WATERLOGGED;
+package grondag.ab.building.block;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.block.entity.BlockEntityType.BlockEntitySupplier;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
 
 import grondag.ab.Ability;
-import grondag.xm.api.block.XmBlockState;
+import grondag.ab.building.block.base.FormedNonCubicBlock;
+import grondag.ab.building.block.init.FormedBlockMaterial;
 import grondag.xm.api.block.XmProperties;
-import grondag.xm.api.collision.CollisionDispatcher;
 import grondag.xm.api.modelstate.primitive.PrimitiveState;
 import grondag.xm.api.modelstate.primitive.PrimitiveStateMutator;
 import grondag.xm.api.modelstate.primitive.SimplePrimitiveStateMutator;
@@ -60,7 +49,7 @@ import grondag.xm.orientation.api.DirectionHelper;
 import grondag.xm.orientation.api.FaceEdge;
 import grondag.xm.orientation.api.HorizontalEdge;
 
-public class FormedStairLike extends FormedBlock {
+public class StairLike extends FormedNonCubicBlock {
 	public enum Shape {
 		STRAIGHT,
 		INSIDE_CORNER,
@@ -69,39 +58,23 @@ public class FormedStairLike extends FormedBlock {
 
 	public final Shape shape;
 
-	public FormedStairLike(
+	public StairLike(
 			Properties settings,
-			BlockEntitySupplier<FormedBlockEntity> beFactory,
 			PrimitiveState defaultModelState,
 			PrimitiveStateMutator stateFunc,
 			Shape shape
 	) {
-		super(settings, beFactory, defaultModelState, stateFunc);
+		super(settings, defaultModelState, stateFunc);
 		this.shape = shape;
-		registerDefaultState(stateDefinition.any().setValue(WATERLOGGED, false));
-	}
-
-	@Deprecated
-	@Override
-	public boolean useShapeForLightOcclusion(BlockState blockState_1) {
-		return true;
-	}
-
-	@Deprecated
-	@Override
-	public VoxelShape getShape(BlockState blockState, BlockGetter blockView, BlockPos pos, CollisionContext entityContext) {
-		return CollisionDispatcher.shapeFor(XmBlockState.modelState(blockState, blockView, pos, true));
 	}
 
 	//UGLY: It was bad in the previous versions, too.  There must be a better model for this, but I haven't found it yet.
 	//TODO: consider splitting this mess into a utility class for reuse - like it was in prior version
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
-		final BlockPos pos = context.getClickedPos();
+		BlockState result = super.getStateForPlacement(context);
 		final Player player = context.getPlayer();
-		final FluidState fluidState = context.getLevel().getFluidState(pos);
 		final Direction onFace = context.getClickedFace().getOpposite();
-		BlockState result = defaultBlockState().setValue(WATERLOGGED, fluidState.getType() == Fluids.WATER);
 
 		Direction bottomFace = Direction.DOWN;
 		Direction backFace = Direction.SOUTH;
@@ -224,31 +197,10 @@ public class FormedStairLike extends FormedBlock {
 		return result;
 	}
 
-	@Deprecated
-	@Override
-	public BlockState updateShape(BlockState blockState, Direction direction, BlockState blockState2, LevelAccessor levelAccessor, BlockPos blockPos, BlockPos blockPos2) {
-		if (blockState.getValue(WATERLOGGED).booleanValue()) {
-			levelAccessor.scheduleTick(blockPos, Fluids.WATER, Fluids.WATER.getTickDelay(levelAccessor));
-		}
-
-		return super.updateShape(blockState, direction, blockState2, levelAccessor, blockPos, blockPos2);
-	}
-
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-		builder.add(XmProperties.ROTATION, WATERLOGGED);
-	}
-
-	@Deprecated
-	@Override
-	public FluidState getFluidState(BlockState blockState_1) {
-		return blockState_1.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(blockState_1);
-	}
-
-	@Deprecated
-	@Override
-	public boolean isPathfindable(BlockState blockState_1, BlockGetter blockView_1, BlockPos blockPos_1, PathComputationType blockPlacementEnvironment_1) {
-		return false;
+		super.createBlockStateDefinition(builder);
+		builder.add(XmProperties.ROTATION);
 	}
 
 	@Deprecated
@@ -266,7 +218,7 @@ public class FormedStairLike extends FormedBlock {
 	public static SimplePrimitiveStateMutator MODELSTATE_FROM_BLOCKSTATE = (modelState, blockState) -> {
 		final Block rawBlock = blockState.getBlock();
 
-		if (!(rawBlock instanceof final FormedStairLike block)) {
+		if (!(rawBlock instanceof final StairLike block)) {
 			return modelState;
 		}
 
@@ -275,4 +227,14 @@ public class FormedStairLike extends FormedBlock {
 		modelState.orientationIndex(blockState.getValue(XmProperties.ROTATION).ordinal());
 		return modelState;
 	};
+
+	/**
+	 *  Use default orientation to render better for items in GUI.
+	 */
+	public static StairLike create(FormedBlockMaterial material, AbstractWedge primitive, StairLike.Shape shape, CubeRotation defaultRotation) {
+		final var defaultState = primitive.newState().orientationIndex(defaultRotation.ordinal()).paintAll(material.paint());
+		AbstractWedge.setCorner(shape != Shape.STRAIGHT, defaultState);
+		AbstractWedge.setInsideCorner(shape == Shape.INSIDE_CORNER, defaultState);
+		return new StairLike(material.settings(), defaultState.releaseToImmutable(), StairLike.MODELSTATE_FROM_BLOCKSTATE, shape);
+	}
 }

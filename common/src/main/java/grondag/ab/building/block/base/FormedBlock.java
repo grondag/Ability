@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package grondag.ab.building;
+package grondag.ab.building.block.base;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -28,27 +28,35 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType.BlockEntitySupplier;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
 
+import grondag.ab.building.block.init.FormedBlocks;
 import grondag.xm.api.modelstate.primitive.PrimitiveState;
 import grondag.xm.api.modelstate.primitive.PrimitiveStateMutator;
 
 public class FormedBlock extends Block implements EntityBlock, BlockModelStateProvider {
-	protected final BlockEntitySupplier<? extends BlockEntity> beFactory;
+	public static final IntegerProperty LIGHT_LEVEL = IntegerProperty.create("ab_light", 0, 15);
+
 	protected final PrimitiveState defaultModelState;
 	protected final PrimitiveStateMutator stateFunc;
 
-	protected FormedBlock(Properties settings, BlockEntitySupplier<? extends BlockEntity> beFactory, PrimitiveState defaultModelState, PrimitiveStateMutator stateFunc) {
-		super(settings);
-		this.beFactory = beFactory;
+	protected FormedBlock(Properties settings, PrimitiveState defaultModelState, PrimitiveStateMutator stateFunc) {
+		super(settings.lightLevel(b -> b.getOptionalValue(LIGHT_LEVEL).orElse(0)));
 		this.defaultModelState = defaultModelState.toImmutable();
 		this.stateFunc = stateFunc;
 	}
 
 	@Override
+	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
+		super.createBlockStateDefinition(builder);
+		builder.add(LIGHT_LEVEL);
+	}
+
+	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-		return beFactory.create(pos, state);
+		return FormedBlocks.formedBlockEntity(pos, state);
 	}
 
 	@Override

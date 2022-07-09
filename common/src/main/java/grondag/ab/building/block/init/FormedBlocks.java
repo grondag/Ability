@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package grondag.ab.building;
+package grondag.ab.building.block.init;
 
 import dev.architectury.networking.NetworkManager;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -31,7 +31,11 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 import grondag.ab.Ability;
+import grondag.ab.building.block.base.FormedBlock;
+import grondag.ab.building.block.base.FormedBlockEntity;
 import grondag.ab.building.gui.UpdateStackPaintC2S;
+import grondag.ab.building.placement.BlockPlacementTool;
+import grondag.ab.building.placement.FormedBlockItem;
 import grondag.xm.api.block.XmBlockRegistry;
 import grondag.xm.api.item.XmItemRegistry;
 import grondag.xm.api.texture.XmTextures;
@@ -39,7 +43,7 @@ import grondag.xm.api.texture.core.CoreTextures;
 import grondag.xm.api.texture.tech.TechTextures;
 import grondag.xm.api.texture.unstable.UnstableTextures;
 
-public class Building {
+public class FormedBlocks {
 	public static BlockEntityType<FormedBlockEntity> formedBlockEntityType;
 	public static Block DEFAULT_ABILITY_BLOCK;
 
@@ -56,13 +60,13 @@ public class Building {
 	//		return new HsBlockEntity(ROUND_COLUMN_BLOCK_ENTITY_TYPE, RC_DEFAULT_STATE, PrimitiveStateMutator.builder().build());
 	//	}
 
-	private static void createBlockFamily(BuildingMaterial material) {
+	private static void createBlockFamily(FormedBlockMaterial material) {
 		final ObjectArrayList<Block> familyBlocks = new ObjectArrayList<>();
 		FormedBlockShape.forEach(shape -> familyBlocks.add(createBlock(material, shape)));
 		BLOCKS.add(familyBlocks);
 	}
 
-	private static Block createBlock(BuildingMaterial material, FormedBlockShape shape) {
+	private static Block createBlock(FormedBlockMaterial material, FormedBlockShape shape) {
 		final String name = material.code() + "-" + shape.code;
 		final Block block = Ability.blockNoItem(name, shape.createBlock(material));
 		final BlockItem item = Ability.item(name, new FormedBlockItem(block, Ability.itemSettings()));
@@ -74,13 +78,13 @@ public class Building {
 	private static final ObjectArrayList<ObjectArrayList<Block>> BLOCKS = new ObjectArrayList<>();
 
 	public static void initialize() {
-		BuildingMaterial.ALL.forEach(Building::createBlockFamily);
+		FormedBlockMaterial.ALL.forEach(FormedBlocks::createBlockFamily);
 
 		DEFAULT_ABILITY_BLOCK = BLOCKS.get(0).get(0);
 
 		final ObjectArrayList<Block> allBlocks = new ObjectArrayList<>();
 		BLOCKS.forEach(allBlocks::addAll);
-		formedBlockEntityType = Ability.blockEntityType("fbe", Building::formedBlockEntity, allBlocks.toArray(new FormedBlock[allBlocks.size()]));
+		formedBlockEntityType = Ability.blockEntityType("fbe", FormedBlocks::formedBlockEntity, allBlocks.toArray(new FormedBlock[allBlocks.size()]));
 		allBlocks.forEach(b -> XmBlockRegistry.addBlock(b, FormedBlockEntity.STATE_ACCESS_FUNC, FormedBlockItem.FORMED_BLOCK_ITEM_MODEL_FUNCTION));
 
 		final Item BLOCK_PLACEMENT_TOOL = Ability.item("bpt", new BlockPlacementTool(Ability.itemSettings().stacksTo(1)));

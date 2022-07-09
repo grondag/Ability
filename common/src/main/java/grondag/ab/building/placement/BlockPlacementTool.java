@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package grondag.ab.building;
+package grondag.ab.building.placement;
 
 import java.util.function.BiFunction;
 
@@ -45,6 +45,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.shapes.CollisionContext;
 
+import grondag.ab.building.block.base.BlockModelStateProvider;
+import grondag.ab.building.block.base.FormedBlockEntity;
+import grondag.ab.building.block.init.FormedBlocks;
 import grondag.ab.building.gui.PaintScreen;
 import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.api.modelstate.MutableModelState;
@@ -118,7 +121,7 @@ public class BlockPlacementTool extends Item {
 	}
 
 	protected Block getBlock() {
-		return Building.DEFAULT_ABILITY_BLOCK;
+		return FormedBlocks.DEFAULT_ABILITY_BLOCK;
 	}
 
 
@@ -164,7 +167,7 @@ public class BlockPlacementTool extends Item {
 		if (tag == null) {
 			tag = new CompoundTag();
 			tag.put(FormedBlockEntity.TAG_MODEL_STATE, modelState.toTag());
-			BlockItem.setBlockEntityData(stack, Building.formedBlockEntityType, tag);
+			BlockItem.setBlockEntityData(stack, FormedBlocks.formedBlockEntityType, tag);
 		} else {
 			tag.put(FormedBlockEntity.TAG_MODEL_STATE, modelState.toTag());
 		}
