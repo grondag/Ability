@@ -58,9 +58,7 @@ public class Building {
 
 	private static void createBlockFamily(BuildingMaterial material) {
 		final ObjectArrayList<Block> familyBlocks = new ObjectArrayList<>();
-
-		familyBlocks.add(createBlock(material, FormedBlockShape.CUBE));
-
+		FormedBlockShape.forEach(shape -> familyBlocks.add(createBlock(material, shape)));
 		BLOCKS.add(familyBlocks);
 	}
 
@@ -76,7 +74,7 @@ public class Building {
 	private static final ObjectArrayList<ObjectArrayList<Block>> BLOCKS = new ObjectArrayList<>();
 
 	public static void initialize() {
-		createBlockFamily(BuildingMaterial.DURACRETE);
+		BuildingMaterial.ALL.forEach(Building::createBlockFamily);
 
 		DEFAULT_ABILITY_BLOCK = BLOCKS.get(0).get(0);
 
