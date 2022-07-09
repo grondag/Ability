@@ -63,7 +63,7 @@ public class Building {
 	}
 
 	private static Block createBlock(BuildingMaterial material, FormedBlockShape shape) {
-		final String name = material.code() + shape.code;
+		final String name = material.code() + "-" + shape.code;
 		final Block block = Ability.blockNoItem(name, shape.createBlock(material));
 		final BlockItem item = Ability.item(name, new FormedBlockItem(block, Ability.itemSettings()));
 		item.registerBlocks(BlockItem.BY_BLOCK, item);

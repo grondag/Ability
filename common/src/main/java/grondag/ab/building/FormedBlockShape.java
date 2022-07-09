@@ -30,6 +30,7 @@ import grondag.xm.api.connect.species.SpeciesProperty;
 import grondag.xm.api.modelstate.primitive.PrimitiveStateMutator;
 import grondag.xm.api.primitive.base.AbstractWedge;
 import grondag.xm.api.primitive.simple.Cube;
+import grondag.xm.api.primitive.simple.Stair;
 import grondag.xm.api.primitive.simple.Wedge;
 import grondag.xm.orientation.api.CubeRotation;
 
@@ -56,7 +57,7 @@ public abstract class FormedBlockShape {
 			.withUpdate(SpeciesProperty.SPECIES_MODIFIER)
 			.build();
 
-	public static final FormedBlockShape CUBE = new FormedBlockShape("cu") {
+	public static final FormedBlockShape CUBE = new FormedBlockShape("cube-u") {
 		@Override
 		public Block createBlock(BuildingMaterial material) {
 			final var defaultState = Cube.INSTANCE.newState().paintAll(material.paint()).releaseToImmutable();
@@ -64,7 +65,7 @@ public abstract class FormedBlockShape {
 		}
 	};
 
-	public static final FormedBlockShape WEDGE = new FormedBlockShape("wd") {
+	public static final FormedBlockShape WEDGE = new FormedBlockShape("wedge-s") {
 		@Override
 		public Block createBlock(BuildingMaterial material) {
 			final var defaultState = Wedge.INSTANCE.newState().orientationIndex(CubeRotation.DOWN_WEST.ordinal()).paintAll(material.paint()).releaseToImmutable();
@@ -72,7 +73,7 @@ public abstract class FormedBlockShape {
 		}
 	};
 
-	public static final FormedBlockShape INSIDE_WEDGE = new FormedBlockShape("wi") {
+	public static final FormedBlockShape INSIDE_WEDGE = new FormedBlockShape("wedge-i") {
 		@Override
 		public Block createBlock(BuildingMaterial material) {
 			// Default orientation renders better for items in GUI
@@ -83,11 +84,41 @@ public abstract class FormedBlockShape {
 		}
 	};
 
-	public static final FormedBlockShape OUTSIDE_WEDGE = new FormedBlockShape("wo") {
+	public static final FormedBlockShape OUTSIDE_WEDGE = new FormedBlockShape("wedge-o") {
 		@Override
 		public Block createBlock(BuildingMaterial material) {
 			// Default orientation renders better for items in GUI
 			final var defaultState = Wedge.INSTANCE.newState().orientationIndex(CubeRotation.DOWN_SOUTH.ordinal()).paintAll(material.paint());
+			AbstractWedge.setCorner(true, defaultState);
+			AbstractWedge.setInsideCorner(false, defaultState);
+			return new FormedStairLike(material.settings(), Building::formedBlockEntity, defaultState.releaseToImmutable(), FormedStairLike.MODELSTATE_FROM_BLOCKSTATE, FormedStairLike.Shape.OUTSIDE_CORNER);
+		}
+	};
+
+	public static final FormedBlockShape STAIR = new FormedBlockShape("stair-s") {
+		@Override
+		public Block createBlock(BuildingMaterial material) {
+			final var defaultState = Stair.INSTANCE.newState().orientationIndex(CubeRotation.DOWN_WEST.ordinal()).paintAll(material.paint()).releaseToImmutable();
+			return new FormedStairLike(material.settings(), Building::formedBlockEntity, defaultState, FormedStairLike.MODELSTATE_FROM_BLOCKSTATE, FormedStairLike.Shape.STRAIGHT);
+		}
+	};
+
+	public static final FormedBlockShape INSIDE_STAIR = new FormedBlockShape("stair-i") {
+		@Override
+		public Block createBlock(BuildingMaterial material) {
+			// Default orientation renders better for items in GUI
+			final var defaultState = Stair.INSTANCE.newState().orientationIndex(CubeRotation.DOWN_SOUTH.ordinal()).paintAll(material.paint());
+			AbstractWedge.setCorner(true, defaultState);
+			AbstractWedge.setInsideCorner(true, defaultState);
+			return new FormedStairLike(material.settings(), Building::formedBlockEntity, defaultState.releaseToImmutable(), FormedStairLike.MODELSTATE_FROM_BLOCKSTATE, FormedStairLike.Shape.INSIDE_CORNER);
+		}
+	};
+
+	public static final FormedBlockShape OUTSIDE_STAIR = new FormedBlockShape("stair-o") {
+		@Override
+		public Block createBlock(BuildingMaterial material) {
+			// Default orientation renders better for items in GUI
+			final var defaultState = Stair.INSTANCE.newState().orientationIndex(CubeRotation.DOWN_SOUTH.ordinal()).paintAll(material.paint());
 			AbstractWedge.setCorner(true, defaultState);
 			AbstractWedge.setInsideCorner(false, defaultState);
 			return new FormedStairLike(material.settings(), Building::formedBlockEntity, defaultState.releaseToImmutable(), FormedStairLike.MODELSTATE_FROM_BLOCKSTATE, FormedStairLike.Shape.OUTSIDE_CORNER);
