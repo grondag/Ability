@@ -21,43 +21,30 @@
 package grondag.ab.building;
 
 import dev.architectury.networking.NetworkManager;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 import grondag.ab.Ability;
 import grondag.ab.building.gui.UpdateStackPaintC2S;
-import grondag.ab.ux.client.color.BlockColors;
 import grondag.xm.api.block.XmBlockRegistry;
-import grondag.xm.api.connect.species.SpeciesProperty;
 import grondag.xm.api.item.XmItemRegistry;
-import grondag.xm.api.modelstate.primitive.PrimitiveState;
-import grondag.xm.api.modelstate.primitive.PrimitiveStateMutator;
-import grondag.xm.api.paint.XmPaint;
-import grondag.xm.api.primitive.simple.Cube;
 import grondag.xm.api.texture.XmTextures;
 import grondag.xm.api.texture.core.CoreTextures;
 import grondag.xm.api.texture.tech.TechTextures;
 import grondag.xm.api.texture.unstable.UnstableTextures;
 
 public class Building {
-	public static final XmPaint DEFAULT_PAINT = XmPaint.finder().texture(0, XmTextures.TILE_NOISE_LIGHT).textureColor(0, BlockColors.DEFAULT_WHITE_RGB).find();
+	public static BlockEntityType<FormedBlockEntity> formedBlockEntityType;
+	public static Block DEFAULT_ABILITY_BLOCK;
 
-	public static final PrimitiveState CUBE_DEFAULT_STATE = Cube.INSTANCE.newState().paintAll(DEFAULT_PAINT).releaseToImmutable();
-	public static final FormedBlock DURACRETE_CUBE = Ability.blockNoItem("dcc", new FormedSpeciesBlock(FormedBlockSettings.duraCrete(), Building::cubeBe, CUBE_DEFAULT_STATE));
-	public static final BlockEntityType<FormedBlockEntity> CUBE_BLOCK_ENTITY_TYPE = Ability.blockEntityType("dcc", Building::cubeBe, DURACRETE_CUBE);
-
-	public static final PrimitiveStateMutator CUBE_STATE_FUNC = PrimitiveStateMutator.builder()
-			.withJoin(SpeciesProperty.matchBlockAndSpecies())
-			.withUpdate(SpeciesProperty.SPECIES_MODIFIER)
-			.build();
-
-	public static final FormedBlockItem DURACRETE_CUBE_ITEM = Ability.item("dcc_item", new FormedBlockItem(DURACRETE_CUBE, Ability.itemSettings()));
-
-
-	private static FormedBlockEntity cubeBe(BlockPos pos, BlockState state) {
-		return new FormedBlockEntity(CUBE_BLOCK_ENTITY_TYPE, pos, state, CUBE_DEFAULT_STATE, CUBE_STATE_FUNC);
+	public static FormedBlockEntity formedBlockEntity(BlockPos pos, BlockState state) {
+		return new FormedBlockEntity(formedBlockEntityType, pos, state);
 	}
 
 	//	public static final PrimitiveState RC_DEFAULT_STATE = RoundedColumn.INSTANCE.newState().paintAll(DEFAULT_PAINT).releaseToImmutable();
@@ -69,12 +56,38 @@ public class Building {
 	//		return new HsBlockEntity(ROUND_COLUMN_BLOCK_ENTITY_TYPE, RC_DEFAULT_STATE, PrimitiveStateMutator.builder().build());
 	//	}
 
-	public static void initialize() {
-		NetworkManager.registerReceiver(NetworkManager.c2s(), UpdateStackPaintC2S.IDENTIFIER, UpdateStackPaintC2S::accept);
+	private static void createBlockFamily(BuildingMaterial material) {
+		final ObjectArrayList<Block> familyBlocks = new ObjectArrayList<>();
 
-		XmBlockRegistry.addBlock(DURACRETE_CUBE, FormedBlockEntity.STATE_ACCESS_FUNC);
-		XmItemRegistry.addItem(DURACRETE_CUBE_ITEM, FormedBlockItem.FORMED_BLOCK_ITEM_MODEL_FUNCTION);
-		//		XmBlockRegistry.addBlock(DURACRETE_ROUND_COLUMN, HsBlockEntity.STATE_ACCESS_FUNC, HsBlockItem.HS_ITEM_MODEL_FUNCTION);
+		familyBlocks.add(createBlock(material, FormedBlockShape.CUBE));
+
+		BLOCKS.add(familyBlocks);
+	}
+
+	private static Block createBlock(BuildingMaterial material, FormedBlockShape shape) {
+		final String name = material.code() + shape.code;
+		final Block block = Ability.blockNoItem(name, shape.createBlock(material));
+		final BlockItem item = Ability.item(name, new FormedBlockItem(block, Ability.itemSettings()));
+		item.registerBlocks(BlockItem.BY_BLOCK, item);
+
+		return block;
+	}
+
+	private static final ObjectArrayList<ObjectArrayList<Block>> BLOCKS = new ObjectArrayList<>();
+
+	public static void initialize() {
+		createBlockFamily(BuildingMaterial.DURACRETE);
+
+		DEFAULT_ABILITY_BLOCK = BLOCKS.get(0).get(0);
+
+		final ObjectArrayList<Block> allBlocks = new ObjectArrayList<>();
+		BLOCKS.forEach(allBlocks::addAll);
+		formedBlockEntityType = Ability.blockEntityType("fbe", Building::formedBlockEntity, allBlocks.toArray(new FormedBlock[allBlocks.size()]));
+		allBlocks.forEach(b -> XmBlockRegistry.addBlock(b, FormedBlockEntity.STATE_ACCESS_FUNC, FormedBlockItem.FORMED_BLOCK_ITEM_MODEL_FUNCTION));
+
+		final Item BLOCK_PLACEMENT_TOOL = Ability.item("bpt", new BlockPlacementTool(Ability.itemSettings().stacksTo(1)));
+		NetworkManager.registerReceiver(NetworkManager.c2s(), UpdateStackPaintC2S.IDENTIFIER, UpdateStackPaintC2S::accept);
+		XmItemRegistry.addItem(BLOCK_PLACEMENT_TOOL, BlockPlacementTool.ITEM_MODEL_FUNCTION);
 
 		XmTextures.TILE_NOISE_STRONG.use();
 		XmTextures.TILE_NOISE_MODERATE.use();

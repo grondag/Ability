@@ -35,7 +35,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
 import grondag.ab.Ability;
-import grondag.ab.building.FormedBlockItem;
+import grondag.ab.building.BlockPlacementTool;
 import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.api.paint.PaintIndex;
 
@@ -65,8 +65,8 @@ public class UpdateStackPaintC2S {
 	protected static void acceptInner(Player player, ModelState modelState, boolean offHand) {
 		final ItemStack stack = offHand ? player.getOffhandItem() : player.getMainHandItem();
 
-		if (stack.getItem() instanceof FormedBlockItem) {
-			((FormedBlockItem) stack.getItem()).acceptClientModelStateUpdate(player, stack, modelState, offHand);
+		if (stack.getItem() instanceof BlockPlacementTool) {
+			((BlockPlacementTool) stack.getItem()).acceptClientModelStateUpdate(player, stack, modelState, offHand);
 		}
 	}
 

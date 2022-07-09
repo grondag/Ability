@@ -31,17 +31,19 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType.BlockEntitySupplier;
 import net.minecraft.world.level.block.state.BlockState;
 
-import grondag.ab.storage.block.StorageBlockEntity;
 import grondag.xm.api.modelstate.primitive.PrimitiveState;
+import grondag.xm.api.modelstate.primitive.PrimitiveStateMutator;
 
-public class FormedBlock extends Block implements EntityBlock {
+public class FormedBlock extends Block implements EntityBlock, BlockModelStateProvider {
 	protected final BlockEntitySupplier<? extends BlockEntity> beFactory;
 	protected final PrimitiveState defaultModelState;
+	protected final PrimitiveStateMutator stateFunc;
 
-	protected FormedBlock(Properties settings, BlockEntitySupplier<? extends BlockEntity> beFactory, PrimitiveState defaultModelState) {
+	protected FormedBlock(Properties settings, BlockEntitySupplier<? extends BlockEntity> beFactory, PrimitiveState defaultModelState, PrimitiveStateMutator stateFunc) {
 		super(settings);
 		this.beFactory = beFactory;
 		this.defaultModelState = defaultModelState.toImmutable();
+		this.stateFunc = stateFunc;
 	}
 
 	@Override
@@ -55,7 +57,7 @@ public class FormedBlock extends Block implements EntityBlock {
 		if (!playerEntity.isCreative() && !world.isClientSide) {
 			final BlockEntity blockEntity = world.getBlockEntity(blockPos);
 
-			if (blockEntity instanceof StorageBlockEntity) {
+			if (blockEntity instanceof FormedBlockEntity) {
 				final ItemStack itemStack = new ItemStack(this);
 				blockEntity.saveToItem(itemStack);
 				final ItemEntity itemEntity = new ItemEntity(world, blockPos.getX() + 0.5D, blockPos.getY() + 0.5D, blockPos.getZ() + 0.5D, itemStack);
@@ -65,5 +67,15 @@ public class FormedBlock extends Block implements EntityBlock {
 		}
 
 		super.playerWillDestroy(world, blockPos, blockState, playerEntity);
+	}
+
+	@Override
+	public PrimitiveState defaultModelState() {
+		return defaultModelState;
+	}
+
+	@Override
+	public PrimitiveStateMutator stateFunction() {
+		return stateFunc;
 	}
 }

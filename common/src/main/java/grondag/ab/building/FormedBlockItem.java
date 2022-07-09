@@ -24,64 +24,24 @@ import java.util.function.BiFunction;
 
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
-import grondag.ab.building.gui.PaintScreen;
 import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.api.modelstate.primitive.MutablePrimitiveState;
 import grondag.xm.api.paint.PaintIndex;
-import grondag.xm.modelstate.AbstractPrimitiveModelState;
 
 public class FormedBlockItem extends BlockItem {
-	public FormedBlockItem(FormedBlock block, Properties settings) {
+	public FormedBlockItem(Block block, Properties settings) {
 		super(block, settings);
-	}
-
-	@Override
-	public InteractionResult useOn(UseOnContext ctx) {
-		//		if(!ctx.getPlayer().isSneaking()) {
-		//			if(use(ctx.getWorld(), ctx.getPlayer(), ctx.getHand()).getResult().isAccepted()) {
-		//				return ActionResult.SUCCESS;
-		//			}
-		//		}
-
-		return super.useOn(ctx);
-	}
-
-	@Override
-	public InteractionResultHolder<ItemStack> use(Level world, Player playerEntity, InteractionHand hand) {
-		final ItemStack itemStack = playerEntity.getItemInHand(hand);
-
-		if (world.isClientSide) {
-			Minecraft.getInstance().setScreen(new PaintScreen(itemStack, hand));
-		}
-
-		return InteractionResultHolder.success(itemStack);
-	}
-
-	public void acceptClientModelStateUpdate(Player player, ItemStack itemStack, ModelState modelState, boolean offHand) {
-		final MutablePrimitiveState stackState = readModelState(itemStack, player.level);
-
-		if (!modelState.isStatic() && stackState.primitive()  == ((AbstractPrimitiveModelState<?, ?, ?>) modelState).primitive()) {
-			stackState.copyFrom(modelState);
-			writeModelState(itemStack, stackState);
-			player.setItemInHand(offHand ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND, itemStack);
-		}
-
-		stackState.release();
 	}
 
 	public MutablePrimitiveState readModelState(ItemStack stack, Level world) {
@@ -92,20 +52,7 @@ public class FormedBlockItem extends BlockItem {
 		if (tag != null && tag.contains(FormedBlockEntity.TAG_MODEL_STATE)) {
 			return (MutablePrimitiveState) ModelState.fromTag(tag.getCompound(FormedBlockEntity.TAG_MODEL_STATE), PaintIndex.forWorld(world));
 		} else {
-			return ((FormedBlock) getBlock()).defaultModelState.mutableCopy();
-		}
-	}
-
-	public void writeModelState(ItemStack stack, MutablePrimitiveState modelState) {
-		assert stack.getItem() == this;
-		var tag = BlockItem.getBlockEntityData(stack);
-
-		if (tag == null) {
-			tag = new CompoundTag();
-			tag.put(FormedBlockEntity.TAG_MODEL_STATE, modelState.toTag());
-			BlockItem.setBlockEntityData(stack, Building.CUBE_BLOCK_ENTITY_TYPE, tag);
-		} else {
-			tag.put(FormedBlockEntity.TAG_MODEL_STATE, modelState.toTag());
+			return ((BlockModelStateProvider) getBlock()).defaultModelState().mutableCopy();
 		}
 	}
 

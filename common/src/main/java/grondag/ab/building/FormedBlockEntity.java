@@ -32,111 +32,104 @@ import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.api.modelstate.primitive.MutablePrimitiveState;
 import grondag.xm.api.modelstate.primitive.PrimitiveState;
 import grondag.xm.api.modelstate.primitive.PrimitiveStateFunction;
-import grondag.xm.api.modelstate.primitive.PrimitiveStateMutator;
 import grondag.xm.api.paint.PaintIndex;
 
 public class FormedBlockEntity extends BlockEntity {
-	protected final PrimitiveState defaultModelState;
 	protected MutablePrimitiveState modelState;
-	protected final PrimitiveStateMutator stateFunction;
 	public static final String TAG_MODEL_STATE = ("abms");
 
-	public FormedBlockEntity(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState, PrimitiveState defaultModelState, PrimitiveStateMutator stateFunction) {
+	public FormedBlockEntity(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
 		super(blockEntityType, blockPos, blockState);
-		this.defaultModelState = defaultModelState;
-		this.stateFunction = stateFunction;
 	}
 
 	// PERF: cache world refresh
-		public MutablePrimitiveState getModelState(boolean refreshFromWorld) {
-			MutablePrimitiveState result = modelState;
+	public MutablePrimitiveState getModelState(boolean refreshFromWorld) {
+		final var block = (BlockModelStateProvider) this.getBlockState().getBlock();
 
-			if (result == null) {
-				result = defaultModelState.mutableCopy();
-				modelState = result;
-				refreshFromWorld = true;
-			}
+		MutablePrimitiveState result = modelState;
 
-			if (refreshFromWorld && !result.isStatic()) {
-				stateFunction.mutate(result, getBlockState(), level, worldPosition, null, refreshFromWorld);
-			}
-
-			return result.mutableCopy();
+		if (result == null) {
+			modelState = block.defaultModelState().mutableCopy();
+			result = modelState;
+			refreshFromWorld = true;
 		}
 
+		if (refreshFromWorld && !result.isStatic()) {
+			block.stateFunction().mutate(result, getBlockState(), level, worldPosition, null, refreshFromWorld);
+		}
 
-		public void setModelStateState(PrimitiveState newState) {
-			// PERF: can copy instead of release?
+		return result.mutableCopy();
+	}
+
+
+	public void setModelStateState(PrimitiveState newState) {
+		// PERF: can copy instead of release?
+		if (modelState != null) {
+			modelState.release();
+		}
+
+		modelState = newState.mutableCopy();
+
+		markForSave();
+	}
+
+	@Override
+	protected void saveAdditional(CompoundTag compoundTag) {
+		super.saveAdditional(compoundTag);
+
+		if (modelState != null) {
+			compoundTag.put(TAG_MODEL_STATE, modelState.toTag());
+		} else {
+			compoundTag.put(TAG_MODEL_STATE, ((BlockModelStateProvider) getBlockState().getBlock()).defaultModelState().toTag());
+		}
+	}
+
+	@Override
+	public void load(CompoundTag tag) {
+		super.load(tag);
+
+		if (tag.contains(TAG_MODEL_STATE)) {
+			final var newModelState = (MutablePrimitiveState) ModelState.fromTag(tag.getCompound(TAG_MODEL_STATE), PaintIndex.forWorld(level));
+
+			// PERF can copy instead of allocate?
 			if (modelState != null) {
+				// Skip check when is null because that is initial load and render refresh will happen anyway
+				if (level.isClientSide() && !modelState.equals(newModelState)) {
+					SafeBlockRenderUpdate.PROXY.updateBlockRender(worldPosition);
+				}
+
 				modelState.release();
 			}
 
-			modelState = newState.mutableCopy();
-
-			markForSave();
+			modelState = newModelState;
 		}
+	}
 
-	    @Override
-		protected void saveAdditional(CompoundTag compoundTag) {
-	    	super.saveAdditional(compoundTag);
+	protected void markForSave() {
+		if (level != null && worldPosition != null) {
+			level.blockEntityChanged(worldPosition);
+		}
+	}
 
-	    	if (modelState != null) {
-	    		compoundTag.put(TAG_MODEL_STATE, modelState.toTag());
-			} else {
-				compoundTag.put(TAG_MODEL_STATE, defaultModelState.toTag());
-			}
-	    }
+	@Override
+	public CompoundTag getUpdateTag() {
+		return saveWithoutMetadata();
+	}
 
-	    @Override
-		public void load(CompoundTag tag) {
-			super.load(tag);
+	@Override
+	public ClientboundBlockEntityDataPacket getUpdatePacket() {
+		return ClientboundBlockEntityDataPacket.create(this);
+	}
 
-			if (tag.contains(TAG_MODEL_STATE)) {
-				final var newModelState = (MutablePrimitiveState) ModelState.fromTag(tag.getCompound(TAG_MODEL_STATE), PaintIndex.forWorld(level));
+	public static final PrimitiveStateFunction STATE_ACCESS_FUNC = (state, world, pos, refresh) -> {
+		if (world != null && pos != null) {
+			final BlockEntity be = world.getBlockEntity(pos);
 
-				// PERF can copy instead of allocate?
-				if (modelState != null) {
-					// Skip check when is null because that is initial load and render refresh will happen anyway
-					if (level.isClientSide() && !modelState.equals(newModelState)) {
-						SafeBlockRenderUpdate.PROXY.updateBlockRender(worldPosition);
-					}
-
-					modelState.release();
-				}
-
-				modelState = newModelState;
+			if (be != null) {
+				return ((FormedBlockEntity) world.getBlockEntity(pos)).getModelState(refresh);
 			}
 		}
 
-		protected void markForSave() {
-			if (level != null && worldPosition != null) {
-				level.blockEntityChanged(worldPosition);
-			}
-		}
-
-		@Override
-		public CompoundTag getUpdateTag() {
-			return saveWithoutMetadata();
-		}
-
-		@Override
-		public ClientboundBlockEntityDataPacket getUpdatePacket() {
-			return ClientboundBlockEntityDataPacket.create(this);
-		}
-
-		public static final PrimitiveStateFunction STATE_ACCESS_FUNC = (state, world, pos, refresh) -> {
-			if (state.getBlock() instanceof FormedBlock) {
-				if (world != null && pos != null) {
-					final BlockEntity be = world.getBlockEntity(pos);
-
-					if (be != null) {
-						return ((FormedBlockEntity) world.getBlockEntity(pos)).getModelState(refresh);
-					}
-				}
-
-				return ((FormedBlock) state.getBlock()).defaultModelState.mutableCopy();
-			}
-
-			return null;
-		};
+		return ((BlockModelStateProvider) state.getBlock()).defaultModelState().mutableCopy();
+	};
 }

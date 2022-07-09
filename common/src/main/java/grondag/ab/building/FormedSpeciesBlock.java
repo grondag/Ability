@@ -32,12 +32,13 @@ import grondag.xm.api.connect.species.SpeciesFunction;
 import grondag.xm.api.connect.species.SpeciesMode;
 import grondag.xm.api.connect.species.SpeciesProperty;
 import grondag.xm.api.modelstate.primitive.PrimitiveState;
+import grondag.xm.api.modelstate.primitive.PrimitiveStateMutator;
 
 public class FormedSpeciesBlock extends FormedBlock {
 	private final SpeciesFunction speciesFunc = SpeciesProperty.speciesForBlock(this);
 
-	protected FormedSpeciesBlock(Properties settings, BlockEntitySupplier<FormedBlockEntity> beFactory, PrimitiveState defaultModelState) {
-		super(settings, beFactory, defaultModelState);
+	protected FormedSpeciesBlock(Properties settings, BlockEntitySupplier<FormedBlockEntity> beFactory, PrimitiveState defaultModelState, PrimitiveStateMutator stateFunc) {
+		super(settings, beFactory, defaultModelState, stateFunc);
 	}
 
 	@Override
