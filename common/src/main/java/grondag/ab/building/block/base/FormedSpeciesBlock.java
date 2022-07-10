@@ -50,7 +50,7 @@ public class FormedSpeciesBlock extends FormedBlock {
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		final var mode = Ability.forceKey.isPressed(context.getPlayer()) ? SpeciesMode.COUNTER_MOST : SpeciesMode.MATCH_MOST;
 		final int species = Species.speciesForPlacement(context, mode, speciesFunc);
-		return defaultBlockState().setValue(SpeciesProperty.SPECIES, species);
+		return super.getStateForPlacement(context).setValue(SpeciesProperty.SPECIES, species);
 	}
 
 	public static final PrimitiveStateMutator SIMPLE_SPECIES_MUTATOR = PrimitiveStateMutator.builder()

@@ -23,41 +23,42 @@ package grondag.ab.building.block.base;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.RotatedPillarBlock;
-import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
 
-import grondag.xm.api.connect.world.BlockConnectors;
+import grondag.ab.building.block.init.FormedBlockMaterial;
+import grondag.xm.api.block.XmProperties;
 import grondag.xm.api.modelstate.primitive.PrimitiveState;
 import grondag.xm.api.modelstate.primitive.PrimitiveStateMutator;
+import grondag.xm.api.primitive.SimplePrimitive;
 
-public class FormedNonCubicPillarBlock extends FormedNonCubicBlock {
-	public FormedNonCubicPillarBlock(Properties settings, PrimitiveState defaultModelState, PrimitiveStateMutator stateFunc) {
+public class FormedNonCubicFacingBlock extends FormedNonCubicBlock {
+	public FormedNonCubicFacingBlock(Properties settings, PrimitiveState defaultModelState, PrimitiveStateMutator stateFunc, Direction defaultFace) {
 		super(settings, defaultModelState, stateFunc);
-		registerDefaultState(defaultBlockState().setValue(RotatedPillarBlock.AXIS, Direction.Axis.Y));
-	}
-
-	@Deprecated
-	@Override
-	public BlockState rotate(BlockState blockState, Rotation rotation) {
-		return RotatedPillarBlock.rotatePillar(blockState, rotation);
+		registerDefaultState(defaultBlockState().setValue(DirectionalBlock.FACING, defaultFace));
 	}
 
 	@Override
-	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
 		super.createBlockStateDefinition(builder);
-		builder.add(RotatedPillarBlock.AXIS);
+		builder.add(DirectionalBlock.FACING);
 	}
 
 	@Override
-	public BlockState getStateForPlacement(BlockPlaceContext blockPlaceContext) {
-		return super.getStateForPlacement(blockPlaceContext)
-				.setValue(RotatedPillarBlock.AXIS, blockPlaceContext.getClickedFace().getAxis());
+	public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+		return super.getStateForPlacement(ctx).setValue(DirectionalBlock.FACING, ctx.getClickedFace().getOpposite());
 	}
 
-	public static final PrimitiveStateMutator AXIS_JOIN_COLUMN_MUTATOR = PrimitiveStateMutator.builder()
-			.withJoin(BlockConnectors.AXIS_JOIN_SAME_OR_CONNECTABLE)
-			.withUpdate(PrimitiveState.AXIS_FROM_BLOCKSTATE)
+	public static FormedNonCubicFacingBlock create(FormedBlockMaterial material, SimplePrimitive primitive, Direction defaultFace) {
+		final var defaultState = primitive.newState()
+				.paintAll(material.paint())
+				.orientationIndex(defaultFace.ordinal());
+
+		final PrimitiveStateMutator stateFunc = PrimitiveStateMutator.builder()
+			.withUpdate(XmProperties.FACE_MODIFIER)
 			.build();
+
+		return new FormedNonCubicFacingBlock(material.settings(), defaultState.releaseToImmutable(), stateFunc, defaultFace);
+	}
 }

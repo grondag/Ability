@@ -32,12 +32,46 @@ import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.texture.XmTextures;
 import grondag.xm.api.texture.core.CoreTextures;
 import grondag.xm.api.texture.unstable.UnstableTextures;
+import grondag.xm.api.util.ColorUtil;
 
 public record FormedBlockMaterial (
 		String code, SoundType sound, boolean hyper, boolean needsTool, boolean clear, float hardness, float resistance,
 		Material material,
 		XmPaint paint
 ) {
+	public Block.Properties settings() {
+		final var result = Block.Properties.of(material())
+				.sound(sound)
+				.strength(hardness, resistance);
+
+		if (needsTool) {
+			result.requiresCorrectToolForDrops();
+		}
+
+		if (clear) {
+			result.noOcclusion();
+		}
+
+		if (this == VIRTUAL) {
+			result.noCollission();
+		}
+
+		if (hyper) {
+			result.isValidSpawn((s, w, p, t) -> false);
+			result.friction(HYPER_SLIP);
+		}
+
+		return result;
+	}
+
+	public XmPaint paintInner() {
+		return XmPaint.finder().copy(paint).textureColor(0, ColorUtil.multiplyRGB(paint.textureColor(0), 0.85f)).find();
+	}
+
+	public XmPaint paintCut() {
+		return XmPaint.finder().copy(paint).textureColor(0, ColorUtil.multiplyRGB(paint.textureColor(0), 0.92f)).find();
+	}
+
 	public static final FormedBlockMaterial VIRTUAL = new FormedBlockMaterial(
 		"virtual", SoundType.SNOW, false, false, false, 0.0f, 0.0f,
 		new Material.Builder(MaterialColor.NONE).replaceable().noCollider().nonSolid().build(),
@@ -95,29 +129,4 @@ public record FormedBlockMaterial (
 	private static final float HYPER_SLIP = 0.989F;
 
 	public static final ImmutableList<FormedBlockMaterial> ALL = ImmutableList.of(DURAFOAM, DURAGLASS, DURACRETE, DURAWOOD, DURASTEEL);
-
-	public Block.Properties settings() {
-		final var result = Block.Properties.of(material())
-				.sound(sound)
-				.strength(hardness, resistance);
-
-		if (needsTool) {
-			result.requiresCorrectToolForDrops();
-		}
-
-		if (clear) {
-			result.noOcclusion();
-		}
-
-		if (this == VIRTUAL) {
-			result.noCollission();
-		}
-
-		if (hyper) {
-			result.isValidSpawn((s, w, p, t) -> false);
-			result.friction(HYPER_SLIP);
-		}
-
-		return result;
-	}
 }

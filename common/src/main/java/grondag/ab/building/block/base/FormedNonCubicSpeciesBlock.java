@@ -20,44 +20,36 @@
 
 package grondag.ab.building.block.base;
 
-import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.RotatedPillarBlock;
-import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
 
-import grondag.xm.api.connect.world.BlockConnectors;
+import grondag.ab.Ability;
+import grondag.xm.api.connect.species.Species;
+import grondag.xm.api.connect.species.SpeciesFunction;
+import grondag.xm.api.connect.species.SpeciesMode;
+import grondag.xm.api.connect.species.SpeciesProperty;
 import grondag.xm.api.modelstate.primitive.PrimitiveState;
 import grondag.xm.api.modelstate.primitive.PrimitiveStateMutator;
 
-public class FormedNonCubicPillarBlock extends FormedNonCubicBlock {
-	public FormedNonCubicPillarBlock(Properties settings, PrimitiveState defaultModelState, PrimitiveStateMutator stateFunc) {
+public class FormedNonCubicSpeciesBlock extends FormedNonCubicBlock {
+	protected final SpeciesFunction speciesFunc = SpeciesProperty.speciesForBlock(this);
+
+	public FormedNonCubicSpeciesBlock(Properties settings, PrimitiveState defaultModelState, PrimitiveStateMutator stateFunc) {
 		super(settings, defaultModelState, stateFunc);
-		registerDefaultState(defaultBlockState().setValue(RotatedPillarBlock.AXIS, Direction.Axis.Y));
-	}
-
-	@Deprecated
-	@Override
-	public BlockState rotate(BlockState blockState, Rotation rotation) {
-		return RotatedPillarBlock.rotatePillar(blockState, rotation);
 	}
 
 	@Override
-	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
 		super.createBlockStateDefinition(builder);
-		builder.add(RotatedPillarBlock.AXIS);
+		builder.add(SpeciesProperty.SPECIES);
 	}
 
 	@Override
-	public BlockState getStateForPlacement(BlockPlaceContext blockPlaceContext) {
-		return super.getStateForPlacement(blockPlaceContext)
-				.setValue(RotatedPillarBlock.AXIS, blockPlaceContext.getClickedFace().getAxis());
+	public BlockState getStateForPlacement(BlockPlaceContext context) {
+		final var mode = Ability.forceKey.isPressed(context.getPlayer()) ? SpeciesMode.COUNTER_MOST : SpeciesMode.MATCH_MOST;
+		final int species = Species.speciesForPlacement(context, mode, speciesFunc);
+		return super.getStateForPlacement(context).setValue(SpeciesProperty.SPECIES, species);
 	}
-
-	public static final PrimitiveStateMutator AXIS_JOIN_COLUMN_MUTATOR = PrimitiveStateMutator.builder()
-			.withJoin(BlockConnectors.AXIS_JOIN_SAME_OR_CONNECTABLE)
-			.withUpdate(PrimitiveState.AXIS_FROM_BLOCKSTATE)
-			.build();
 }

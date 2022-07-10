@@ -44,7 +44,7 @@ import grondag.xm.api.modelstate.primitive.PrimitiveStateMutator;
 
 public class FormedNonCubicBlock extends FormedBlock {
 	public FormedNonCubicBlock(Properties settings, PrimitiveState defaultModelState, PrimitiveStateMutator stateFunc) {
-		super(settings, defaultModelState, stateFunc);
+		super(settings.dynamicShape(), defaultModelState, stateFunc);
 		registerDefaultState(defaultBlockState().setValue(WATERLOGGED, false));
 	}
 

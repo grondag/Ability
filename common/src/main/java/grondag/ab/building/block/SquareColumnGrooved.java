@@ -21,6 +21,7 @@
 package grondag.ab.building.block;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RotatedPillarBlock;
@@ -36,12 +37,10 @@ import grondag.xm.api.connect.world.BlockTest;
 import grondag.xm.api.connect.world.FenceHelper;
 import grondag.xm.api.modelstate.primitive.PrimitiveState;
 import grondag.xm.api.modelstate.primitive.PrimitiveStateMutator;
-import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.primitive.simple.SquareColumn;
-import grondag.xm.api.util.ColorUtil;
 
-public class SquareInsetColumn extends FormedNonCubicPillarBlock {
-	public SquareInsetColumn(Properties settings, PrimitiveState defaultModelState, PrimitiveStateMutator stateFunc) {
+public class SquareColumnGrooved extends FormedNonCubicPillarBlock {
+	public SquareColumnGrooved(Properties settings, PrimitiveState defaultModelState, PrimitiveStateMutator stateFunc) {
 		super(settings, defaultModelState, stateFunc);
 	}
 
@@ -51,16 +50,13 @@ public class SquareInsetColumn extends FormedNonCubicPillarBlock {
 		return CollisionShapes.CUBE_WITH_CUTOUTS;
 	}
 
-	public static SquareInsetColumn create(FormedBlockMaterial material) {
-		final var mainPaint = material.paint();
-		final var paintInner = XmPaint.finder().copy(mainPaint).textureColor(0, ColorUtil.multiplyRGB(mainPaint.textureColor(0), 0.85f)).find();
-		final var paintCut = XmPaint.finder().copy(mainPaint).textureColor(0, ColorUtil.multiplyRGB(mainPaint.textureColor(0), 0.92f)).find();
-
+	public static SquareColumnGrooved create(FormedBlockMaterial material) {
 		final var defaultState = SquareColumn.INSTANCE.newState()
-				.paint(SquareColumn.SURFACE_END, mainPaint)
-				.paint(SquareColumn.SURFACE_SIDE, mainPaint)
-				.paint(SquareColumn.SURFACE_CUT, paintCut)
-				.paint(SquareColumn.SURFACE_INLAY, paintInner);
+				.paint(SquareColumn.SURFACE_END, material.paint())
+				.paint(SquareColumn.SURFACE_SIDE, material.paint())
+				.paint(SquareColumn.SURFACE_CUT, material.paintCut())
+				.paint(SquareColumn.SURFACE_INLAY, material.paintInner())
+				.orientationIndex(Axis.Y.ordinal());
 
 		SquareColumn.setCutCount(4, defaultState);
 		SquareColumn.setCutsOnEdge(true, defaultState);
@@ -80,7 +76,7 @@ public class SquareInsetColumn extends FormedNonCubicPillarBlock {
 			.withJoin(joinFunc)
 			.build();
 
-		final var result = new SquareInsetColumn(material.settings(), defaultState.releaseToImmutable(), stateFunc);
+		final var result = new SquareColumnGrooved(material.settings(), defaultState.releaseToImmutable(), stateFunc);
 
 		FenceHelper.add(result);
 
