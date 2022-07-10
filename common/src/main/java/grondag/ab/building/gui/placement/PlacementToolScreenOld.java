@@ -18,45 +18,37 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package grondag.ab.building.gui;
-
-import com.mojang.blaze3d.vertex.PoseStack;
+package grondag.ab.building.gui.placement;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 
-import grondag.ab.ux.client.AbstractSimpleScreen;
-import grondag.ab.ux.client.GuiUtil;
-import grondag.ab.ux.client.ScreenTheme;
+import grondag.ab.building.gui.ColorPicker;
+import grondag.ab.building.gui.LayerSelector;
+import grondag.ab.building.gui.TexturePicker;
 import grondag.ab.ux.client.color.BlockColors;
-import grondag.ab.ux.client.control.Button;
 import grondag.ab.ux.client.control.Slider;
 import grondag.ab.ux.client.control.Toggle;
+import grondag.xm.api.modelstate.primitive.MutablePrimitiveState;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.paint.XmPaintFinder;
 import grondag.xm.api.texture.TextureSet;
 import grondag.xm.api.texture.XmTextures;
-import grondag.xm.modelstate.AbstractPrimitiveModelState;
 
-public class PaintScreen extends AbstractSimpleScreen {
+public class PlacementToolScreenOld extends PlacementToolScreen {
 	private static final int PREVIEW_SIZE = 80;
 	private static final int TEXTURE_SIZE = 40;
 	private static final int MARGIN = 4;
 	private static final int SPACING = 8;
-	private static final int BUTTON_WIDTH = 60;
 	private static final int BUTTON_HEIGHT = 20;
 
 	protected ColorPicker colorPicker;
-	protected ModelPreview modelPreview;
 	protected TexturePicker texturePicker;
 	protected Toggle aoToggle;
 	protected Toggle diffuseToggle;
 	protected Toggle emissiveToggle;
 	protected Slider alphaSlider;
-
-	protected final ItemStack stack;
-	protected final InteractionHand hand;
 
 	private int selectedLayer =  0;
 
@@ -64,34 +56,14 @@ public class PaintScreen extends AbstractSimpleScreen {
 
 	protected final XmPaintFinder finder = XmPaint.finder();
 
-	public PaintScreen(ItemStack stack, InteractionHand hand) {
-		this.stack = stack;
-		this.hand = hand;
-	}
-
-	@Override
-	protected void computeScreenBounds() {
-		screenWidth = MARGIN + PREVIEW_SIZE + SPACING + (TEXTURE_SIZE + MARGIN) * 5 + MARGIN + ScreenTheme.current().tabMargin + ScreenTheme.current().tabWidth + MARGIN;
-		screenLeft = (width - screenWidth) / 2;
-		screenHeight = MARGIN + PREVIEW_SIZE + SPACING + (TEXTURE_SIZE + MARGIN) * 3 + MARGIN + BUTTON_HEIGHT + MARGIN;
-		screenTop = (height - screenHeight) / 2;
-	}
-
-	@Override
-	public void renderBackground(PoseStack matrices) {
-		super.renderBackground(matrices);
-		GuiUtil.drawRect(matrices.last().pose(), screenLeft, screenTop, screenLeft + screenWidth, screenTop + screenHeight, 0xFF202020);
+	public PlacementToolScreenOld(ItemStack stack, InteractionHand hand) {
+		super(stack, hand);
 	}
 
 	@Override
 	public void addControls() {
-		modelPreview = new ModelPreview(this);
-		modelPreview.setLeft(screenLeft + MARGIN);
-		modelPreview.setTop(screenTop + MARGIN);
-		modelPreview.setWidth(PREVIEW_SIZE);
-		modelPreview.setHeight(PREVIEW_SIZE);
-		modelPreview.setStack(stack);
-		addRenderableWidget(modelPreview);
+		addPreview();
+		addMainMenuButtons();
 
 		// NB: need to come before color picker in child list to get mouse events
 		aoToggle = new Toggle(this);
@@ -177,22 +149,12 @@ public class PaintScreen extends AbstractSimpleScreen {
 		layers[2] = layer2;
 		addRenderableWidget(layer2);
 
-		final int buttonX = screenLeft + screenWidth - MARGIN - BUTTON_WIDTH;
-		final int buttonY = screenTop + screenHeight - MARGIN - BUTTON_HEIGHT;
 
-		final Button done = new Button(this, buttonX, buttonY, BUTTON_WIDTH, BUTTON_HEIGHT, Component.translatable("gui.done")) {
-			@Override
-			public void onPress() {
-				UpdateStackPaintC2S.send(modelPreview.modelState(), hand);
-				PaintScreen.this.onClose();
-			}
-		};
-
-		this.addRenderableWidget(done);
+		addPrimaryFooter();
 
 		alphaSlider = new Slider(this, 256, Component.literal("Alpha"), 0.15f);
 		alphaSlider.setLeft(screenLeft + MARGIN);
-		alphaSlider.setTop(buttonY + MARGIN);
+		alphaSlider.setTop(layout.bottomMargin - layout.buttonHeight);
 		alphaSlider.setHeight(12);
 		alphaSlider.setWidth(256);
 		alphaSlider.onChanged(this::updateAlpha);
@@ -202,36 +164,37 @@ public class PaintScreen extends AbstractSimpleScreen {
 	}
 
 	private void updateColor(int rgb) {
-		final XmPaint paint = modelPreview.modelState().paint(0);
+		final MutablePrimitiveState modelState = toolState.modelState().mutableCopy();
+		final XmPaint paint = modelState.paint(0);
 		finder.clear();
 		finder.copy(paint);
 		finder.textureColor(selectedLayer, (paint.textureColor(selectedLayer) & 0xFF000000) | (rgb & 0xFFFFFF));
-		modelPreview.modelState().paint(0, finder.find());
-		modelPreview.setModelDirty();
-		readMaterial();
+		modelState.paint(0, finder.find());
+		updateModelState(modelState);
+		modelState.release();
 	}
 
 	private void updateTexture(TextureSet tex) {
-		final AbstractPrimitiveModelState<?, ?, ?> modelState = modelPreview.modelState();
+		final MutablePrimitiveState modelState = toolState.modelState().mutableCopy();
 		finder.clear();
 		finder.copy(modelState.paint(0));
 		finder.texture(selectedLayer, tex);
 		modelState.paint(0, finder.find());
-		modelPreview.setModelDirty();
-		readMaterial();
+		updateModelState(modelState);
+		modelState.release();
 	}
 
 	private void updateLayer(int index, LayerSelector.Action action) {
 		switch(action) {
 		case CLEAR: {
-			final AbstractPrimitiveModelState<?, ?, ?> modelState = modelPreview.modelState();
+			final MutablePrimitiveState modelState = toolState.modelState().mutableCopy();
 
 			if (index > 0 && index == modelState.paint(0).textureDepth() - 1) {
 				finder.clear();
 				finder.copy(modelState.paint(0));
 				finder.textureDepth(index);
 				modelState.paint(0, finder.find());
-				modelPreview.setModelDirty();
+				updateModelState(modelState);
 			}
 
 			if (index == selectedLayer) {
@@ -240,12 +203,13 @@ public class PaintScreen extends AbstractSimpleScreen {
 				layers[selectedLayer].setSelected(true);
 			}
 
-			readMaterial();
+			updateModelState(modelState);
+			modelState.release();
 			break;
 		}
 
 		case CREATE: {
-			final AbstractPrimitiveModelState<?, ?, ?> modelState = modelPreview.modelState();
+			final MutablePrimitiveState modelState = toolState.modelState().mutableCopy();
 
 			layers[selectedLayer].setSelected(false);
 			selectedLayer = index;
@@ -256,7 +220,7 @@ public class PaintScreen extends AbstractSimpleScreen {
 			finder.texture(index, XmTextures.TILE_NOISE_SUBTLE);
 			finder.textureColor(index, BlockColors.DEFAULT_WHITE_RGB);
 			modelState.paint(0, finder.find());
-			modelPreview.setModelDirty();
+			updateModelState(modelState);
 			readMaterial();
 			break;
 		}
@@ -271,10 +235,11 @@ public class PaintScreen extends AbstractSimpleScreen {
 		}
 	}
 
-	private void readMaterial() {
-		assert modelPreview.modelState() != null : "Invalid state in PaintScreen - missing model state";
+	@Override
+	protected void readMaterial() {
+		super.readMaterial();
 
-		final XmPaint paint = modelPreview.modelState().paint(0);
+		final XmPaint paint = toolState.modelState().paint(0);
 		final int depth = paint.textureDepth();
 
 		for (int i = 0; i < depth; ++i) {
@@ -305,46 +270,47 @@ public class PaintScreen extends AbstractSimpleScreen {
 	}
 
 	private void updateAo(boolean hasAo) {
-		final AbstractPrimitiveModelState<?, ?, ?> modelState = modelPreview.modelState();
+		final MutablePrimitiveState modelState = toolState.modelState().mutableCopy();
 
 		if (selectedLayer < modelState.paint(0).textureDepth()) {
 			finder.clear();
 			finder.copy(modelState.paint(0));
 			finder.disableAo(selectedLayer, !hasAo);
 			modelState.paint(0, finder.find());
-			modelPreview.setModelDirty();
-			readMaterial();
+			updateModelState(modelState);
 		}
+
+		modelState.release();
 	}
 
 	private void updateDiffuse(boolean hasDiffuse) {
-		final AbstractPrimitiveModelState<?, ?, ?> modelState = modelPreview.modelState();
+		final MutablePrimitiveState modelState = toolState.modelState().mutableCopy();
 
 		if (selectedLayer < modelState.paint(0).textureDepth()) {
 			finder.clear();
 			finder.copy(modelState.paint(0));
 			finder.disableDiffuse(selectedLayer, !hasDiffuse);
 			modelState.paint(0, finder.find());
-			modelPreview.setModelDirty();
-			readMaterial();
+			updateModelState(modelState);
 		}
+
+		modelState.release();
 	}
 
 	private void updateEmissive(boolean isEmissive) {
-		final AbstractPrimitiveModelState<?, ?, ?> modelState = modelPreview.modelState();
+		final MutablePrimitiveState modelState = toolState.modelState().mutableCopy();
 
 		if (selectedLayer < modelState.paint(0).textureDepth()) {
 			finder.clear();
 			finder.copy(modelState.paint(0));
 			finder.emissive(selectedLayer, isEmissive);
 			modelState.paint(0, finder.find());
-			modelPreview.setModelDirty();
-			readMaterial();
+			updateModelState(modelState);
 		}
 	}
 
 	private void updateAlpha(int alpha) {
-		final AbstractPrimitiveModelState<?, ?, ?> modelState = modelPreview.modelState();
+		final MutablePrimitiveState modelState = toolState.modelState().mutableCopy();
 
 		if (selectedLayer < modelState.paint(0).textureDepth()) {
 			finder.clear();
@@ -352,8 +318,9 @@ public class PaintScreen extends AbstractSimpleScreen {
 			final int oldColor = modelState.paint(0).textureColor(selectedLayer);
 			finder.textureColor(selectedLayer, ((alpha & 0xFF) << 24) | (oldColor & 0xFFFFFF));
 			modelState.paint(0, finder.find());
-			modelPreview.setModelDirty();
-			readMaterial();
+			updateModelState(modelState);
 		}
+
+		modelState.release();
 	}
 }

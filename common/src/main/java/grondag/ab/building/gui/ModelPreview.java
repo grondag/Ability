@@ -75,16 +75,6 @@ public class ModelPreview extends AbstractControl<ModelPreview> {
 		assert modelState != null;
 	}
 
-	public AbstractPrimitiveModelState<?, ?, ?> modelState() {
-		return modelState;
-	}
-
-	public void setModelDirty() {
-		if (modelState != null) {
-			modelState.clearRendering();
-		}
-	}
-
 	@Override
 	public void drawContent(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 		if (previewItem != null) {

@@ -25,7 +25,6 @@ import java.util.function.BiFunction;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
@@ -48,7 +47,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import grondag.ab.building.block.base.BlockModelStateProvider;
 import grondag.ab.building.block.base.FormedBlockEntity;
 import grondag.ab.building.block.init.FormedBlocks;
-import grondag.ab.building.gui.PaintScreen;
+import grondag.ab.varia.SafePlacementScreen;
 import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.api.modelstate.primitive.MutablePrimitiveState;
@@ -130,7 +129,7 @@ public class BlockPlacementTool extends Item {
 		final ItemStack itemStack = playerEntity.getItemInHand(hand);
 
 		if (world.isClientSide) {
-			Minecraft.getInstance().setScreen(new PaintScreen(itemStack, hand));
+			SafePlacementScreen.PROXY.dislay(itemStack, hand);
 		}
 
 		return InteractionResultHolder.success(itemStack);

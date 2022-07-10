@@ -36,6 +36,7 @@ import net.fabricmc.api.Environment;
 
 import grondag.ab.Ability;
 import grondag.ab.building.placement.BlockPlacementTool;
+import grondag.ab.building.placement.PlacementToolState;
 import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.api.paint.PaintIndex;
 
@@ -71,4 +72,13 @@ public class UpdateStackPaintC2S {
 	}
 
 	public static ResourceLocation IDENTIFIER = Ability.id("usp");
+
+	public static void send(PlacementToolState toolState) {
+		if (Minecraft.getInstance().getConnection() != null) {
+			final FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+			buf.writeBoolean(toolState.hand() == InteractionHand.OFF_HAND);
+			toolState.modelState().toBytes(buf);
+			NetworkManager.sendToServer(IDENTIFIER, buf);
+		}
+	}
 }
