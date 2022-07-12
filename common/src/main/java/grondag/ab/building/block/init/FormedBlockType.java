@@ -18,13 +18,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package grondag.ab.building.block.base;
+package grondag.ab.building.block.init;
 
+import net.minecraft.world.level.block.AirBlock;
+
+import grondag.ab.building.block.base.FormedBlockBase;
 import grondag.xm.api.modelstate.primitive.PrimitiveState;
-import grondag.xm.api.modelstate.primitive.PrimitiveStateMutator;
 
-public interface BlockModelStateProvider {
-	PrimitiveState defaultModelState();
+public class FormedBlockType {
+	public final FormedBlockMaterial material;
+	public final FormedBlockShape shape;
+	public final String name;
+	public final PrimitiveState defaultModelState;
 
-	PrimitiveStateMutator stateFunction();
+	public FormedBlockType (FormedBlockMaterial material, FormedBlockShape shape) {
+		this.material = material;
+		this.shape = shape;
+		name = material.code() + "-" + shape.code;
+		this.defaultModelState = shape.defaultModelStateFunc.apply(material);
+	}
+
+	public static FormedBlockType of(FormedBlockMaterial material, FormedBlockShape shape) {
+		return new FormedBlockType(material, shape);
+	}
+
+	public AirBlock.Properties settings() {
+		final var result = material.settings()
+				.lightLevel(b -> b.getOptionalValue(FormedBlockBase.LIGHT_LEVEL).orElse(0));
+
+		return shape.shapeType.setup.apply(result);
+	}
 }

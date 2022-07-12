@@ -44,18 +44,18 @@ public class FormedBlockEntity extends BlockEntity {
 
 	// PERF: cache world refresh
 	public MutablePrimitiveState getModelState(boolean refreshFromWorld) {
-		final var block = (BlockModelStateProvider) this.getBlockState().getBlock();
+		final var block = (FormedBlock) this.getBlockState().getBlock();
 
 		MutablePrimitiveState result = modelState;
 
 		if (result == null) {
-			modelState = block.defaultModelState().mutableCopy();
+			modelState = block.formedBlockType().defaultModelState.mutableCopy();
 			result = modelState;
 			refreshFromWorld = true;
 		}
 
 		if (refreshFromWorld && !result.isStatic()) {
-			block.stateFunction().mutate(result, getBlockState(), level, worldPosition, null, refreshFromWorld);
+			block.formedBlockType().shape.stateFunc.mutate(result, getBlockState(), level, worldPosition, null, refreshFromWorld);
 		}
 
 		return result.mutableCopy();
@@ -80,7 +80,7 @@ public class FormedBlockEntity extends BlockEntity {
 		if (modelState != null) {
 			compoundTag.put(TAG_MODEL_STATE, modelState.toTag());
 		} else {
-			compoundTag.put(TAG_MODEL_STATE, ((BlockModelStateProvider) getBlockState().getBlock()).defaultModelState().toTag());
+			compoundTag.put(TAG_MODEL_STATE, ((FormedBlock) getBlockState().getBlock()).formedBlockType().defaultModelState.toTag());
 		}
 	}
 
@@ -130,6 +130,6 @@ public class FormedBlockEntity extends BlockEntity {
 			}
 		}
 
-		return ((BlockModelStateProvider) state.getBlock()).defaultModelState().mutableCopy();
+		return ((FormedBlock) state.getBlock()).formedBlockType().defaultModelState.mutableCopy();
 	};
 }

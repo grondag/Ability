@@ -20,74 +20,36 @@
 
 package grondag.ab.building.block.init;
 
-import java.util.function.Consumer;
 import java.util.function.Function;
 
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-
-import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
 
-import grondag.ab.building.block.PanelFlat;
-import grondag.ab.building.block.PanelInset;
-import grondag.ab.building.block.RoundColumn;
-import grondag.ab.building.block.RoundColumnCut;
-import grondag.ab.building.block.RoundColumnRoundCap;
-import grondag.ab.building.block.RoundColumnSquareCap;
-import grondag.ab.building.block.SimpleCube;
-import grondag.ab.building.block.SquareColumnCapped;
-import grondag.ab.building.block.SquareColumnGrooved;
-import grondag.ab.building.block.StairLike;
-import grondag.ab.building.block.base.FormedNonCubicFacingBlock;
-import grondag.xm.api.primitive.simple.Slab;
-import grondag.xm.api.primitive.simple.Stair;
-import grondag.xm.api.primitive.simple.Wedge;
-import grondag.xm.api.primitive.simple.WedgeCap;
-import grondag.xm.orientation.api.CubeRotation;
+import grondag.xm.api.modelstate.primitive.PrimitiveState;
+import grondag.xm.api.modelstate.primitive.PrimitiveStateMutator;
 
 public class FormedBlockShape {
 	public final String code;
-	private final Function<FormedBlockMaterial, Block> factory;
+	public final Function<FormedBlockMaterial, PrimitiveState> defaultModelStateFunc;
+	public final PrimitiveStateMutator stateFunc;
+	private final Function<FormedBlockType, Block> factory;
+	public final ShapeType shapeType;
 
-	private FormedBlockShape (
+	public FormedBlockShape (
 			String code,
-			Function<FormedBlockMaterial, Block> factory
+			Function<FormedBlockMaterial, PrimitiveState> defaultModelStateFunc,
+			PrimitiveStateMutator stateFunc,
+			Function<FormedBlockType, Block> factory,
+			ShapeType shapeType
 	) {
 		this.code = code;
+		this.defaultModelStateFunc = defaultModelStateFunc;
+		this.stateFunc = stateFunc;
 		this.factory = factory;
-		ALL.add(this);
+		this.shapeType = shapeType;
 	}
 
-	public Block createBlock(FormedBlockMaterial material) {
-		return factory.apply(material);
+	public Block createBlock(FormedBlockType blockType) {
+		assert blockType.shape == this;
+		return factory.apply(blockType);
 	}
-
-	private static final ObjectArrayList<FormedBlockShape> ALL = new ObjectArrayList<>();
-
-	public static void forEach(Consumer<FormedBlockShape> consumer) {
-		ALL.forEach(consumer);
-	}
-
-	public static final FormedBlockShape CUBE = new FormedBlockShape("cube", SimpleCube::create);
-
-	public static final FormedBlockShape PANEL_INSET = new FormedBlockShape("pnl-ins", PanelInset::create);
-	public static final FormedBlockShape PANEL_FLAT = new FormedBlockShape("pnl-flt", PanelFlat::create);
-
-	public static final FormedBlockShape WEDGE = new FormedBlockShape("wedge", m -> StairLike.create(m, Wedge.INSTANCE, StairLike.Shape.STRAIGHT, CubeRotation.DOWN_WEST));
-	public static final FormedBlockShape WEDGE_INSIDE = new FormedBlockShape("wedge-i", m -> StairLike.create(m, Wedge.INSTANCE, StairLike.Shape.INSIDE_CORNER, CubeRotation.DOWN_SOUTH));
-	public static final FormedBlockShape WEDGE_OUTSIDE = new FormedBlockShape("wedge-o", m -> StairLike.create(m, Wedge.INSTANCE, StairLike.Shape.OUTSIDE_CORNER, CubeRotation.DOWN_SOUTH));
-	public static final FormedBlockShape WEDGE_CAP = new FormedBlockShape("wedge-c", m -> FormedNonCubicFacingBlock.create(m, WedgeCap.INSTANCE, Direction.DOWN));
-
-	public static final FormedBlockShape SLAB = new FormedBlockShape("slab", m -> FormedNonCubicFacingBlock.create(m, Slab.INSTANCE, Direction.DOWN));
-
-	public static final FormedBlockShape STAIR = new FormedBlockShape("stair", m -> StairLike.create(m, Stair.INSTANCE, StairLike.Shape.STRAIGHT, CubeRotation.DOWN_WEST));
-	public static final FormedBlockShape STAIR_INSIDE = new FormedBlockShape("stair-i", m -> StairLike.create(m, Stair.INSTANCE, StairLike.Shape.INSIDE_CORNER, CubeRotation.DOWN_SOUTH));
-	public static final FormedBlockShape STAIR_OUTSIDE = new FormedBlockShape("stair-o", m -> StairLike.create(m, Stair.INSTANCE, StairLike.Shape.OUTSIDE_CORNER, CubeRotation.DOWN_SOUTH));
-
-	public static final FormedBlockShape SQUARE_COLUMN_GROOVED = new FormedBlockShape("sqcol-gr", SquareColumnGrooved::create);
-	public static final FormedBlockShape SQUARE_COLUMN_CAPPED = new FormedBlockShape("sqcol-c", SquareColumnCapped::create);
-	public static final FormedBlockShape ROUND_COLUMN = new FormedBlockShape("rcol", m -> RoundColumn.create(m));
-	public static final FormedBlockShape ROUND_COLUMN_SQUARE_CAP = new FormedBlockShape("rcol-sqc", RoundColumnSquareCap::create);
-	public static final FormedBlockShape ROUND_COLUMN_ROUND_CAP = new FormedBlockShape("rcol-rc", RoundColumnRoundCap::create);
-	public static final FormedBlockShape ROUND_COLUMN_CUT = new FormedBlockShape("rcol-cut", RoundColumnCut::create);
 }

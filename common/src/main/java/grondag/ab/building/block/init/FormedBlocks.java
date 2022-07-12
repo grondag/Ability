@@ -31,7 +31,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 import grondag.ab.Ability;
-import grondag.ab.building.block.base.FormedBlock;
+import grondag.ab.building.block.base.FormedBlockBase;
 import grondag.ab.building.block.base.FormedBlockEntity;
 import grondag.ab.building.gui.UpdateStackPaintC2S;
 import grondag.ab.building.placement.BlockPlacementTool;
@@ -62,14 +62,13 @@ public class FormedBlocks {
 
 	private static void createBlockFamily(FormedBlockMaterial material) {
 		final ObjectArrayList<Block> familyBlocks = new ObjectArrayList<>();
-		FormedBlockShape.forEach(shape -> familyBlocks.add(createBlock(material, shape)));
+		FormedBlockShapes.forEach(shape -> familyBlocks.add(createBlock(FormedBlockType.of(material, shape))));
 		BLOCKS.add(familyBlocks);
 	}
 
-	private static Block createBlock(FormedBlockMaterial material, FormedBlockShape shape) {
-		final String name = material.code() + "-" + shape.code;
-		final Block block = Ability.blockNoItem(name, shape.createBlock(material));
-		final BlockItem item = Ability.item(name, new FormedBlockItem(block, Ability.itemSettings()));
+	private static Block createBlock(FormedBlockType blockType) {
+		final Block block = Ability.blockNoItem(blockType.name, blockType.shape.createBlock(blockType));
+		final BlockItem item = Ability.item(blockType.name, new FormedBlockItem(block, Ability.itemSettings()));
 		item.registerBlocks(BlockItem.BY_BLOCK, item);
 
 		return block;
@@ -84,7 +83,7 @@ public class FormedBlocks {
 
 		final ObjectArrayList<Block> allBlocks = new ObjectArrayList<>();
 		BLOCKS.forEach(allBlocks::addAll);
-		formedBlockEntityType = Ability.blockEntityType("fbe", FormedBlocks::formedBlockEntity, allBlocks.toArray(new FormedBlock[allBlocks.size()]));
+		formedBlockEntityType = Ability.blockEntityType("fbe", FormedBlocks::formedBlockEntity, allBlocks.toArray(new FormedBlockBase[allBlocks.size()]));
 		allBlocks.forEach(b -> XmBlockRegistry.addBlock(b, FormedBlockEntity.STATE_ACCESS_FUNC, FormedBlockItem.FORMED_BLOCK_ITEM_MODEL_FUNCTION));
 
 		final Item BLOCK_PLACEMENT_TOOL = Ability.item("bpt", new BlockPlacementTool(Ability.itemSettings().stacksTo(1)));

@@ -27,15 +27,16 @@ import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 
-import grondag.ab.building.block.init.FormedBlockMaterial;
+import grondag.ab.building.block.init.FormedBlockShape;
+import grondag.ab.building.block.init.FormedBlockType;
+import grondag.ab.building.block.init.ShapeType;
 import grondag.xm.api.block.XmProperties;
-import grondag.xm.api.modelstate.primitive.PrimitiveState;
 import grondag.xm.api.modelstate.primitive.PrimitiveStateMutator;
 import grondag.xm.api.primitive.SimplePrimitive;
 
 public class FormedNonCubicFacingBlock extends FormedNonCubicBlock {
-	public FormedNonCubicFacingBlock(Properties settings, PrimitiveState defaultModelState, PrimitiveStateMutator stateFunc, Direction defaultFace) {
-		super(settings, defaultModelState, stateFunc);
+	public FormedNonCubicFacingBlock(FormedBlockType blockType, Direction defaultFace) {
+		super(blockType);
 		registerDefaultState(defaultBlockState().setValue(DirectionalBlock.FACING, defaultFace));
 	}
 
@@ -50,15 +51,10 @@ public class FormedNonCubicFacingBlock extends FormedNonCubicBlock {
 		return super.getStateForPlacement(ctx).setValue(DirectionalBlock.FACING, ctx.getClickedFace().getOpposite());
 	}
 
-	public static FormedNonCubicFacingBlock create(FormedBlockMaterial material, SimplePrimitive primitive, Direction defaultFace) {
-		final var defaultState = primitive.newState()
-				.paintAll(material.paint())
-				.orientationIndex(defaultFace.ordinal());
-
-		final PrimitiveStateMutator stateFunc = PrimitiveStateMutator.builder()
-			.withUpdate(XmProperties.FACE_MODIFIER)
-			.build();
-
-		return new FormedNonCubicFacingBlock(material.settings(), defaultState.releaseToImmutable(), stateFunc, defaultFace);
+	public static FormedBlockShape createBlockShape(String name, SimplePrimitive primitive, Direction defaultFace) {
+		return new FormedBlockShape("name",
+			material -> primitive.newState().paintAll(material.paint()).orientationIndex(defaultFace.ordinal()),
+			PrimitiveStateMutator.builder().withUpdate(XmProperties.FACE_MODIFIER).build(),
+			bt -> new FormedNonCubicFacingBlock(bt, defaultFace), ShapeType.DYNAMIC_NON_CUBIC);
 	}
 }

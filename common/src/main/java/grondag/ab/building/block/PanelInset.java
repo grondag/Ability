@@ -27,39 +27,19 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import grondag.ab.building.block.base.FormedNonCubicSpeciesBlock;
-import grondag.ab.building.block.init.FormedBlockMaterial;
+import grondag.ab.building.block.init.FormedBlockType;
 import grondag.xm.api.collision.CollisionShapes;
-import grondag.xm.api.connect.world.BlockConnectors;
 import grondag.xm.api.connect.world.FenceHelper;
-import grondag.xm.api.modelstate.primitive.PrimitiveState;
-import grondag.xm.api.modelstate.primitive.PrimitiveStateMutator;
-import grondag.xm.api.primitive.simple.InsetPanel;
 
 public class PanelInset extends FormedNonCubicSpeciesBlock {
-	public PanelInset(Properties settings, PrimitiveState defaultModelState, PrimitiveStateMutator stateFunc) {
-		super(settings, defaultModelState, stateFunc);
+	public PanelInset(FormedBlockType blockType) {
+		super(blockType);
+		FenceHelper.add(this);
 	}
 
 	@Deprecated
 	@Override
 	public VoxelShape getShape(BlockState blockState, BlockGetter blockView, BlockPos pos, CollisionContext entityContext) {
 		return CollisionShapes.CUBE_WITH_CUTOUTS;
-	}
-
-	public static PanelInset create(FormedBlockMaterial material) {
-		final var defaultState = InsetPanel.INSTANCE.newState()
-				.paint(InsetPanel.SURFACE_OUTER, material.paint())
-				.paint(InsetPanel.SURFACE_CUT, material.paintCut())
-				.paint(InsetPanel.SURFACE_INNER, material.paintInner());
-
-		final PrimitiveStateMutator stateFunc = PrimitiveStateMutator.builder()
-			.withJoin(BlockConnectors.SAME_BLOCK_OR_CONNECTABLE)
-			.build();
-
-		final var result = new PanelInset(material.settings(), defaultState.releaseToImmutable(), stateFunc);
-
-		FenceHelper.add(result);
-
-		return result;
 	}
 }

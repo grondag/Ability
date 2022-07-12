@@ -26,18 +26,18 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 
 import grondag.ab.Ability;
+import grondag.ab.building.block.init.FormedBlockType;
 import grondag.xm.api.connect.species.Species;
 import grondag.xm.api.connect.species.SpeciesFunction;
 import grondag.xm.api.connect.species.SpeciesMode;
 import grondag.xm.api.connect.species.SpeciesProperty;
-import grondag.xm.api.modelstate.primitive.PrimitiveState;
 import grondag.xm.api.modelstate.primitive.PrimitiveStateMutator;
 
-public class FormedSpeciesBlock extends FormedBlock {
+public class FormedSpeciesBlock extends FormedBlockBase {
 	private final SpeciesFunction speciesFunc = SpeciesProperty.speciesForBlock(this);
 
-	public FormedSpeciesBlock(Properties settings, PrimitiveState defaultModelState, PrimitiveStateMutator stateFunc) {
-		super(settings, defaultModelState, stateFunc);
+	public FormedSpeciesBlock(FormedBlockType blockType) {
+		super(blockType);
 	}
 
 	@Override

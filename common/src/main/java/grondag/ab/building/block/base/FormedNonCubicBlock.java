@@ -37,14 +37,13 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+import grondag.ab.building.block.init.FormedBlockType;
 import grondag.xm.api.block.XmBlockState;
 import grondag.xm.api.collision.CollisionDispatcher;
-import grondag.xm.api.modelstate.primitive.PrimitiveState;
-import grondag.xm.api.modelstate.primitive.PrimitiveStateMutator;
 
-public class FormedNonCubicBlock extends FormedBlock {
-	public FormedNonCubicBlock(Properties settings, PrimitiveState defaultModelState, PrimitiveStateMutator stateFunc) {
-		super(settings.dynamicShape(), defaultModelState, stateFunc);
+public class FormedNonCubicBlock extends FormedBlockBase {
+	public FormedNonCubicBlock(FormedBlockType blockType) {
+		super(blockType);
 		registerDefaultState(defaultBlockState().setValue(WATERLOGGED, false));
 	}
 

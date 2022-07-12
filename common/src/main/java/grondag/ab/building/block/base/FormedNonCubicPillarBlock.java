@@ -28,13 +28,14 @@ import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 
+import grondag.ab.building.block.init.FormedBlockType;
 import grondag.xm.api.connect.world.BlockConnectors;
 import grondag.xm.api.modelstate.primitive.PrimitiveState;
 import grondag.xm.api.modelstate.primitive.PrimitiveStateMutator;
 
 public class FormedNonCubicPillarBlock extends FormedNonCubicBlock {
-	public FormedNonCubicPillarBlock(Properties settings, PrimitiveState defaultModelState, PrimitiveStateMutator stateFunc) {
-		super(settings, defaultModelState, stateFunc);
+	public FormedNonCubicPillarBlock(FormedBlockType blockType) {
+		super(blockType);
 		registerDefaultState(defaultBlockState().setValue(RotatedPillarBlock.AXIS, Direction.Axis.Y));
 	}
 

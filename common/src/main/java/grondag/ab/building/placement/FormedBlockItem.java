@@ -34,7 +34,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
-import grondag.ab.building.block.base.BlockModelStateProvider;
+import grondag.ab.building.block.base.FormedBlock;
 import grondag.ab.building.block.base.FormedBlockEntity;
 import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.api.modelstate.MutableModelState;
@@ -54,7 +54,7 @@ public class FormedBlockItem extends BlockItem {
 		if (tag != null && tag.contains(FormedBlockEntity.TAG_MODEL_STATE)) {
 			return (MutablePrimitiveState) ModelState.fromTag(tag.getCompound(FormedBlockEntity.TAG_MODEL_STATE), PaintIndex.forWorld(world));
 		} else {
-			return ((BlockModelStateProvider) getBlock()).defaultModelState().mutableCopy();
+			return ((FormedBlock) getBlock()).formedBlockType().defaultModelState.mutableCopy();
 		}
 	}
 

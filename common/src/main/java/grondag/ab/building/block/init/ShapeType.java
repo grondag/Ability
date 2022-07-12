@@ -18,21 +18,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package grondag.ab.building.block;
+package grondag.ab.building.block.init;
 
-import grondag.ab.building.block.base.FormedSpeciesBlock;
-import grondag.ab.building.block.init.FormedBlockMaterial;
-import grondag.xm.api.modelstate.primitive.PrimitiveState;
-import grondag.xm.api.modelstate.primitive.PrimitiveStateMutator;
-import grondag.xm.api.primitive.simple.Cube;
+import java.util.function.Function;
 
-public class SimpleCube extends FormedSpeciesBlock {
-	public SimpleCube(Properties settings, PrimitiveState defaultModelState, PrimitiveStateMutator stateFunc) {
-		super(settings, defaultModelState, stateFunc);
-	}
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
-	public static SimpleCube create(FormedBlockMaterial material) {
-		final var defaultState = Cube.INSTANCE.newState().paintAll(material.paint()).releaseToImmutable();
-		return new SimpleCube(material.settings(), defaultState, SIMPLE_SPECIES_MUTATOR);
+public enum ShapeType {
+	STATIC_CUBE(p -> p),
+	STATIC_CUBE_WITH_CUTOUTS(p -> p),
+	DYNAMIC_CUBE_WITH_CUTOUTS(p -> p.dynamicShape()),
+	STATIC_NON_CUBIC(p -> p),
+	DYNAMIC_NON_CUBIC(p -> p.dynamicShape());
+
+	public final Function<Properties, Properties> setup;
+
+	ShapeType(Function<Properties, Properties> setup) {
+		this.setup = setup;
 	}
 }

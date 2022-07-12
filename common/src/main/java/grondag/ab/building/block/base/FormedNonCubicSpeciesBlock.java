@@ -26,18 +26,17 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 
 import grondag.ab.Ability;
+import grondag.ab.building.block.init.FormedBlockType;
 import grondag.xm.api.connect.species.Species;
 import grondag.xm.api.connect.species.SpeciesFunction;
 import grondag.xm.api.connect.species.SpeciesMode;
 import grondag.xm.api.connect.species.SpeciesProperty;
-import grondag.xm.api.modelstate.primitive.PrimitiveState;
-import grondag.xm.api.modelstate.primitive.PrimitiveStateMutator;
 
 public class FormedNonCubicSpeciesBlock extends FormedNonCubicBlock {
 	protected final SpeciesFunction speciesFunc = SpeciesProperty.speciesForBlock(this);
 
-	public FormedNonCubicSpeciesBlock(Properties settings, PrimitiveState defaultModelState, PrimitiveStateMutator stateFunc) {
-		super(settings, defaultModelState, stateFunc);
+	public FormedNonCubicSpeciesBlock(FormedBlockType blockType) {
+		super(blockType);
 	}
 
 	@Override

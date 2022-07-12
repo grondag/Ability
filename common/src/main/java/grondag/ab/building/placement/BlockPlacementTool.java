@@ -44,7 +44,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.shapes.CollisionContext;
 
-import grondag.ab.building.block.base.BlockModelStateProvider;
+import grondag.ab.building.block.base.FormedBlock;
 import grondag.ab.building.block.base.FormedBlockEntity;
 import grondag.ab.building.block.init.FormedBlocks;
 import grondag.ab.varia.SafePlacementScreen;
@@ -155,7 +155,7 @@ public class BlockPlacementTool extends Item {
 		if (tag != null && tag.contains(FormedBlockEntity.TAG_MODEL_STATE)) {
 			return (MutablePrimitiveState) ModelState.fromTag(tag.getCompound(FormedBlockEntity.TAG_MODEL_STATE), PaintIndex.forWorld(world));
 		} else {
-			return ((BlockModelStateProvider) getBlock()).defaultModelState().mutableCopy();
+			return ((FormedBlock) getBlock()).formedBlockType().defaultModelState.mutableCopy();
 		}
 	}
 

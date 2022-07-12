@@ -23,25 +23,22 @@ package grondag.ab.building.block;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import grondag.ab.building.block.base.FormedNonCubicPillarBlock;
 import grondag.ab.building.block.init.FormedBlockMaterial;
+import grondag.ab.building.block.init.FormedBlockType;
 import grondag.xm.api.collision.CollisionShapes;
-import grondag.xm.api.connect.world.BlockConnectors;
-import grondag.xm.api.connect.world.BlockTest;
 import grondag.xm.api.connect.world.FenceHelper;
 import grondag.xm.api.modelstate.primitive.PrimitiveState;
-import grondag.xm.api.modelstate.primitive.PrimitiveStateMutator;
 import grondag.xm.api.primitive.simple.SquareColumn;
 
 public class SquareColumnGrooved extends FormedNonCubicPillarBlock {
-	public SquareColumnGrooved(Properties settings, PrimitiveState defaultModelState, PrimitiveStateMutator stateFunc) {
-		super(settings, defaultModelState, stateFunc);
+	public SquareColumnGrooved(FormedBlockType blockType) {
+		super(blockType);
+		FenceHelper.add(this);
 	}
 
 	@Deprecated
@@ -50,7 +47,7 @@ public class SquareColumnGrooved extends FormedNonCubicPillarBlock {
 		return CollisionShapes.CUBE_WITH_CUTOUTS;
 	}
 
-	public static SquareColumnGrooved create(FormedBlockMaterial material) {
+	public static PrimitiveState createDefaultModelState(FormedBlockMaterial material) {
 		final var defaultState = SquareColumn.INSTANCE.newState()
 				.paint(SquareColumn.SURFACE_END, material.paint())
 				.paint(SquareColumn.SURFACE_SIDE, material.paint())
@@ -61,25 +58,6 @@ public class SquareColumnGrooved extends FormedNonCubicPillarBlock {
 		SquareColumn.setCutCount(4, defaultState);
 		SquareColumn.setCutsOnEdge(true, defaultState);
 
-		final BlockTest<PrimitiveState> joinFunc = ctx -> {
-			final BlockState fromBlock = ctx.fromBlockState();
-			final BlockState toBlock = ctx.toBlockState();
-			final Block a = fromBlock.getBlock();
-			final Block b = toBlock.getBlock();
-			return (a == b || BlockConnectors.canConnect(a, b))
-				&& fromBlock.hasProperty(RotatedPillarBlock.AXIS)
-				&& fromBlock.getValue(RotatedPillarBlock.AXIS) == toBlock.getValue(RotatedPillarBlock.AXIS);
-		};
-
-		final PrimitiveStateMutator stateFunc = PrimitiveStateMutator.builder()
-			.withUpdate(PrimitiveState.AXIS_FROM_BLOCKSTATE)
-			.withJoin(joinFunc)
-			.build();
-
-		final var result = new SquareColumnGrooved(material.settings(), defaultState.releaseToImmutable(), stateFunc);
-
-		FenceHelper.add(result);
-
-		return result;
+		return defaultState.releaseToImmutable();
 	}
 }
