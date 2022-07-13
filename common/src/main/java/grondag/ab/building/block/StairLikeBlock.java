@@ -36,11 +36,10 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.phys.Vec3;
 
 import grondag.ab.Ability;
-import grondag.ab.building.block.base.FormedNonCubicBlock;
-import grondag.ab.building.block.init.FormedBlockMaterial;
-import grondag.ab.building.block.init.FormedBlockShape;
-import grondag.ab.building.block.init.FormedBlockType;
-import grondag.ab.building.block.init.ShapeType;
+import grondag.ab.building.block.base.FormedBlockMaterial;
+import grondag.ab.building.block.base.FormedBlockShape;
+import grondag.ab.building.block.base.FormedBlockType;
+import grondag.ab.building.block.base.ShapeType;
 import grondag.xm.api.block.XmProperties;
 import grondag.xm.api.modelstate.primitive.PrimitiveState;
 import grondag.xm.api.modelstate.primitive.SimplePrimitiveStateMutator;
@@ -52,7 +51,7 @@ import grondag.xm.orientation.api.DirectionHelper;
 import grondag.xm.orientation.api.FaceEdge;
 import grondag.xm.orientation.api.HorizontalEdge;
 
-public class StairLike extends FormedNonCubicBlock {
+public class StairLikeBlock extends BasicBlock {
 	public enum Shape {
 		STRAIGHT,
 		INSIDE_CORNER,
@@ -61,7 +60,7 @@ public class StairLike extends FormedNonCubicBlock {
 
 	public final Shape shape;
 
-	public StairLike(FormedBlockType blockType, Shape shape) {
+	public StairLikeBlock(FormedBlockType blockType, Shape shape) {
 		super(blockType);
 		this.shape = shape;
 	}
@@ -216,7 +215,7 @@ public class StairLike extends FormedNonCubicBlock {
 	public static SimplePrimitiveStateMutator MODELSTATE_FROM_BLOCKSTATE = (modelState, blockState) -> {
 		final Block rawBlock = blockState.getBlock();
 
-		if (!(rawBlock instanceof final StairLike block)) {
+		if (!(rawBlock instanceof final StairLikeBlock block)) {
 			return modelState;
 		}
 
@@ -226,17 +225,17 @@ public class StairLike extends FormedNonCubicBlock {
 		return modelState;
 	};
 
-	public static PrimitiveState createDefaultModelState(FormedBlockMaterial material, AbstractWedge primitive, StairLike.Shape shape, CubeRotation defaultRotation) {
+	public static PrimitiveState createDefaultModelState(FormedBlockMaterial material, AbstractWedge primitive, StairLikeBlock.Shape shape, CubeRotation defaultRotation) {
 		final var defaultState = primitive.newState().orientationIndex(defaultRotation.ordinal()).paintAll(material.paint());
 		AbstractWedge.setCorner(shape != Shape.STRAIGHT, defaultState);
 		AbstractWedge.setInsideCorner(shape == Shape.INSIDE_CORNER, defaultState);
 		return defaultState;
 	}
 
-	public static FormedBlockShape createBlockShape(String name, AbstractWedge primitive, StairLike.Shape shape, CubeRotation defaultRotation) {
-		return new FormedBlockShape("name",
-			material -> StairLike.createDefaultModelState(material, Wedge.INSTANCE, shape, defaultRotation),
-			StairLike.MODELSTATE_FROM_BLOCKSTATE,
-			bt -> new StairLike(bt, shape), ShapeType.DYNAMIC_NON_CUBIC);
+	public static FormedBlockShape createBlockShape(String name, AbstractWedge primitive, StairLikeBlock.Shape shape, CubeRotation defaultRotation) {
+		return new FormedBlockShape(name,
+			material -> StairLikeBlock.createDefaultModelState(material, Wedge.INSTANCE, shape, defaultRotation),
+			StairLikeBlock.MODELSTATE_FROM_BLOCKSTATE,
+			bt -> new StairLikeBlock(bt, shape), ShapeType.DYNAMIC_NON_CUBIC, false);
 	}
 }

@@ -18,11 +18,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package grondag.ab.building.block.init;
+package grondag.ab.building.block.base;
 
-import net.minecraft.world.level.block.AirBlock;
+import java.util.IdentityHashMap;
 
-import grondag.ab.building.block.base.FormedBlockBase;
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
+import grondag.ab.building.block.BasicBlock;
 import grondag.xm.api.modelstate.primitive.PrimitiveState;
 
 public class FormedBlockType {
@@ -36,16 +38,36 @@ public class FormedBlockType {
 		this.shape = shape;
 		name = material.code() + "-" + shape.code;
 		this.defaultModelState = shape.defaultModelStateFunc.apply(material);
+		addToMap(this);
+	}
+
+	public Properties createSettings() {
+		final var result = material.settings()
+				.lightLevel(b -> b.getOptionalValue(BasicBlock.LIGHT_LEVEL).orElse(0));
+
+		return shape.shapeType.setup.apply(result);
 	}
 
 	public static FormedBlockType of(FormedBlockMaterial material, FormedBlockShape shape) {
 		return new FormedBlockType(material, shape);
 	}
 
-	public AirBlock.Properties settings() {
-		final var result = material.settings()
-				.lightLevel(b -> b.getOptionalValue(FormedBlockBase.LIGHT_LEVEL).orElse(0));
+	private static IdentityHashMap<FormedBlockMaterial, IdentityHashMap<FormedBlockShape, FormedBlockType>> MAP = new IdentityHashMap<>();
 
-		return shape.shapeType.setup.apply(result);
+	private static void addToMap(FormedBlockType blockType) {
+		var innerMap = MAP.get(blockType.material);
+
+		if (innerMap == null ) {
+			innerMap = new IdentityHashMap<>();
+			MAP.put(blockType.material, innerMap);
+		}
+
+		innerMap.put(blockType.shape, blockType);
+	}
+
+	public static FormedBlockType get(FormedBlockMaterial material, FormedBlockShape shape) {
+		final var innerMap = MAP.get(material);
+
+		return innerMap == null ? null : innerMap.get(shape);
 	}
 }

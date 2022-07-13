@@ -18,43 +18,43 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package grondag.ab.building.block.base;
+package grondag.ab.building.block;
 
+import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 
-import grondag.ab.Ability;
-import grondag.ab.building.block.init.FormedBlockType;
-import grondag.xm.api.connect.species.Species;
-import grondag.xm.api.connect.species.SpeciesFunction;
-import grondag.xm.api.connect.species.SpeciesMode;
-import grondag.xm.api.connect.species.SpeciesProperty;
+import grondag.ab.building.block.base.FormedBlockShape;
+import grondag.ab.building.block.base.FormedBlockType;
+import grondag.ab.building.block.base.ShapeType;
+import grondag.xm.api.block.XmProperties;
 import grondag.xm.api.modelstate.primitive.PrimitiveStateMutator;
+import grondag.xm.api.primitive.SimplePrimitive;
 
-public class FormedSpeciesBlock extends FormedBlockBase {
-	private final SpeciesFunction speciesFunc = SpeciesProperty.speciesForBlock(this);
-
-	public FormedSpeciesBlock(FormedBlockType blockType) {
+public class FacingBlock extends BasicBlock {
+	public FacingBlock(FormedBlockType blockType, Direction defaultFace) {
 		super(blockType);
+		registerDefaultState(defaultBlockState().setValue(DirectionalBlock.FACING, defaultFace));
 	}
 
 	@Override
 	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
 		super.createBlockStateDefinition(builder);
-		builder.add(SpeciesProperty.SPECIES);
+		builder.add(DirectionalBlock.FACING);
 	}
 
 	@Override
-	public BlockState getStateForPlacement(BlockPlaceContext context) {
-		final var mode = Ability.forceKey.isPressed(context.getPlayer()) ? SpeciesMode.COUNTER_MOST : SpeciesMode.MATCH_MOST;
-		final int species = Species.speciesForPlacement(context, mode, speciesFunc);
-		return super.getStateForPlacement(context).setValue(SpeciesProperty.SPECIES, species);
+	public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+		return super.getStateForPlacement(ctx).setValue(DirectionalBlock.FACING, ctx.getClickedFace().getOpposite());
 	}
 
-	public static final PrimitiveStateMutator SIMPLE_SPECIES_MUTATOR = PrimitiveStateMutator.builder()
-			.withJoin(SpeciesProperty.matchBlockAndSpecies())
-			.withUpdate(SpeciesProperty.SPECIES_MODIFIER)
-			.build();
+	public static FormedBlockShape createBlockShape(String name, SimplePrimitive primitive, Direction defaultFace) {
+		return new FormedBlockShape(name,
+			material -> primitive.newState().paintAll(material.paint()).orientationIndex(defaultFace.ordinal()),
+			PrimitiveStateMutator.builder().withUpdate(XmProperties.FACE_MODIFIER).build(),
+			bt -> new FacingBlock(bt, defaultFace), ShapeType.DYNAMIC_NON_CUBIC, false);
+	}
 }

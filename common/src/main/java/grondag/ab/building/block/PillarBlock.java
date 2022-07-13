@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package grondag.ab.building.block.base;
+package grondag.ab.building.block;
 
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -28,13 +28,13 @@ import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 
-import grondag.ab.building.block.init.FormedBlockType;
+import grondag.ab.building.block.base.FormedBlockType;
 import grondag.xm.api.connect.world.BlockConnectors;
 import grondag.xm.api.modelstate.primitive.PrimitiveState;
 import grondag.xm.api.modelstate.primitive.PrimitiveStateMutator;
 
-public class FormedNonCubicPillarBlock extends FormedNonCubicBlock {
-	public FormedNonCubicPillarBlock(FormedBlockType blockType) {
+public class PillarBlock extends BasicBlock {
+	public PillarBlock(FormedBlockType blockType) {
 		super(blockType);
 		registerDefaultState(defaultBlockState().setValue(RotatedPillarBlock.AXIS, Direction.Axis.Y));
 	}

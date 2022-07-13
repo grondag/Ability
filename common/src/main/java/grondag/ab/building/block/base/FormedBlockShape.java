@@ -18,9 +18,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package grondag.ab.building.block.init;
+package grondag.ab.building.block.base;
 
+import java.util.function.Consumer;
 import java.util.function.Function;
+
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
 import net.minecraft.world.level.block.Block;
 
@@ -33,23 +36,33 @@ public class FormedBlockShape {
 	public final PrimitiveStateMutator stateFunc;
 	private final Function<FormedBlockType, Block> factory;
 	public final ShapeType shapeType;
+	public final boolean useSpecies;
 
 	public FormedBlockShape (
 			String code,
 			Function<FormedBlockMaterial, PrimitiveState> defaultModelStateFunc,
 			PrimitiveStateMutator stateFunc,
 			Function<FormedBlockType, Block> factory,
-			ShapeType shapeType
+			ShapeType shapeType,
+			boolean useSpecies
 	) {
 		this.code = code;
 		this.defaultModelStateFunc = defaultModelStateFunc;
 		this.stateFunc = stateFunc;
 		this.factory = factory;
 		this.shapeType = shapeType;
+		this.useSpecies = useSpecies;
+		ALL.add(this);
 	}
 
 	public Block createBlock(FormedBlockType blockType) {
 		assert blockType.shape == this;
 		return factory.apply(blockType);
+	}
+
+	private static final ObjectArrayList<FormedBlockShape> ALL = new ObjectArrayList<>();
+
+	public static void forEach(Consumer<FormedBlockShape> consumer) {
+		ALL.forEach(consumer);
 	}
 }

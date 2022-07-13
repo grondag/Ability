@@ -21,6 +21,7 @@
 package grondag.ab.building.block.init;
 
 import dev.architectury.networking.NetworkManager;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
 import net.minecraft.core.BlockPos;
@@ -31,8 +32,11 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 import grondag.ab.Ability;
-import grondag.ab.building.block.base.FormedBlockBase;
+import grondag.ab.building.block.BasicBlock;
 import grondag.ab.building.block.base.FormedBlockEntity;
+import grondag.ab.building.block.base.FormedBlockMaterial;
+import grondag.ab.building.block.base.FormedBlockShape;
+import grondag.ab.building.block.base.FormedBlockType;
 import grondag.ab.building.gui.UpdateStackPaintC2S;
 import grondag.ab.building.placement.BlockPlacementTool;
 import grondag.ab.building.placement.FormedBlockItem;
@@ -46,44 +50,44 @@ import grondag.xm.api.texture.unstable.UnstableTextures;
 public class FormedBlocks {
 	public static BlockEntityType<FormedBlockEntity> formedBlockEntityType;
 	public static Block DEFAULT_ABILITY_BLOCK;
+	private static final ObjectArrayList<ObjectArrayList<Block>> BLOCKS_BY_FAMILY = new ObjectArrayList<>();
+	private static final Object2ObjectOpenHashMap<FormedBlockType, Block> BLOCKS_BY_TYPE = new Object2ObjectOpenHashMap<>();
 
 	public static FormedBlockEntity formedBlockEntity(BlockPos pos, BlockState state) {
 		return new FormedBlockEntity(formedBlockEntityType, pos, state);
 	}
 
-	//	public static final PrimitiveState RC_DEFAULT_STATE = RoundedColumn.INSTANCE.newState().paintAll(DEFAULT_PAINT).releaseToImmutable();
-	//	public static final HsBlock DURACRETE_ROUND_COLUMN = REG.blockNoItem("dcrc", new HsBlock(HsBlockSettings.duraCrete(), HsBlocks::roundedColumnBe, RC_DEFAULT_STATE));
-	//	public static final BlockEntityType<HsBlockEntity> ROUND_COLUMN_BLOCK_ENTITY_TYPE = REG.blockEntityType("dcrc", HsBlocks::roundedColumnBe, DURACRETE_ROUND_COLUMN);
-	//	public static final HsBlockItem DURACRETE_ROUNDED_COLUMN_ITEM = REG.item("dcrc_item", new HsBlockItem(DURACRETE_ROUND_COLUMN, REG.itemSettings()));
-	//
-	//	private static HsBlockEntity roundedColumnBe() {
-	//		return new HsBlockEntity(ROUND_COLUMN_BLOCK_ENTITY_TYPE, RC_DEFAULT_STATE, PrimitiveStateMutator.builder().build());
-	//	}
-
 	private static void createBlockFamily(FormedBlockMaterial material) {
 		final ObjectArrayList<Block> familyBlocks = new ObjectArrayList<>();
-		FormedBlockShapes.forEach(shape -> familyBlocks.add(createBlock(FormedBlockType.of(material, shape))));
-		BLOCKS.add(familyBlocks);
+		FormedBlockShape.forEach(shape -> familyBlocks.add(createBlock(FormedBlockType.of(material, shape))));
+		BLOCKS_BY_FAMILY.add(familyBlocks);
 	}
 
 	private static Block createBlock(FormedBlockType blockType) {
 		final Block block = Ability.blockNoItem(blockType.name, blockType.shape.createBlock(blockType));
 		final BlockItem item = Ability.item(blockType.name, new FormedBlockItem(block, Ability.itemSettings()));
 		item.registerBlocks(BlockItem.BY_BLOCK, item);
-
+		BLOCKS_BY_TYPE.put(blockType, block);
 		return block;
 	}
 
-	private static final ObjectArrayList<ObjectArrayList<Block>> BLOCKS = new ObjectArrayList<>();
+	public static Block get(FormedBlockType blockType) {
+		return BLOCKS_BY_TYPE.get(blockType);
+	}
+
+	public static Block get(FormedBlockMaterial material, FormedBlockShape shape) {
+		return get(FormedBlockType.get(material, shape));
+	}
 
 	public static void initialize() {
-		FormedBlockMaterial.ALL.forEach(FormedBlocks::createBlockFamily);
+		FormedBlockShapes.initialize();
+		FormedBlockMaterials.ALL.forEach(FormedBlocks::createBlockFamily);
 
-		DEFAULT_ABILITY_BLOCK = BLOCKS.get(0).get(0);
+		DEFAULT_ABILITY_BLOCK = get(FormedBlockMaterials.DURACRETE, FormedBlockShapes.CUBE);
 
 		final ObjectArrayList<Block> allBlocks = new ObjectArrayList<>();
-		BLOCKS.forEach(allBlocks::addAll);
-		formedBlockEntityType = Ability.blockEntityType("fbe", FormedBlocks::formedBlockEntity, allBlocks.toArray(new FormedBlockBase[allBlocks.size()]));
+		BLOCKS_BY_FAMILY.forEach(allBlocks::addAll);
+		formedBlockEntityType = Ability.blockEntityType("fbe", FormedBlocks::formedBlockEntity, allBlocks.toArray(new BasicBlock[allBlocks.size()]));
 		allBlocks.forEach(b -> XmBlockRegistry.addBlock(b, FormedBlockEntity.STATE_ACCESS_FUNC, FormedBlockItem.FORMED_BLOCK_ITEM_MODEL_FUNCTION));
 
 		final Item BLOCK_PLACEMENT_TOOL = Ability.item("bpt", new BlockPlacementTool(Ability.itemSettings().stacksTo(1)));

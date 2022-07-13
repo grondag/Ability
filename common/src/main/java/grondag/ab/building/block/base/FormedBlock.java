@@ -20,8 +20,6 @@
 
 package grondag.ab.building.block.base;
 
-import grondag.ab.building.block.init.FormedBlockType;
-
 public interface FormedBlock {
 	FormedBlockType formedBlockType();
 }

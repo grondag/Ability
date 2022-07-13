@@ -18,28 +18,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package grondag.ab.building.block;
+package grondag.ab.building.block.base;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
+import java.util.function.Function;
 
-import grondag.ab.building.block.base.FormedNonCubicSpeciesBlock;
-import grondag.ab.building.block.init.FormedBlockType;
-import grondag.xm.api.collision.CollisionShapes;
-import grondag.xm.api.connect.world.FenceHelper;
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
-public class PanelInset extends FormedNonCubicSpeciesBlock {
-	public PanelInset(FormedBlockType blockType) {
-		super(blockType);
-		FenceHelper.add(this);
-	}
+public enum ShapeType {
+	CUBE(p -> p, true),
+	OCCLUDING_CUBE_WITH_CUTOUTS(p -> p, true),
+	DYNAMIC_CUBE_WITH_CUTOUTS(p -> p.dynamicShape(), false),
+	STATIC_NON_CUBIC(p -> p, false),
+	DYNAMIC_NON_CUBIC(p -> p.dynamicShape(), false);
 
-	@Deprecated
-	@Override
-	public VoxelShape getShape(BlockState blockState, BlockGetter blockView, BlockPos pos, CollisionContext entityContext) {
-		return CollisionShapes.CUBE_WITH_CUTOUTS;
+	public final Function<Properties, Properties> setup;
+	public final boolean isFullOccluder;
+
+	ShapeType(Function<Properties, Properties> setup, boolean isFullOccluder) {
+		this.setup = setup;
+		this.isFullOccluder = isFullOccluder;
 	}
 }
