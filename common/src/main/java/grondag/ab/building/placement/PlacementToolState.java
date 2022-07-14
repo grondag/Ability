@@ -24,32 +24,47 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
+import grondag.ab.building.block.base.FormedBlockType;
+import grondag.ab.building.block.init.FormedBlocks;
 import grondag.ab.building.gui.LayerSelector;
-import grondag.xm.api.item.XmItem;
 import grondag.xm.api.modelstate.primitive.PrimitiveState;
 
 public class PlacementToolState {
-	protected ItemStack stack;
-	protected InteractionHand hand;
+	private ItemStack stack;
+	private InteractionHand hand;
+	private FormedBlockType blockType;
+	private PrimitiveState modelState;
 
 	protected int selectedLayer =  0;
 
 	protected LayerSelector[] layers = new LayerSelector[3];
 
-	PrimitiveState modelState;
-
 	public void load(ItemStack stack, InteractionHand hand, Level level) {
+		assert stack.getItem() == FormedBlocks.BLOCK_PLACEMENT_TOOL;
 		this.stack = stack;
 		this.hand = hand;
-		this.modelState = XmItem.modelState(level, stack);
-	}
-
-	public void modelState(PrimitiveState modelState) {
-		this.modelState = modelState.toImmutable();
+		this.modelState = BlockPlacementTool.readModelState(stack, level);
+		this.blockType = BlockPlacementTool.getBlockType(stack);
 	}
 
 	public PrimitiveState modelState() {
 		return modelState;
+	}
+
+	public void modelState(PrimitiveState modelState) {
+		this.modelState = modelState.toImmutable();
+		BlockPlacementTool.writeModelState(stack, this.modelState);
+	}
+
+	public FormedBlockType blockType() {
+		return blockType;
+	}
+
+	public void blockType(FormedBlockType blockType) {
+		this.blockType = blockType;
+		BlockPlacementTool.setBlockType(stack, blockType);
+		this.modelState = blockType.defaultModelState;
+		BlockPlacementTool.writeModelState(stack, this.modelState);
 	}
 
 	public ItemStack displayStack() {
@@ -59,4 +74,5 @@ public class PlacementToolState {
 	public InteractionHand hand() {
 		return hand;
 	}
+
 }

@@ -20,6 +20,8 @@
 
 package grondag.ab.building.gui.placement;
 
+import io.netty.util.internal.ThreadLocalRandom;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
@@ -27,6 +29,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 
+import grondag.ab.building.block.base.FormedBlockType;
+import grondag.ab.building.block.init.FormedBlockMaterials;
 import grondag.ab.building.gui.ModelPreview;
 import grondag.ab.building.gui.UpdateStackPaintC2S;
 import grondag.ab.building.placement.PlacementToolState;
@@ -78,7 +82,9 @@ public class PlacementToolScreen extends AbstractSimpleScreen {
 		this.addRenderableWidget(new Button(this, layout.leftMargin, menuY, layout.previewSize, layout.buttonHeight, Component.translatable("gui.ab.material")) {
 			@Override
 			public void onPress() {
-
+				final var material = FormedBlockMaterials.ALL.get(ThreadLocalRandom.current().nextInt(FormedBlockMaterials.ALL.size()));
+				toolState.blockType(FormedBlockType.get(material, toolState.blockType().shape));
+				modelPreview.setStack(toolState.displayStack());
 			}
 		});
 

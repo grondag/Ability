@@ -35,6 +35,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
 import grondag.ab.Ability;
+import grondag.ab.building.block.base.FormedBlockType;
 import grondag.ab.building.placement.BlockPlacementTool;
 import grondag.ab.building.placement.PlacementToolState;
 import grondag.xm.api.modelstate.ModelState;
@@ -43,39 +44,34 @@ import grondag.xm.api.paint.PaintIndex;
 public class UpdateStackPaintC2S {
 	private UpdateStackPaintC2S() { }
 
-	@Environment(EnvType.CLIENT)
-	public static void send(ModelState state, InteractionHand hand) {
-		if (Minecraft.getInstance().getConnection() != null) {
-			final FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
-			buf.writeBoolean(hand == InteractionHand.OFF_HAND);
-			state.toBytes(buf);
-			NetworkManager.sendToServer(IDENTIFIER, buf);
-		}
-	}
-
 	public static void accept(FriendlyByteBuf buf, PacketContext context) {
 		final var player = context.getPlayer();
 
 		if (player != null) {
+			final int blockTypeIndex = buf.readInt();
 			final boolean offHand = buf.readBoolean();
 			final ModelState modelState = ModelState.fromBytes(buf, PaintIndex.forWorld(player.level));
-			context.queue(() -> acceptInner(player, modelState, offHand));
+			context.queue(() -> acceptInner(player, offHand, modelState, blockTypeIndex));
 		}
 	}
 
-	protected static void acceptInner(Player player, ModelState modelState, boolean offHand) {
+	protected static void acceptInner(Player player, boolean offHand, ModelState modelState, int blockTypeIndex) {
 		final ItemStack stack = offHand ? player.getOffhandItem() : player.getMainHandItem();
 
 		if (stack.getItem() instanceof BlockPlacementTool) {
-			((BlockPlacementTool) stack.getItem()).acceptClientModelStateUpdate(player, stack, modelState, offHand);
+			BlockPlacementTool.writeModelState(stack, modelState);
+			BlockPlacementTool.setBlockType(stack, FormedBlockType.get(blockTypeIndex));
+			player.setItemInHand(offHand ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND, stack);
 		}
 	}
 
 	public static ResourceLocation IDENTIFIER = Ability.id("usp");
 
+	@Environment(EnvType.CLIENT)
 	public static void send(PlacementToolState toolState) {
 		if (Minecraft.getInstance().getConnection() != null) {
 			final FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+			buf.writeInt(toolState.blockType().index);
 			buf.writeBoolean(toolState.hand() == InteractionHand.OFF_HAND);
 			toolState.modelState().toBytes(buf);
 			NetworkManager.sendToServer(IDENTIFIER, buf);

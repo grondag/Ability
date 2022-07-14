@@ -22,6 +22,9 @@ package grondag.ab.building.block.base;
 
 import java.util.IdentityHashMap;
 
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 import grondag.ab.building.block.BasicBlock;
@@ -31,6 +34,7 @@ public class FormedBlockType {
 	public final FormedBlockMaterial material;
 	public final FormedBlockShape shape;
 	public final String name;
+	public final int index;
 	public final PrimitiveState defaultModelState;
 
 	public FormedBlockType (FormedBlockMaterial material, FormedBlockShape shape) {
@@ -38,7 +42,9 @@ public class FormedBlockType {
 		this.shape = shape;
 		name = material.code() + "-" + shape.code;
 		this.defaultModelState = shape.defaultModelStateFunc.apply(material);
-		addToMap(this);
+		addToMaps(this);
+		this.index = LIST.size();
+		LIST.add(this);
 	}
 
 	public Properties createSettings() {
@@ -52,21 +58,33 @@ public class FormedBlockType {
 		return new FormedBlockType(material, shape);
 	}
 
-	private static IdentityHashMap<FormedBlockMaterial, IdentityHashMap<FormedBlockShape, FormedBlockType>> MAP = new IdentityHashMap<>();
+	private static ObjectArrayList<FormedBlockType> LIST = new ObjectArrayList<>();
+	private static IdentityHashMap<FormedBlockMaterial, IdentityHashMap<FormedBlockShape, FormedBlockType>> MATERIAL_SHAPE_MAP = new IdentityHashMap<>();
+	private static Object2ObjectOpenHashMap<String, FormedBlockType> NAME_MAP = new Object2ObjectOpenHashMap<>();
 
-	private static void addToMap(FormedBlockType blockType) {
-		var innerMap = MAP.get(blockType.material);
+	private static void addToMaps(FormedBlockType blockType) {
+		var innerMap = MATERIAL_SHAPE_MAP.get(blockType.material);
 
 		if (innerMap == null ) {
 			innerMap = new IdentityHashMap<>();
-			MAP.put(blockType.material, innerMap);
+			MATERIAL_SHAPE_MAP.put(blockType.material, innerMap);
 		}
 
 		innerMap.put(blockType.shape, blockType);
+
+		NAME_MAP.put(blockType.name, blockType);
+	}
+
+	public static FormedBlockType get(Integer index) {
+		return LIST.get(index);
+	}
+
+	public static FormedBlockType get(String name) {
+		return NAME_MAP.get(name);
 	}
 
 	public static FormedBlockType get(FormedBlockMaterial material, FormedBlockShape shape) {
-		final var innerMap = MAP.get(material);
+		final var innerMap = MATERIAL_SHAPE_MAP.get(material);
 
 		return innerMap == null ? null : innerMap.get(shape);
 	}

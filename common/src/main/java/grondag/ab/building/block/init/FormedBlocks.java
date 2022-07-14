@@ -26,7 +26,6 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -49,7 +48,10 @@ import grondag.xm.api.texture.unstable.UnstableTextures;
 
 public class FormedBlocks {
 	public static BlockEntityType<FormedBlockEntity> formedBlockEntityType;
+	public static FormedBlockType DEFAULT_ABILITY_BLOCK_TYPE;
 	public static Block DEFAULT_ABILITY_BLOCK;
+	public static BlockPlacementTool BLOCK_PLACEMENT_TOOL;
+
 	private static final ObjectArrayList<ObjectArrayList<Block>> BLOCKS_BY_FAMILY = new ObjectArrayList<>();
 	private static final Object2ObjectOpenHashMap<FormedBlockType, Block> BLOCKS_BY_TYPE = new Object2ObjectOpenHashMap<>();
 
@@ -83,14 +85,15 @@ public class FormedBlocks {
 		FormedBlockShapes.initialize();
 		FormedBlockMaterials.ALL.forEach(FormedBlocks::createBlockFamily);
 
-		DEFAULT_ABILITY_BLOCK = get(FormedBlockMaterials.DURACRETE, FormedBlockShapes.CUBE);
+		DEFAULT_ABILITY_BLOCK_TYPE = FormedBlockType.get(FormedBlockMaterials.DURACRETE, FormedBlockShapes.CUBE);
+		DEFAULT_ABILITY_BLOCK = get(DEFAULT_ABILITY_BLOCK_TYPE);
 
 		final ObjectArrayList<Block> allBlocks = new ObjectArrayList<>();
 		BLOCKS_BY_FAMILY.forEach(allBlocks::addAll);
 		formedBlockEntityType = Ability.blockEntityType("fbe", FormedBlocks::formedBlockEntity, allBlocks.toArray(new BasicBlock[allBlocks.size()]));
 		allBlocks.forEach(b -> XmBlockRegistry.addBlock(b, FormedBlockEntity.STATE_ACCESS_FUNC, FormedBlockItem.FORMED_BLOCK_ITEM_MODEL_FUNCTION));
 
-		final Item BLOCK_PLACEMENT_TOOL = Ability.item("bpt", new BlockPlacementTool(Ability.itemSettings().stacksTo(1)));
+		BLOCK_PLACEMENT_TOOL = Ability.item("bpt", new BlockPlacementTool(Ability.itemSettings().stacksTo(1)));
 		NetworkManager.registerReceiver(NetworkManager.c2s(), UpdateStackPaintC2S.IDENTIFIER, UpdateStackPaintC2S::accept);
 		XmItemRegistry.addItem(BLOCK_PLACEMENT_TOOL, BlockPlacementTool.ITEM_MODEL_FUNCTION);
 
