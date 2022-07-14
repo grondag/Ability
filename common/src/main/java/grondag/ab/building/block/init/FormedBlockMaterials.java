@@ -88,5 +88,5 @@ public class FormedBlockMaterials {
 		XmPaint.finder().texture(0, XmTextures.TILE_NOISE_SUBTLE).textureColor(0, BlockColors.DEFAULT_WHITE_RGB).find()
 	);
 
-	public static final ImmutableList<FormedBlockMaterial> ALL = ImmutableList.of(DURAFOAM, DURAGLASS, DURACRETE, DURAWOOD, DURASTEEL);
+	public static final ImmutableList<FormedBlockMaterial> CONVENTIONAL = ImmutableList.of(DURAFOAM, DURAGLASS, DURACRETE, DURAWOOD, DURASTEEL);
 }

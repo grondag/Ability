@@ -83,7 +83,7 @@ public class FormedBlocks {
 
 	public static void initialize() {
 		FormedBlockShapes.initialize();
-		FormedBlockMaterials.ALL.forEach(FormedBlocks::createBlockFamily);
+		FormedBlockMaterials.CONVENTIONAL.forEach(FormedBlocks::createBlockFamily);
 
 		DEFAULT_ABILITY_BLOCK_TYPE = FormedBlockType.get(FormedBlockMaterials.DURACRETE, FormedBlockShapes.CUBE);
 		DEFAULT_ABILITY_BLOCK = get(DEFAULT_ABILITY_BLOCK_TYPE);

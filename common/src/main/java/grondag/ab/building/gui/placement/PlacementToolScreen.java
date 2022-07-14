@@ -29,6 +29,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 
+import grondag.ab.building.block.base.FormedBlockShape;
 import grondag.ab.building.block.base.FormedBlockType;
 import grondag.ab.building.block.init.FormedBlockMaterials;
 import grondag.ab.building.gui.ModelPreview;
@@ -82,7 +83,7 @@ public class PlacementToolScreen extends AbstractSimpleScreen {
 		this.addRenderableWidget(new Button(this, layout.leftMargin, menuY, layout.previewSize, layout.buttonHeight, Component.translatable("gui.ab.material")) {
 			@Override
 			public void onPress() {
-				final var material = FormedBlockMaterials.ALL.get(ThreadLocalRandom.current().nextInt(FormedBlockMaterials.ALL.size()));
+				final var material = FormedBlockMaterials.CONVENTIONAL.get(ThreadLocalRandom.current().nextInt(FormedBlockMaterials.CONVENTIONAL.size()));
 				toolState.blockType(FormedBlockType.get(material, toolState.blockType().shape));
 				modelPreview.setStack(toolState.displayStack());
 			}
@@ -93,7 +94,9 @@ public class PlacementToolScreen extends AbstractSimpleScreen {
 		this.addRenderableWidget(new Button(this, layout.leftMargin, menuY, layout.previewSize, layout.buttonHeight, Component.translatable("gui.ab.shape")) {
 			@Override
 			public void onPress() {
-
+				final var shape = FormedBlockShape.get(ThreadLocalRandom.current().nextInt(FormedBlockShape.count()));
+				toolState.blockType(FormedBlockType.get(toolState.blockType().material, shape));
+				modelPreview.setStack(toolState.displayStack());
 			}
 		});
 

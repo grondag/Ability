@@ -62,6 +62,14 @@ public class FormedBlockShape {
 
 	private static final ObjectArrayList<FormedBlockShape> ALL = new ObjectArrayList<>();
 
+	public static int count() {
+		return ALL.size();
+	}
+
+	public static FormedBlockShape get(int index) {
+		return ALL.get(index);
+	}
+
 	public static void forEach(Consumer<FormedBlockShape> consumer) {
 		ALL.forEach(consumer);
 	}
