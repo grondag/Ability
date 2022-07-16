@@ -54,13 +54,13 @@ public class Panel extends AbstractParentControl<Panel> implements ContainerEven
 
 	public Panel addAll(AbstractControl<?>... controls) {
 		children.addAll(Arrays.asList(controls));
-		isDirty = true;
+		setCoordinatesDirty();
 		return this;
 	}
 
 	public Panel add(AbstractControl<?> control) {
 		children.add(control);
-		isDirty = true;
+		setCoordinatesDirty();
 		return this;
 	}
 
@@ -76,7 +76,9 @@ public class Panel extends AbstractParentControl<Panel> implements ContainerEven
 	}
 
 	@Override
-	protected void handleCoordinateUpdate() {
+	protected void computeCoordinates() {
+		super.computeCoordinates();
+
 		if (isLayoutDisabled || children == null || children.isEmpty()) {
 			return;
 		}
@@ -220,7 +222,7 @@ public class Panel extends AbstractParentControl<Panel> implements ContainerEven
 	/** Sets the pixelWidth of the background from the edge of child controls. */
 	public Panel setOuterMarginWidth(int outerMarginWidth) {
 		this.outerMarginWidth = outerMarginWidth;
-		isDirty = true;
+		setCoordinatesDirty();
 		return this;
 	}
 
@@ -232,7 +234,7 @@ public class Panel extends AbstractParentControl<Panel> implements ContainerEven
 	/** Sets the spacing between child controls. */
 	public Panel setInnerMarginWidth(int innerMarginWidth) {
 		this.innerMarginWidth = innerMarginWidth;
-		isDirty = true;
+		setCoordinatesDirty();
 		return this;
 	}
 

@@ -86,14 +86,14 @@ public abstract class TabBar<T> extends AbstractControl<TabBar<T>> {
 
 	public void setList(List<T> items) {
 		this.items = items;
-		isDirty = true;
+		setCoordinatesDirty();
 	}
 
 	/**
 	 * Use if the list is externally modified.
 	 */
 	public void setDirty() {
-		isDirty = true;
+		setCoordinatesDirty();
 	}
 
 	@Override
@@ -279,7 +279,9 @@ public abstract class TabBar<T> extends AbstractControl<TabBar<T>> {
 	}
 
 	@Override
-	protected void handleCoordinateUpdate() {
+	protected void computeCoordinates() {
+		super.computeCoordinates();
+
 		if (this.items != null) {
 			rowsPerTab = (int) ((height + itemSpacing) / itemRowHeightWithCaption);
 			scrollHeight = rowsPerTab * itemRowHeightWithCaption - itemSpacing - (theme.tabWidth + itemSpacing) * 2;
@@ -406,7 +408,7 @@ public abstract class TabBar<T> extends AbstractControl<TabBar<T>> {
 		}
 
 		items.add(item);
-		isDirty = true;
+		setCoordinatesDirty();
 	}
 
 	public void addAll(Collection<T> items) {
@@ -415,7 +417,7 @@ public abstract class TabBar<T> extends AbstractControl<TabBar<T>> {
 		}
 
 		items.addAll(items);
-		isDirty = true;
+		setCoordinatesDirty();
 	}
 
 	public void addAll(T[] itemsIn) {
@@ -427,7 +429,7 @@ public abstract class TabBar<T> extends AbstractControl<TabBar<T>> {
 			items.add(item);
 		}
 
-		isDirty = true;
+		setCoordinatesDirty();
 	}
 
 	public T get(int index) {
@@ -460,7 +462,7 @@ public abstract class TabBar<T> extends AbstractControl<TabBar<T>> {
 		}
 
 		items.clear();
-		isDirty = true;
+		setCoordinatesDirty();
 	}
 
 	public void setItemSize(int itemSize) {
@@ -480,7 +482,7 @@ public abstract class TabBar<T> extends AbstractControl<TabBar<T>> {
 
 	public void setItemsPerRow(int itemsPerRow) {
 		columnsPerRow = Math.max(1, itemsPerRow);
-		isDirty = true;
+		setCoordinatesDirty();
 	}
 
 	/**
@@ -495,7 +497,7 @@ public abstract class TabBar<T> extends AbstractControl<TabBar<T>> {
 			return 0;
 		}
 
-		refreshContentCoordinatesIfNeeded();
+		computeCoordinatesIfNeeded();
 		return itemsPerTab;
 	}
 
@@ -542,7 +544,7 @@ public abstract class TabBar<T> extends AbstractControl<TabBar<T>> {
 			return NO_SELECTION;
 		}
 
-		refreshContentCoordinatesIfNeeded();
+		computeCoordinatesIfNeeded();
 		return selectedTabIndex * itemsPerTab;
 	}
 
@@ -552,7 +554,7 @@ public abstract class TabBar<T> extends AbstractControl<TabBar<T>> {
 			return NO_SELECTION;
 		}
 
-		refreshContentCoordinatesIfNeeded();
+		computeCoordinatesIfNeeded();
 		return Math.min((selectedTabIndex + 1) * itemsPerTab, items.size());
 	}
 
@@ -566,7 +568,7 @@ public abstract class TabBar<T> extends AbstractControl<TabBar<T>> {
 			return NO_SELECTION;
 		}
 
-		refreshContentCoordinatesIfNeeded();
+		computeCoordinatesIfNeeded();
 		final int result = selectedItemIndex - getFirstDisplayedIndex();
 		return (result < 0 || result >= getItemsPerTab()) ? NO_SELECTION : result;
 	}
@@ -576,7 +578,7 @@ public abstract class TabBar<T> extends AbstractControl<TabBar<T>> {
 		// can't implement here because layout may not be set when called - defer until
 		// next refresh
 		focusOnSelection = true;
-		isDirty = true;
+		setCoordinatesDirty();
 	}
 
 	/**

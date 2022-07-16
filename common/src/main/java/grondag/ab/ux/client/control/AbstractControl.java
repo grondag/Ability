@@ -35,6 +35,9 @@ import grondag.ab.ux.client.Layout;
 import grondag.ab.ux.client.ScreenRenderContext;
 import grondag.ab.ux.client.ScreenTheme;
 
+/**
+ * Similar to Mojang's Abstract Widget but not based on fixed integer/pixel dimensions.
+ */
 @Environment(EnvType.CLIENT)
 public abstract class AbstractControl<T extends AbstractControl<T>> extends GuiComponent implements GuiEventListener, Widget, NarratableEntry {
 	public static final int NO_SELECTION = -1;
@@ -56,7 +59,7 @@ public abstract class AbstractControl<T extends AbstractControl<T>> extends GuiC
 
 	protected int backgroundColor = 0;
 
-	protected boolean isDirty = false;
+	private boolean coordinatesDirty = false;
 
 	protected boolean isVisible = true;
 
@@ -80,18 +83,17 @@ public abstract class AbstractControl<T extends AbstractControl<T>> extends GuiC
 		this.renderContext = renderContext;
 	}
 
-	public AbstractControl<T> resize(float left, float top, float width, float height) {
+	public void resize(float left, float top, float width, float height) {
 		this.left = left;
 		this.top = top;
 		this.width = width;
 		this.height = height;
-		this.isDirty = true;
-		return this;
+		this.setCoordinatesDirty();
 	}
 
 	@Override
 	public final void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-		this.refreshContentCoordinatesIfNeeded();
+		this.computeCoordinatesIfNeeded();
 
 		if (this.isVisible) {
 			// set hover start, so that controls further down the stack can overwrite
@@ -118,9 +120,16 @@ public abstract class AbstractControl<T extends AbstractControl<T>> extends GuiC
 
 	protected abstract void drawContent(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks);
 
-	/** Called after any coordinate-related input changes. */
-	protected void handleCoordinateUpdate() {
-		// NOOP
+	/**
+	 * Recomputes all coordinate state and clears coordinate dirty flag.
+	 * Use {@link #computeCoordinatesIfNeeded()} if uncertain if update is needed.
+	 *
+	 * <p>Child classes should always call super method, and call it first.
+	 */
+	protected void computeCoordinates() {
+		this.bottom = this.top + this.height;
+		this.right = this.left + this.width;
+		coordinatesDirty = false;
 	}
 
 	protected void handleMouseClick(double mouseX, double mouseY, int clickedMouseButton) {
@@ -189,13 +198,14 @@ public abstract class AbstractControl<T extends AbstractControl<T>> extends GuiC
 		return result;
 	}
 
-	protected void refreshContentCoordinatesIfNeeded() {
-		if (this.isDirty) {
-			this.bottom = this.top + this.height;
-			this.right = this.left + this.width;
-
-			this.handleCoordinateUpdate();
-			this.isDirty = false;
+	/**
+	 * Checks for dirty coordinates and calls {@link #computeCoordinates()} if found.
+	 * Note that {@link #computeCoordinates()} always resets dirty flag and super
+	 * implementation must be called.
+	 */
+	protected final void computeCoordinatesIfNeeded() {
+		if (coordinatesDirty) {
+			computeCoordinates();
 		}
 	}
 
@@ -204,7 +214,7 @@ public abstract class AbstractControl<T extends AbstractControl<T>> extends GuiC
 	}
 
 	public float getBottom() {
-		this.refreshContentCoordinatesIfNeeded();
+		computeCoordinatesIfNeeded();
 		return this.bottom;
 	}
 
@@ -213,7 +223,7 @@ public abstract class AbstractControl<T extends AbstractControl<T>> extends GuiC
 	}
 
 	public float getRight() {
-		this.refreshContentCoordinatesIfNeeded();
+		computeCoordinatesIfNeeded();
 		return this.right;
 	}
 
@@ -224,14 +234,14 @@ public abstract class AbstractControl<T extends AbstractControl<T>> extends GuiC
 	@SuppressWarnings("unchecked")
 	public T setTop(float top) {
 		this.top = top;
-		this.isDirty = true;
+		setCoordinatesDirty();
 		return (T) this;
 	}
 
 	@SuppressWarnings("unchecked")
 	public T setLeft(float left) {
 		this.left = left;
-		this.isDirty = true;
+		setCoordinatesDirty();
 		return (T) this;
 	}
 
@@ -243,14 +253,14 @@ public abstract class AbstractControl<T extends AbstractControl<T>> extends GuiC
 	public T setSquareSize(float size) {
 		this.height = size;
 		this.width = size;
-		this.isDirty = true;
+		setCoordinatesDirty();
 		return (T) this;
 	}
 
 	@SuppressWarnings("unchecked")
 	public T setHeight(float height) {
 		this.height = height;
-		this.isDirty = true;
+		setCoordinatesDirty();
 		return (T) this;
 	}
 
@@ -261,7 +271,7 @@ public abstract class AbstractControl<T extends AbstractControl<T>> extends GuiC
 	@SuppressWarnings("unchecked")
 	public T setWidth(float width) {
 		this.width = width;
-		this.isDirty = true;
+		this.setCoordinatesDirty();
 		return (T) this;
 	}
 
@@ -336,5 +346,9 @@ public abstract class AbstractControl<T extends AbstractControl<T>> extends GuiC
 
 	public void setVisible(boolean isVisible) {
 		this.isVisible = isVisible;
+	}
+
+	protected void setCoordinatesDirty() {
+		coordinatesDirty = true;
 	}
 }

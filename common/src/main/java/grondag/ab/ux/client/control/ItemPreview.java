@@ -50,7 +50,8 @@ public class ItemPreview extends AbstractControl<ItemPreview> {
 	}
 
 	@Override
-	protected void handleCoordinateUpdate() {
+	protected void computeCoordinates() {
+		super.computeCoordinates();
 		contentSize = Math.min(width, height);
 		contentLeft = left + (width - contentSize) / 2;
 		contentTop = top + (height - contentSize) / 2;

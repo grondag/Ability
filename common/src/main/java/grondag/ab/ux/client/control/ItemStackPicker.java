@@ -121,9 +121,9 @@ public class ItemStackPicker<T> extends TabBar<T> {
 	}
 
 	@Override
-	protected void handleCoordinateUpdate() {
+	protected void computeCoordinates() {
+		super.computeCoordinates();
 		fontDrawScale = 6f / renderContext.fontRenderer().lineHeight;
-		super.handleCoordinateUpdate();
 	}
 
 	// FIX: remove or repair

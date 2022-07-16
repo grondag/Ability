@@ -180,7 +180,9 @@ public class Slider extends AbstractControl<Slider> {
 	}
 
 	@Override
-	protected void handleCoordinateUpdate() {
+	protected void computeCoordinates() {
+		super.computeCoordinates();
+
 		if (size != 0) {
 			labelWidth = width * labelWidthFactor;
 			choiceWidth = width * choiceWidthFactor;

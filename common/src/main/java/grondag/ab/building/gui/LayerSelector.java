@@ -129,7 +129,8 @@ public class LayerSelector extends AbstractControl<LayerSelector> {
 	}
 
 	@Override
-	protected void handleCoordinateUpdate() {
+	protected void computeCoordinates() {
+		super.computeCoordinates();
 		height = top + itemSelectionMargin * 2 + itemSize;
 	}
 

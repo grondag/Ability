@@ -68,7 +68,8 @@ public class Toggle extends AbstractControl<Toggle> {
 
 	@SuppressWarnings("resource")
 	@Override
-	protected void handleCoordinateUpdate() {
+	protected void computeCoordinates() {
+		super.computeCoordinates();
 		final int fontHeight = Minecraft.getInstance().font.lineHeight;
 		targetAreaTop = (int) Math.max(top, top + (height - fontHeight) / 2);
 		targetAreaBottom = (int) Math.min(bottom, targetAreaTop + fontHeight);
@@ -110,7 +111,7 @@ public class Toggle extends AbstractControl<Toggle> {
 
 	public Toggle setLabel(Component label) {
 		this.label = label;
-		isDirty = true;
+		setCoordinatesDirty();
 		return this;
 	}
 

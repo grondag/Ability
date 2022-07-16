@@ -313,11 +313,6 @@ public class ColorPicker extends AbstractControl<ColorPicker> {
 	}
 
 	@Override
-	protected void handleCoordinateUpdate() {
-
-	}
-
-	@Override
 	public void drawToolTip(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 		// NOOP
 

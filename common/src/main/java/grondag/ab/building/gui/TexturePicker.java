@@ -53,7 +53,7 @@ public class TexturePicker extends TabBar<TextureSet> {
 			}
 		});
 
-		isDirty = true;
+		setCoordinatesDirty();
 	}
 
 	public void onChanged(Consumer<TextureSet> onChanged) {

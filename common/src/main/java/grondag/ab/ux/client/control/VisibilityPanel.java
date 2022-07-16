@@ -49,8 +49,8 @@ public class VisibilityPanel extends Panel {
 	public void setVisiblityIndex(int visiblityIndex) {
 		this.visiblityIndex = visiblityIndex;
 		children = groups.get(visiblityIndex);
-		isDirty = true;
-		refreshContentCoordinatesIfNeeded();
+		setCoordinatesDirty();
+		computeCoordinatesIfNeeded();
 	}
 
 	/**
@@ -65,19 +65,19 @@ public class VisibilityPanel extends Panel {
 
 	public VisibilityPanel addAll(int visibilityIndex, AbstractControl<?>... controls) {
 		groups.get(visibilityIndex).addAll(Arrays.asList(controls));
-		isDirty = true;
+		setCoordinatesDirty();
 		return this;
 	}
 
 	public VisibilityPanel add(int visibilityIndex, AbstractControl<?> control) {
 		groups.get(visibilityIndex).add(control);
-		isDirty = true;
+		setCoordinatesDirty();
 		return this;
 	}
 
 	public VisibilityPanel remove(int visibilityIndex, int controlindex) {
 		groups.get(visibilityIndex).remove(controlindex);
-		isDirty = true;
+		setCoordinatesDirty();
 		return this;
 	}
 

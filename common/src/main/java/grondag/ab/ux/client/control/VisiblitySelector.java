@@ -66,7 +66,7 @@ public class VisiblitySelector extends AbstractControl<VisiblitySelector> {
 	}
 
 	private int getButtonIndex(double mouseX, double mouseY) {
-		refreshContentCoordinatesIfNeeded();
+		computeCoordinatesIfNeeded();
 
 		if (mouseX < left || mouseX > right || buttonHeight == 0) {
 			return NO_SELECTION;
@@ -78,7 +78,9 @@ public class VisiblitySelector extends AbstractControl<VisiblitySelector> {
 	}
 
 	@Override
-	protected void handleCoordinateUpdate() {
+	protected void computeCoordinates() {
+		super.computeCoordinates();
+
 		if (target.size() > 0) {
 			buttonHeight = height / target.size();
 		}
