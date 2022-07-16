@@ -20,11 +20,16 @@
 
 package grondag.ab.building.gui.placement;
 
+import java.util.function.Consumer;
+
 import io.netty.util.internal.ThreadLocalRandom;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.Widget;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
@@ -44,7 +49,8 @@ public class PlacementToolScreen extends AbstractSimpleScreen {
 	protected final PlacementScreenLayout layout = new PlacementScreenLayout();
 	protected final PlacementToolState toolState = new PlacementToolState();
 
-	protected ModelPreview modelPreview;
+	private ModelPreview modelPreview;
+	private Consumer<PlacementToolScreen> toolTab = s -> { };
 
 	@SuppressWarnings("resource")
 	public PlacementToolScreen(ItemStack stack, InteractionHand hand) {
@@ -150,9 +156,15 @@ public class PlacementToolScreen extends AbstractSimpleScreen {
 	}
 
 	@Override
+	public <T extends GuiEventListener & Widget & NarratableEntry> T addRenderableWidget(T guiEventListener) {
+		return super.addRenderableWidget(guiEventListener);
+	}
+
+	@Override
 	public void addControls() {
 		addPreview();
 		addMainMenuButtons();
+		toolTab.accept(this);
 		addPrimaryFooter();
 		readMaterial();
 	}
