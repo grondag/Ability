@@ -29,7 +29,6 @@ import net.minecraft.client.gui.components.events.ContainerEventHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
-import grondag.ab.ux.client.GuiUtil;
 import grondag.ab.ux.client.Layout;
 import grondag.ab.ux.client.ScreenRenderContext;
 
@@ -66,10 +65,6 @@ public class Panel extends AbstractParentControl<Panel> implements ContainerEven
 
 	@Override
 	protected void drawContent(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-		if (getBackgroundColor() != 0) {
-			GuiUtil.drawRect(matrixStack.last().pose(), left, top, right, bottom, getBackgroundColor());
-		}
-
 		for (final AbstractControl<?> control : children) {
 			control.render(matrixStack, mouseX, mouseY, partialTicks);
 		}

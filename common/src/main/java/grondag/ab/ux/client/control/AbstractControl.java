@@ -40,35 +40,47 @@ import grondag.ab.ux.client.ScreenTheme;
  */
 @Environment(EnvType.CLIENT)
 public abstract class AbstractControl<T extends AbstractControl<T>> extends GuiComponent implements GuiEventListener, Widget, NarratableEntry {
-	public static final int NO_SELECTION = -1;
-
-	protected final ScreenTheme theme = ScreenTheme.current();
-
+	/** Top of this control in screenspace.  Does not reflect any interior margin. */
 	protected float top;
+
+	/** Left of this control in screenspace.  Does not reflect any interior margin. */
 	protected float left;
+
+	/** Height of this control in screenspace.  Does not reflect any interior margin. */
 	protected float height;
+
+	/** Width of this control in screenspace.  Does not reflect any interior margin. */
 	protected float width;
+
+	/** Bottom of this control in screenspace.  Does not reflect any interior margin. */
 	protected float bottom;
+
+	/** Right of this control in screenspace.  Does not reflect any interior margin. */
 	protected float right;
+
+	/** True when coordinate state should be recomputed because inputs may have changed. */
+	private boolean coordinatesDirty = false;
+
+	/** True when control should be rendered. */
+	protected boolean isVisible = true;
+
+	/** True when control should respond to input. */
+	protected boolean isActive = true;
+
+	/** Cumulative scroll distance from all events. */
+	protected float scrollDistance;
+
+	/** Cumulative distance before scroll is recognized. */
+	protected float scrollIncrementDistance = 1;
+
+	/** Last scroll increment - used to compute a delta. */
+	protected int lastScrollIncrement = 0;
 
 	protected int horizontalWeight = 1;
 	protected int verticalWeight = 1;
 
 	protected Layout horizontalLayout = Layout.WEIGHTED;
 	protected Layout verticalLayout = Layout.WEIGHTED;
-
-	protected int backgroundColor = 0;
-
-	private boolean coordinatesDirty = false;
-
-	protected boolean isVisible = true;
-
-	/** Cumulative scroll distance from all events. */
-	protected float scrollDistance;
-	/** Cumulative distance before scroll is recognized. */
-	protected float scrollIncrementDistance = 1;
-	/** Last scroll increment - used to compute a delta. */
-	protected int lastScrollIncrement = 0;
 
 	/**
 	 * If a control has consistent shape, is height / pixelWidth. Multiply
@@ -78,6 +90,10 @@ public abstract class AbstractControl<T extends AbstractControl<T>> extends GuiC
 	protected float aspectRatio = 1.0f;
 
 	protected final ScreenRenderContext renderContext;
+
+	public static final int NO_SELECTION = -1;
+
+	protected final ScreenTheme theme = ScreenTheme.current();
 
 	public AbstractControl(ScreenRenderContext renderContext) {
 		this.renderContext = renderContext;
@@ -272,16 +288,6 @@ public abstract class AbstractControl<T extends AbstractControl<T>> extends GuiC
 	public T setWidth(float width) {
 		this.width = width;
 		this.setCoordinatesDirty();
-		return (T) this;
-	}
-
-	public int getBackgroundColor() {
-		return backgroundColor;
-	}
-
-	@SuppressWarnings("unchecked")
-	public T setBackgroundColor(int backgroundColor) {
-		this.backgroundColor = backgroundColor;
 		return (T) this;
 	}
 
