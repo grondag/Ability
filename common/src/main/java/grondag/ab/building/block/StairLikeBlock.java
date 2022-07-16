@@ -226,10 +226,10 @@ public class StairLikeBlock extends BasicBlock {
 	};
 
 	public static PrimitiveState createDefaultModelState(FormedBlockMaterial material, AbstractWedge primitive, StairLikeBlock.Shape shape, CubeRotation defaultRotation) {
-		final var defaultState = primitive.newState().orientationIndex(defaultRotation.ordinal()).paintAll(material.paint());
+		final var defaultState = primitive.newState().orientationIndex(defaultRotation.ordinal()).apply(material.createPaintState()::applyToState);
 		AbstractWedge.setCorner(shape != Shape.STRAIGHT, defaultState);
 		AbstractWedge.setInsideCorner(shape == Shape.INSIDE_CORNER, defaultState);
-		return defaultState;
+		return defaultState.releaseToImmutable();
 	}
 
 	public static FormedBlockShape createBlockShape(String name, AbstractWedge primitive, StairLikeBlock.Shape shape, CubeRotation defaultRotation) {

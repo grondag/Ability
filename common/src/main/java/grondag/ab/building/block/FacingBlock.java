@@ -53,7 +53,7 @@ public class FacingBlock extends BasicBlock {
 
 	public static FormedBlockShape createBlockShape(String name, SimplePrimitive primitive, Direction defaultFace) {
 		return new FormedBlockShape(name,
-			material -> primitive.newState().paintAll(material.paint()).orientationIndex(defaultFace.ordinal()),
+			material -> primitive.newState().apply(material.createPaintState()::applyToState).orientationIndex(defaultFace.ordinal()).releaseToImmutable(),
 			PrimitiveStateMutator.builder().withUpdate(XmProperties.FACE_MODIFIER).build(),
 			bt -> new FacingBlock(bt, defaultFace), ShapeType.DYNAMIC_NON_CUBIC, false);
 	}

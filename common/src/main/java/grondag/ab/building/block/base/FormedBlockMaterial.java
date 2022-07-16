@@ -20,19 +20,25 @@
 
 package grondag.ab.building.block.base;
 
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.material.Material;
 
 import grondag.ab.building.block.init.FormedBlockMaterials;
+import grondag.ab.building.placement.PaintState;
 import grondag.xm.api.paint.XmPaint;
-import grondag.xm.api.util.ColorUtil;
 
 public record FormedBlockMaterial (
 		String code, SoundType sound, boolean hyper, boolean needsTool, boolean clear, float hardness, float resistance,
 		Material material,
 		XmPaint paint
 ) {
+	public FormedBlockMaterial {
+		MAP_BY_CODE.put(code, this);
+	}
+
 	public Block.Properties settings() {
 		final var result = Block.Properties.of(material())
 				.sound(sound)
@@ -58,13 +64,17 @@ public record FormedBlockMaterial (
 		return result;
 	}
 
-	public XmPaint paintInner() {
-		return XmPaint.finder().copy(paint).textureColor(0, ColorUtil.multiplyRGB(paint.textureColor(0), 0.85f)).find();
-	}
-
-	public XmPaint paintCut() {
-		return XmPaint.finder().copy(paint).textureColor(0, ColorUtil.multiplyRGB(paint.textureColor(0), 0.92f)).find();
+	public PaintState createPaintState() {
+		final var result = new PaintState();
+		result.switchMaterial(this);
+		return result;
 	}
 
 	private static final float HYPER_SLIP = 0.989F;
+
+	private static Object2ObjectOpenHashMap<String, FormedBlockMaterial> MAP_BY_CODE = new Object2ObjectOpenHashMap<>();
+
+	public static FormedBlockMaterial get(String code) {
+		return MAP_BY_CODE.get(code);
+	}
 }

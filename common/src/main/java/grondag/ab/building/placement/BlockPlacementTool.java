@@ -25,7 +25,6 @@ import java.util.function.BiFunction;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -44,14 +43,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.shapes.CollisionContext;
 
-import grondag.ab.building.block.base.FormedBlockEntity;
-import grondag.ab.building.block.base.FormedBlockType;
 import grondag.ab.building.block.init.FormedBlocks;
 import grondag.ab.varia.SafePlacementScreen;
-import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.api.modelstate.MutableModelState;
-import grondag.xm.api.modelstate.primitive.MutablePrimitiveState;
-import grondag.xm.api.paint.PaintIndex;
 
 public class BlockPlacementTool extends Item {
 	public BlockPlacementTool(Properties settings) {
@@ -119,7 +113,7 @@ public class BlockPlacementTool extends Item {
 	}
 
 	protected Block getBlock(ItemStack stack) {
-		return FormedBlocks.get(getBlockType(stack));
+		return FormedBlocks.get(PlacementToolState.getBlockType(stack));
 	}
 
 	@Override
@@ -133,54 +127,11 @@ public class BlockPlacementTool extends Item {
 		return InteractionResultHolder.success(itemStack);
 	}
 
-	public static FormedBlockType getBlockType(ItemStack stack) {
-		final var tag = stack.getTag();
-
-		if (tag != null && tag.contains(BLOCK_TYPE_TAG)) {
-			final var blockType = FormedBlockType.get(tag.getString(BLOCK_TYPE_TAG));
-			return blockType == null ? FormedBlocks.DEFAULT_ABILITY_BLOCK_TYPE : blockType;
-		} else {
-			return FormedBlocks.DEFAULT_ABILITY_BLOCK_TYPE;
-		}
-	}
-
-	public static void setBlockType(ItemStack stack, FormedBlockType blockType) {
-		if (blockType == null) {
-			blockType = FormedBlocks.DEFAULT_ABILITY_BLOCK_TYPE;
-		}
-
-		stack.getOrCreateTag().putString(BLOCK_TYPE_TAG, blockType.name);
-	}
-
-	public static MutablePrimitiveState readModelState(ItemStack stack, Level world) {
-		final CompoundTag tag = BlockItem.getBlockEntityData(stack);
-
-		if (tag != null && tag.contains(FormedBlockEntity.TAG_MODEL_STATE)) {
-			return (MutablePrimitiveState) ModelState.fromTag(tag.getCompound(FormedBlockEntity.TAG_MODEL_STATE), PaintIndex.forWorld(world));
-		} else {
-			return getBlockType(stack).defaultModelState.mutableCopy();
-		}
-	}
-
-	public static void writeModelState(ItemStack stack, ModelState modelState) {
-		var tag = BlockItem.getBlockEntityData(stack);
-
-		if (tag == null) {
-			tag = new CompoundTag();
-			tag.put(FormedBlockEntity.TAG_MODEL_STATE, modelState.toTag());
-			BlockItem.setBlockEntityData(stack, FormedBlocks.formedBlockEntityType, tag);
-		} else {
-			tag.put(FormedBlockEntity.TAG_MODEL_STATE, modelState.toTag());
-		}
-	}
-
 	public static final BiFunction<ItemStack, Level, MutableModelState> ITEM_MODEL_FUNCTION  = (s, w) -> {
 		if (s.getItem() instanceof BlockPlacementTool) {
-			return readModelState(s, w);
+			return PlacementToolState.getModelState(s, w);
 		}
 
 		return null;
 	};
-
-	private static final String BLOCK_TYPE_TAG = "ab_bt";
 }

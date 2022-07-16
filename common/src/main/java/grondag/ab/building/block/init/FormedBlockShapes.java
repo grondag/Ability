@@ -71,15 +71,13 @@ public abstract class FormedBlockShapes {
 	}
 
 	public static final FormedBlockShape CUBE = create("cube",
-			material -> Cube.INSTANCE.newState().paintAll(material.paint()).releaseToImmutable(),
+			material -> Cube.INSTANCE.newState().apply(material.createPaintState()::applyToState).releaseToImmutable(),
 			BasicBlock.SIMPLE_SPECIES_MUTATOR,
 			BasicBlock::new, ShapeType.CUBE, true);
 
 	public static final FormedBlockShape PANEL_INSET = create("pnl-ins",
 			material -> InsetPanel.INSTANCE.newState()
-				.paint(InsetPanel.SURFACE_OUTER, material.paint())
-				.paint(InsetPanel.SURFACE_CUT, material.paintCut())
-				.paint(InsetPanel.SURFACE_INNER, material.paintInner())
+				.apply(material.createPaintState()::applyToState)
 				.releaseToImmutable(),
 			PrimitiveStateMutator.builder()
 				.withJoin(BlockConnectors.SAME_BLOCK_OR_CONNECTABLE)
@@ -88,8 +86,7 @@ public abstract class FormedBlockShapes {
 
 	public static final FormedBlockShape PANEL_FLAT = create("pnl-flt",
 			material -> FlatPanel.INSTANCE.newState()
-				.paint(FlatPanel.SURFACE_OUTER, material.paint())
-				.paint(FlatPanel.SURFACE_INNER, material.paintInner())
+				.apply(material.createPaintState()::applyToState)
 				.releaseToImmutable(),
 			BasicBlock.SIMPLE_SPECIES_MUTATOR,
 			BasicBlock::new, ShapeType.CUBE, true);
@@ -107,10 +104,7 @@ public abstract class FormedBlockShapes {
 
 	public static final FormedBlockShape SQUARE_COLUMN_GROOVED = create("sqcol-gr",
 			material -> SquareColumn.INSTANCE.newState()
-				.paint(SquareColumn.SURFACE_END, material.paint())
-				.paint(SquareColumn.SURFACE_SIDE, material.paint())
-				.paint(SquareColumn.SURFACE_CUT, material.paintCut())
-				.paint(SquareColumn.SURFACE_INLAY, material.paintInner())
+				.apply(material.createPaintState()::applyToState)
 				.orientationIndex(Axis.Y.ordinal())
 				.apply(s -> SquareColumn.setCutCount(4, s))
 				.apply(s -> SquareColumn.setCutsOnEdge(true, s))
@@ -120,10 +114,7 @@ public abstract class FormedBlockShapes {
 
 	public static final FormedBlockShape SQUARE_COLUMN_CAPPED = create("sqcol-c",
 			material -> CappedSquareInsetColumn.INSTANCE.newState()
-				.paint(CappedSquareInsetColumn.SURFACE_OUTER, material.paint())
-				.paint(CappedSquareInsetColumn.SURFACE_ENDS, material.paint())
-				.paint(CappedSquareInsetColumn.SURFACE_INNER, material.paintInner())
-				.paint(CappedSquareInsetColumn.SURFACE_CUT, material.paintCut())
+				.apply(material.createPaintState()::applyToState)
 				.orientationIndex(Axis.Y.ordinal())
 				.releaseToImmutable(),
 			PillarBlock.AXIS_JOIN_COLUMN_MUTATOR,
@@ -132,7 +123,7 @@ public abstract class FormedBlockShapes {
 	public static final FormedBlockShape ROUND_COLUMN = create("rcol",
 			material -> CylinderWithAxis.INSTANCE.newState()
 				.orientationIndex(Axis.Y.ordinal())
-				.paintAll(material.paint())
+				.apply(material.createPaintState()::applyToState)
 				.releaseToImmutable(),
 			PrimitiveStateMutator.builder()
 				.withUpdate(PrimitiveState.AXIS_FROM_BLOCKSTATE)
@@ -141,7 +132,7 @@ public abstract class FormedBlockShapes {
 
 	public static final FormedBlockShape ROUND_COLUMN_SQUARE_CAP = create("rcol-sqc",
 			material -> CappedRoundColumn.INSTANCE.newState()
-				.paintAll(material.paint())
+				.apply(material.createPaintState()::applyToState)
 				.orientationIndex(Axis.Y.ordinal())
 				.releaseToImmutable(),
 			PillarBlock.AXIS_JOIN_COLUMN_MUTATOR,
@@ -149,10 +140,7 @@ public abstract class FormedBlockShapes {
 
 	public static final FormedBlockShape ROUND_COLUMN_ROUND_CAP = create("rcol-rc",
 			material -> RoundCappedRoundColumn.INSTANCE.newState()
-				.paint(RoundCappedRoundColumn.SURFACE_OUTER, material.paint())
-				.paint(RoundCappedRoundColumn.SURFACE_ENDS, material.paint())
-				.paint(RoundCappedRoundColumn.SURFACE_INNER, material.paint())
-				.paint(RoundCappedRoundColumn.SURFACE_CUT, material.paintCut())
+				.apply(material.createPaintState()::applyToState)
 				.orientationIndex(Axis.Y.ordinal())
 				.releaseToImmutable(),
 			PillarBlock.AXIS_JOIN_COLUMN_MUTATOR,
@@ -160,10 +148,7 @@ public abstract class FormedBlockShapes {
 
 	public static final FormedBlockShape ROUND_COLUMN_CUT = create("rcol-cut",
 			material -> CutRoundColumn.INSTANCE.newState()
-				.paint(CutRoundColumn.SURFACE_OUTER, material.paint())
-				.paint(CutRoundColumn.SURFACE_ENDS, material.paint())
-				.paint(CutRoundColumn.SURFACE_INNER, material.paintInner())
-				.paint(CutRoundColumn.SURFACE_CUT, material.paintCut())
+				.apply(material.createPaintState()::applyToState)
 				.orientationIndex(Axis.Y.ordinal())
 				.releaseToImmutable(),
 			PillarBlock.AXIS_JOIN_COLUMN_MUTATOR,

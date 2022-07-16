@@ -48,7 +48,7 @@ public class PlacementToolScreen extends AbstractSimpleScreen {
 
 	@SuppressWarnings("resource")
 	public PlacementToolScreen(ItemStack stack, InteractionHand hand) {
-		toolState.load(stack, hand, Minecraft.getInstance().level);
+		toolState.fromItem(stack, hand, Minecraft.getInstance().level);
 	}
 
 	@Override
