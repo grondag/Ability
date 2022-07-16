@@ -148,12 +148,31 @@ public abstract class AbstractControl<T extends AbstractControl<T>> extends GuiC
 		coordinatesDirty = false;
 	}
 
+	/**
+	 * A difference from vanilla handler is that we delegate sounds and other behavior to handlers
+	 * because we have more varied interactions.
+	 */
+	@Override
+	public final boolean mouseClicked(double mouseX, double mouseY, int clickedMouseButton) {
+		if (!isMouseOver(mouseX, mouseY)) return false;
+		handleMouseClick(mouseX, mouseY, clickedMouseButton);
+		return true;
+	}
+
+	/**
+	 * Responsible for handling mouse clicks.  Click will be in bounds before called.
+	 * Any sounds must be done here.
+	 */
 	protected void handleMouseClick(double mouseX, double mouseY, int clickedMouseButton) {
 		// NOOP
 	}
 
-	protected void handleMouseDrag(double mouseX, double mouseY, int clickedMouseButton, double dx, double dy) {
-		// NOOP
+	@Override
+	public final boolean mouseScrolled(double mouseX, double mouseY, double scrollDelta) {
+		if (!isMouseOver(mouseX, mouseY)) return false;
+		scrollDistance += scrollDelta;
+		handleMouseScroll(mouseX, mouseY, scrollDelta);
+		return true;
 	}
 
 	protected void handleMouseScroll(double mouseX, double mouseY, double scrollDelta) {
@@ -161,46 +180,14 @@ public abstract class AbstractControl<T extends AbstractControl<T>> extends GuiC
 	}
 
 	@Override
-	public final boolean mouseScrolled(double mouseX, double mouseY, double scrollDelta) {
-		if (this.isVisible) {
-			if (mouseX < this.left || mouseX > this.right || mouseY < this.top || mouseY > this.bottom) {
-				return false;
-			}
-
-			this.scrollDistance += scrollDelta;
-			this.handleMouseScroll(mouseX, mouseY, scrollDelta);
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	@Override
-	public final boolean mouseClicked(double mouseX, double mouseY, int clickedMouseButton) {
-		if (this.isVisible) {
-			if (mouseX < this.left || mouseX > this.right || mouseY < this.top || mouseY > this.bottom) {
-				return false;
-			}
-
-			this.handleMouseClick(mouseX, mouseY, clickedMouseButton);
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	@Override
 	public final boolean mouseDragged(double mouseX, double mouseY, int clickedMouseButton, double dx, double dy) {
-		if (this.isVisible) {
-			if (mouseX < this.left || mouseX > this.right || mouseY < this.top || mouseY > this.bottom) {
-				return false;
-			}
+		if (!isMouseOver(mouseX, mouseY)) return false;
+		handleMouseDrag(mouseX, mouseY, clickedMouseButton, dx, dy);
+		return true;
+	}
 
-			this.handleMouseDrag(mouseX, mouseY, clickedMouseButton, dx, dy);
-			return true;
-		} else {
-			return false;
-		}
+	protected void handleMouseDrag(double mouseX, double mouseY, int clickedMouseButton, double dx, double dy) {
+		// NOOP
 	}
 
 	protected int mouseIncrementDelta() {
@@ -343,18 +330,22 @@ public abstract class AbstractControl<T extends AbstractControl<T>> extends GuiC
 
 	@Override
 	public boolean isMouseOver(double mouseX, double mouseY) {
-		return !(mouseX < this.left || mouseX > this.right || mouseY < this.top || mouseY > this.bottom);
+		return isVisible && isActive & inBounds(mouseX, mouseY);
 	}
 
-	public boolean isVisible() {
+	protected final boolean inBounds(double x, double y) {
+		return x >= left && x <= right && y >= top && y <= bottom;
+	}
+
+	public final boolean isVisible() {
 		return isVisible;
 	}
 
-	public void setVisible(boolean isVisible) {
+	public final void setVisible(boolean isVisible) {
 		this.isVisible = isVisible;
 	}
 
-	protected void setCoordinatesDirty() {
+	protected final void setCoordinatesDirty() {
 		coordinatesDirty = true;
 	}
 }

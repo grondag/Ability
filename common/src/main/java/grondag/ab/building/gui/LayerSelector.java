@@ -159,16 +159,6 @@ public class LayerSelector extends AbstractControl<LayerSelector> {
 		this.onAction = onAction;
 	}
 
-	@Override
-	protected void handleMouseDrag(double mouseX, double mouseY, int clickedMouseButton, double dx, double dy) {
-		// NOOP
-	}
-
-	@Override
-	protected void handleMouseScroll(double mouseX, double mouseY, double scrollDelta) {
-		// NOOP
-	}
-
 	public void setRgb(int rgb) {
 		this.rgb = rgb;
 	}
