@@ -134,10 +134,10 @@ public class ItemStorageScreen extends AbstractSimpleContainerScreen<WitBaseCont
 		stackPicker = new ItemStackPicker<>(this, DELEGATE.LIST, ItemStorageActionClientHelper::selectAndSend, d -> d.article().toStack(), DiscreteDisplayDelegate::getCount);
 		stackPicker.setItemsPerRow(9);
 
-		stackPicker.setLeft(leftPos + inventoryLeft);
-		stackPicker.setWidth(ItemStackPicker.idealWidth(theme, 9));
-		stackPicker.setTop(itemPickerTop);
-		stackPicker.setHeight(storageHeight);
+		stackPicker.left(leftPos + inventoryLeft);
+		stackPicker.width(ItemStackPicker.idealWidth(theme, 9));
+		stackPicker.top(itemPickerTop);
+		stackPicker.height(storageHeight);
 		addWidget(stackPicker);
 
 		final Button butt = new Button(this,

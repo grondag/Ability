@@ -94,8 +94,8 @@ public class Slider extends AbstractControl<Slider> {
 		this.size = size;
 		this.label = label;
 		this.labelWidthFactor = labelWidthFactor;
-		setHeight(Math.max(TAB_WIDTH, renderContext.fontRenderer().lineHeight + theme.internalMargin));
-		setVerticalLayout(Layout.FIXED);
+		height(Math.max(TAB_WIDTH, renderContext.fontRenderer().lineHeight + theme.internalMargin));
+		verticalLayout(Layout.FIXED);
 	}
 
 	public void setSize(int size) {

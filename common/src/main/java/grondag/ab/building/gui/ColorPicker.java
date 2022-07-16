@@ -112,7 +112,7 @@ public class ColorPicker extends AbstractControl<ColorPicker> {
 
 	public ColorPicker(ScreenRenderContext renderContext) {
 		super(renderContext);
-		setAspectRatio(1.0f);
+		aspectRatio(1.0f);
 		rebuildMix();
 	}
 

@@ -74,10 +74,10 @@ public class PlacementToolScreen extends AbstractSimpleScreen {
 
 	protected void addPreview() {
 		modelPreview = new ModelPreview(this);
-		modelPreview.setLeft(layout.leftMargin);
-		modelPreview.setTop(layout.topMargin);
-		modelPreview.setWidth(layout.previewSize);
-		modelPreview.setHeight(layout.previewSize);
+		modelPreview.left(layout.leftMargin);
+		modelPreview.top(layout.topMargin);
+		modelPreview.width(layout.previewSize);
+		modelPreview.height(layout.previewSize);
 		modelPreview.setStack(toolState.displayStack());
 		addRenderableWidget(modelPreview);
 	}

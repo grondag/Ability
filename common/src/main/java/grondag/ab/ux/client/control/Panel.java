@@ -87,33 +87,33 @@ public class Panel extends AbstractParentControl<Panel> implements ContainerEven
 		// on start pass, gather the size/weights for the expanding dimension
 		for (final AbstractControl<?> control : children) {
 			if (isVertical) {
-				switch (control.getVerticalLayout()) {
+				switch (control.verticalLayout()) {
 					case FIXED:
-						totalFixed += control.getHeight();
+						totalFixed += control.height();
 						break;
 
 					case PROPORTIONAL:
-						totalFixed += fixedSpace * control.getAspectRatio();
+						totalFixed += fixedSpace * control.aspectRatio();
 						break;
 
 					case WEIGHTED:
 					default:
-						totalWeight += control.getVerticalWeight();
+						totalWeight += control.verticalWeight();
 						break;
 				}
 			} else {
-				switch (control.getHorizontalLayout()) {
+				switch (control.horizontalLayout()) {
 					case FIXED:
-						totalFixed += control.getWidth();
+						totalFixed += control.width();
 						break;
 
 					case PROPORTIONAL:
-						totalFixed += fixedSpace / control.getAspectRatio();
+						totalFixed += fixedSpace / control.aspectRatio();
 						break;
 
 					case WEIGHTED:
 					default:
-						totalWeight += control.getHorizontalWeight();
+						totalWeight += control.horizontalWeight();
 						break;
 				}
 			}
@@ -134,49 +134,49 @@ public class Panel extends AbstractParentControl<Panel> implements ContainerEven
 			float controlWidth;
 
 			if (isVertical) {
-				controlWidth = control.getHorizontalLayout() == Layout.FIXED ? control.getWidth() : fixedSize;
+				controlWidth = control.horizontalLayout() == Layout.FIXED ? control.width() : fixedSize;
 
-				switch (control.getVerticalLayout()) {
+				switch (control.verticalLayout()) {
 					case FIXED:
-						controlHeight = control.getHeight();
+						controlHeight = control.height();
 						break;
 
 					case PROPORTIONAL:
-						controlHeight = controlWidth * control.getAspectRatio();
+						controlHeight = controlWidth * control.aspectRatio();
 						break;
 
 					case WEIGHTED:
 					default:
-						controlHeight = spaceFactor * control.getVerticalWeight();
+						controlHeight = spaceFactor * control.verticalWeight();
 						break;
 				}
 
-				if (control.getHorizontalLayout() == Layout.PROPORTIONAL) {
-					controlWidth = controlHeight / control.getAspectRatio();
+				if (control.horizontalLayout() == Layout.PROPORTIONAL) {
+					controlWidth = controlHeight / control.aspectRatio();
 				}
 
 				control.resize(contentLeft, contentTop, controlWidth, controlHeight);
 				contentTop += controlHeight + innerMarginWidth;
 			} else {
-				controlHeight = control.getVerticalLayout() == Layout.FIXED ? control.getHeight() : fixedSize;
+				controlHeight = control.verticalLayout() == Layout.FIXED ? control.height() : fixedSize;
 
-				switch (control.getHorizontalLayout()) {
+				switch (control.horizontalLayout()) {
 					case FIXED:
-						controlWidth = control.getWidth();
+						controlWidth = control.width();
 						break;
 
 					case PROPORTIONAL:
-						controlWidth = controlHeight / control.getAspectRatio();
+						controlWidth = controlHeight / control.aspectRatio();
 						break;
 
 					case WEIGHTED:
 					default:
-						controlWidth = spaceFactor * control.getHorizontalWeight();
+						controlWidth = spaceFactor * control.horizontalWeight();
 						break;
 				}
 
-				if (control.getVerticalLayout() == Layout.PROPORTIONAL) {
-					controlHeight = controlWidth * control.getAspectRatio();
+				if (control.verticalLayout() == Layout.PROPORTIONAL) {
+					controlHeight = controlWidth * control.aspectRatio();
 				}
 
 				control.resize(contentLeft, contentTop, controlWidth, controlHeight);

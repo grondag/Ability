@@ -83,15 +83,12 @@ public abstract class AbstractControl<T extends AbstractControl<T>> extends GuiC
 	protected Layout verticalLayout = Layout.WEIGHTED;
 
 	/**
-	 * If a control has consistent shape, is height / pixelWidth. Multiply
-	 * pixelWidth by this number to get height. Divide height by this number to get
-	 * pixelWidth.
+	 * If a control has consistent shape, is height / width. Multiply width by this
+	 * number to get height. Divide height by this number to get width.
 	 */
 	protected float aspectRatio = 1.0f;
 
 	protected final ScreenRenderContext renderContext;
-
-	public static final int NO_SELECTION = -1;
 
 	protected final ScreenTheme theme = ScreenTheme.current();
 
@@ -149,7 +146,9 @@ public abstract class AbstractControl<T extends AbstractControl<T>> extends GuiC
 	}
 
 	/**
-	 * A difference from vanilla handler is that we delegate sounds and other behavior to handlers
+	 * Implements vanilla widget handler, delegating all real work to {@link #handleMouseClick(double, double, int)}.
+	 *
+	 * <p>A difference from vanilla handler is that we delegate sounds and other behavior to handlers
 	 * because we have more varied interactions.
 	 */
 	@Override
@@ -167,6 +166,9 @@ public abstract class AbstractControl<T extends AbstractControl<T>> extends GuiC
 		// NOOP
 	}
 
+	/**
+	 * Implements vanilla widget handler, delegating all real work to {@link #handleMouseScroll(double, double, double)}.
+	 */
 	@Override
 	public final boolean mouseScrolled(double mouseX, double mouseY, double scrollDelta) {
 		if (!isMouseOver(mouseX, mouseY)) return false;
@@ -179,6 +181,9 @@ public abstract class AbstractControl<T extends AbstractControl<T>> extends GuiC
 		// NOOP
 	}
 
+	/**
+	 * Implements vanilla widget handler, delegating all real work to {@link #handleMouseDrag(double, double, int, double, double)}.
+	 */
 	@Override
 	public final boolean mouseDragged(double mouseX, double mouseY, int clickedMouseButton, double dx, double dy) {
 		if (!isMouseOver(mouseX, mouseY)) return false;
@@ -212,120 +217,120 @@ public abstract class AbstractControl<T extends AbstractControl<T>> extends GuiC
 		}
 	}
 
-	public float getTop() {
-		return top;
-	}
-
-	public float getBottom() {
-		computeCoordinatesIfNeeded();
-		return this.bottom;
-	}
-
-	public float getLeft() {
-		return left;
-	}
-
-	public float getRight() {
-		computeCoordinatesIfNeeded();
-		return this.right;
-	}
-
-	public float getHeight() {
-		return height;
-	}
-
 	@SuppressWarnings("unchecked")
-	public T setTop(float top) {
+	public final T top(float top) {
 		this.top = top;
 		setCoordinatesDirty();
 		return (T) this;
 	}
 
+	public final float top() {
+		return top;
+	}
+
 	@SuppressWarnings("unchecked")
-	public T setLeft(float left) {
+	public final T left(float left) {
 		this.left = left;
 		setCoordinatesDirty();
 		return (T) this;
 	}
 
+	public final float left() {
+		return left;
+	}
+
+	@SuppressWarnings("unchecked")
+	public final T width(float width) {
+		this.width = width;
+		this.setCoordinatesDirty();
+		return (T) this;
+	}
+
+	public final float width() {
+		return width;
+	}
+
+	public final float height() {
+		return height;
+	}
+
+	@SuppressWarnings("unchecked")
+	public final T height(float height) {
+		this.height = height;
+		setCoordinatesDirty();
+		return (T) this;
+	}
+
 	/**
-	 * Use when control needs to be a square size. Controls that require this
-	 * generally don't enforce it. Sometimes life isn't fair.
+	 * Sets both width and height same size. Controls that dynamically resize may
+	 * result in a non-square actual size. Sometimes life isn't fair.
 	 */
 	@SuppressWarnings("unchecked")
-	public T setSquareSize(float size) {
+	public final T squareSize(float size) {
 		this.height = size;
 		this.width = size;
 		setCoordinatesDirty();
 		return (T) this;
 	}
 
-	@SuppressWarnings("unchecked")
-	public T setHeight(float height) {
-		this.height = height;
-		setCoordinatesDirty();
-		return (T) this;
+	public final float right() {
+		computeCoordinatesIfNeeded();
+		return this.right;
 	}
 
-	public float getWidth() {
-		return width;
-	}
-
-	@SuppressWarnings("unchecked")
-	public T setWidth(float width) {
-		this.width = width;
-		this.setCoordinatesDirty();
-		return (T) this;
-	}
-
-	public float getAspectRatio() {
-		return aspectRatio;
+	public final float bottom() {
+		computeCoordinatesIfNeeded();
+		return this.bottom;
 	}
 
 	@SuppressWarnings("unchecked")
-	public T setAspectRatio(float aspectRatio) {
+	public final T aspectRatio(float aspectRatio) {
 		this.aspectRatio = aspectRatio;
 		return (T) this;
 	}
 
-	public int getHorizontalWeight() {
-		return horizontalWeight;
+	public final float aspectRatio() {
+		return aspectRatio;
 	}
 
 	@SuppressWarnings("unchecked")
-	public T setHorizontalWeight(int horizontalWeight) {
+	public final T horizontalWeight(int horizontalWeight) {
 		this.horizontalWeight = horizontalWeight;
 		return (T) this;
 	}
 
-	public int getVerticalWeight() {
-		return verticalWeight;
+	public final int horizontalWeight() {
+		return horizontalWeight;
 	}
 
 	@SuppressWarnings("unchecked")
-	public T setVerticalWeight(int verticalWeight) {
+	public final T verticalWeight(int verticalWeight) {
 		this.verticalWeight = verticalWeight;
 		return (T) this;
 	}
 
-	public Layout getHorizontalLayout() {
-		return horizontalLayout;
+	public final int verticalWeight() {
+		return verticalWeight;
 	}
 
 	@SuppressWarnings("unchecked")
-	public T setHorizontalLayout(Layout horizontalLayout) {
+	public final T horizontalLayout(Layout horizontalLayout) {
 		this.horizontalLayout = horizontalLayout;
 		return (T) this;
 	}
 
-	public Layout getVerticalLayout() {
-		return verticalLayout;
+	public final Layout horizontalLayout() {
+		return horizontalLayout;
 	}
 
 	@SuppressWarnings("unchecked")
-	public T setVerticalLayout(Layout verticalLayout) {
+	public final T verticalLayout(Layout verticalLayout) {
 		this.verticalLayout = verticalLayout;
 		return (T) this;
+	}
+
+	public final Layout verticalLayout() {
+		return verticalLayout;
 	}
 
 	@Override
@@ -333,6 +338,7 @@ public abstract class AbstractControl<T extends AbstractControl<T>> extends GuiC
 		return isVisible && isActive & inBounds(mouseX, mouseY);
 	}
 
+	/** True when input coordinate within bounds of this control. */
 	protected final boolean inBounds(double x, double y) {
 		return x >= left && x <= right && y >= top && y <= bottom;
 	}
@@ -348,4 +354,7 @@ public abstract class AbstractControl<T extends AbstractControl<T>> extends GuiC
 	protected final void setCoordinatesDirty() {
 		coordinatesDirty = true;
 	}
+
+	/** Used in child classes with integer selection indexes to indicate no choice or empty state. */
+	public static final int NO_SELECTION = -1;
 }
