@@ -61,7 +61,7 @@ public class PlacementToolScreenOld extends PlacementToolScreen {
 	}
 
 	@Override
-	public void addControls() {
+	protected void addControls() {
 		addPreview();
 		addMainMenuButtons();
 

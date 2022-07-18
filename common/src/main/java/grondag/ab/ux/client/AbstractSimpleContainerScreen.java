@@ -110,10 +110,7 @@ public abstract class AbstractSimpleContainerScreen<T extends AbstractContainerM
 
 	protected abstract void drawControls(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks);
 
-	@Override
-	public void addControls() {
-		// NOOP
-	}
+	protected abstract void addControls();
 
 	@Override
 	public void setHoverControl(AbstractControl<?> control) {
@@ -123,26 +120,6 @@ public abstract class AbstractSimpleContainerScreen<T extends AbstractContainerM
 	@Override
 	public void renderTooltip(PoseStack matrixStack, ItemStack hoverStack, int mouseX, int mouseY) {
 		super.renderTooltip(matrixStack, hoverStack, mouseX, mouseY);
-	}
-
-	@Override
-	public int screenLeft() {
-		return leftPos;
-	}
-
-	@Override
-	public int screenWidth() {
-		return imageWidth;
-	}
-
-	@Override
-	public int screenTop() {
-		return topPos;
-	}
-
-	@Override
-	public int screenHeight() {
-		return imageHeight;
 	}
 
 	@Override

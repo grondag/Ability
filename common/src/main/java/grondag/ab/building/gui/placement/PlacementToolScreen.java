@@ -161,7 +161,7 @@ public class PlacementToolScreen extends AbstractSimpleScreen {
 	}
 
 	@Override
-	public void addControls() {
+	protected void addControls() {
 		addPreview();
 		addMainMenuButtons();
 		toolTab.accept(this);

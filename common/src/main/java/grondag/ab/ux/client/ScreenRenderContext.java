@@ -28,14 +28,4 @@ public interface ScreenRenderContext {
 	 * receive a callback after all controls have been rendered to draw a tooltip.
 	 */
 	void setHoverControl(AbstractControl<?> control);
-
-	int screenLeft();
-
-	int screenWidth();
-
-	int screenTop();
-
-	int screenHeight();
-
-	void addControls();
 }

@@ -105,34 +105,11 @@ public abstract class AbstractSimpleScreen extends Screen implements ScreenRende
 		}
 	}
 
-	@Override
-	public void addControls() {
-		// NOOP
-	}
+	protected abstract void addControls();
 
 	@Override
 	public void setHoverControl(AbstractControl<?> control) {
 		hoverControl = control;
-	}
-
-	@Override
-	public int screenLeft() {
-		return screenLeft;
-	}
-
-	@Override
-	public int screenWidth() {
-		return screenWidth;
-	}
-
-	@Override
-	public int screenTop() {
-		return screenTop;
-	}
-
-	@Override
-	public int screenHeight() {
-		return screenHeight;
 	}
 
 	@Override

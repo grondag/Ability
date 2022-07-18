@@ -128,7 +128,7 @@ public class ItemStorageScreen extends AbstractSimpleContainerScreen<WitBaseCont
 	}
 
 	@Override
-	public void addControls() {
+	protected void addControls() {
 		capacityBarLeft = leftPos + theme.externalMargin;
 		itemPickerTop = topPos + headerHeight;
 		stackPicker = new ItemStackPicker<>(this, DELEGATE.LIST, ItemStorageActionClientHelper::selectAndSend, d -> d.article().toStack(), DiscreteDisplayDelegate::getCount);
