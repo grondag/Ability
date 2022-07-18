@@ -20,6 +20,9 @@
 
 package grondag.ab.ux.client;
 
+import java.util.ArrayList;
+
+import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.platform.GlStateManager;
@@ -291,27 +294,22 @@ public class GuiUtil {
 		Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 	}
 
-	public static boolean renderItemAndEffectIntoGui(ScreenRenderContext renderContext, ItemStack itm, float x, float y, float contentSize) {
-		return renderItemAndEffectIntoGui(renderContext.minecraft(), renderContext.renderItem(), itm, x, y, contentSize);
-	}
-
-	public static boolean renderItemAndEffectIntoGui(ScreenRenderContext renderContext, ItemStack itm, BakedModel model, float x, float y, float contentSize) {
-		return renderItemAndEffectIntoGui(renderContext.minecraft(), renderContext.renderItem(), itm, model, x, y, contentSize);
-	}
-
-	public static boolean renderItemAndEffectIntoGui(Minecraft mc, ItemRenderer itemRender, ItemStack itemStack, float x, float y, float contentSize) {
-		if (itemStack != null && itemStack.getItem() != null) {
-			return renderItemAndEffectIntoGui(mc, itemRender, itemStack, itemRender.getModel(itemStack, null, null, 42), x, y, contentSize);
-		}
-
-		return false;
+	public static boolean renderItemAndEffectIntoGui(ItemStack itemStack, float x, float y, float contentSize) {
+		return renderItemAndEffectIntoGui(itemStack, null, x, y, contentSize);
 	}
 
 	/**
 	 * Size is in pixels. Hat tip to McJty.
 	 */
-	public static boolean renderItemAndEffectIntoGui(Minecraft mc, ItemRenderer itemRender, ItemStack itemStack, BakedModel model, float x, float y, float contentSize) {
+	public static boolean renderItemAndEffectIntoGui(ItemStack itemStack, @Nullable BakedModel model, float x, float y, float contentSize) {
 		if (itemStack != null && itemStack.getItem() != null) {
+			final Minecraft mc = Minecraft.getInstance();
+			final ItemRenderer itemRender = mc.getItemRenderer();
+
+			if (model == null) {
+				model = itemRender.getModel(itemStack, null, null, 42);
+			}
+
 			mc.getTextureManager().bindForSetup(InventoryMenu.BLOCK_ATLAS);
 			mc.getTextureManager().getTexture(InventoryMenu.BLOCK_ATLAS).setFilter(false, false);
 			RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
@@ -385,20 +383,22 @@ public class GuiUtil {
 	 */
 	public static void drawAlignedStringNoShadow(
 		PoseStack matrixStack,
-		Font fontRendererIn,
 		Component text,
 		float x, float y, float width, float height,
 		int color,
 		HorizontalAlignment hAlign,
 		VerticalAlignment vAlign
 	) {
+		@SuppressWarnings("resource")
+		final Font font = Minecraft.getInstance().font;
+
 		switch (hAlign) {
 			case RIGHT:
-				x += width - fontRendererIn.width(text);
+				x += width - font.width(text);
 				break;
 
 			case CENTER:
-				x += (width - fontRendererIn.width(text)) / 2;
+				x += (width - font.width(text)) / 2;
 				break;
 
 			case LEFT:
@@ -408,11 +408,11 @@ public class GuiUtil {
 
 		switch (vAlign) {
 			case BOTTOM:
-				y += height - fontRendererIn.lineHeight;
+				y += height - font.lineHeight;
 				break;
 
 			case MIDDLE:
-				y += (height - fontRendererIn.lineHeight) / 2;
+				y += (height - font.lineHeight) / 2;
 				break;
 
 			case TOP:
@@ -420,7 +420,7 @@ public class GuiUtil {
 				break;
 		}
 
-		fontRendererIn.draw(matrixStack, text, x, y, color);
+		font.draw(matrixStack, text, x, y, color);
 	}
 
 	public static void drawAlignedStringNoShadow(
@@ -441,5 +441,39 @@ public class GuiUtil {
 	 */
 	public static void drawStringNoShadow(PoseStack matrixStack, Font fontRendererIn, String text, int x, int y, int color) {
 		fontRendererIn.draw(matrixStack, text, x, y, color);
+	}
+
+	public static void renderTooltip(PoseStack matrixStack, ItemStack itemStack, int i, int j) {
+		@SuppressWarnings("resource")
+		final var screen = Minecraft.getInstance().screen;
+		screen.renderComponentTooltip(matrixStack, screen.getTooltipFromItem(itemStack), i, j);
+	}
+
+	public static void drawLocalizedToolTip(PoseStack matrixStack, String lang_key, int mouseX, int mouseY) {
+		@SuppressWarnings("resource")
+		final var screen = Minecraft.getInstance().screen;
+		screen.renderTooltip(matrixStack, Component.translatable(lang_key), mouseX, mouseY);
+	}
+
+	public static void drawLocalizedToolTip(PoseStack matrixStack, int mouseX, int mouseY, String... lang_keys) {
+		if (lang_keys.length == 0) {
+			return;
+		}
+
+		final ArrayList<Component> list = new ArrayList<>(lang_keys.length);
+
+		for (final String key : lang_keys) {
+			list.add(Component.translatable(key));
+		}
+
+		@SuppressWarnings("resource")
+		final var screen = Minecraft.getInstance().screen;
+		screen.renderComponentTooltip(matrixStack, list, mouseX, mouseY);
+	}
+
+	public static void drawLocalizedToolTipBoolean(PoseStack matrixStack, boolean bool, String true_key, String false_key, int mouseX, int mouseY) {
+		@SuppressWarnings("resource")
+		final var screen = Minecraft.getInstance().screen;
+		screen.renderTooltip(matrixStack, Component.translatable(bool ? true_key : false_key), mouseX, mouseY);
 	}
 }

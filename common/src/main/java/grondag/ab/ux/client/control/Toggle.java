@@ -62,7 +62,7 @@ public class Toggle extends AbstractControl<Toggle> {
 			GuiUtil.drawRect(matrixStack.last().pose(), left + 2, targetAreaTop + 2, boxRight - 2, targetAreaBottom - 2, theme.buttonColorActive);
 		}
 
-		GuiUtil.drawAlignedStringNoShadow(matrixStack, renderContext.fontRenderer(), label, boxRight + theme.internalMargin, targetAreaTop, labelWidth,
+		GuiUtil.drawAlignedStringNoShadow(matrixStack, label, boxRight + theme.internalMargin, targetAreaTop, labelWidth,
 				height, theme.textColorLabel, HorizontalAlignment.LEFT, VerticalAlignment.MIDDLE);
 	}
 

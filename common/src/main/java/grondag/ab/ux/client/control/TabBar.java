@@ -27,8 +27,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.util.Mth;
 
 import net.fabricmc.api.EnvType;
@@ -173,7 +171,7 @@ public abstract class TabBar<T> extends AbstractControl<TabBar<T>> {
 		double itemY = top;
 
 		for (int i = start; i < end; i++) {
-			this.drawItem(matrixStack, this.get(i), renderContext.minecraft(), renderContext.renderItem(), itemX, itemY, partialTicks, i == itemHighlightIndex);
+			this.drawItem(matrixStack, this.get(i), itemX, itemY, partialTicks, i == itemHighlightIndex);
 
 			if (++column == this.columnsPerRow) {
 				column = 0;
@@ -201,12 +199,12 @@ public abstract class TabBar<T> extends AbstractControl<TabBar<T>> {
 			final T item = this.get(this.currentMouseIndex);
 
 			if (item != null) {
-				this.drawItemToolTip(matrixStack, item, renderContext, mouseX, mouseY, partialTicks);
+				this.drawItemToolTip(matrixStack, item, mouseX, mouseY, partialTicks);
 			}
 		}
 	}
 
-	protected abstract void drawItemToolTip(PoseStack matrixStack, T item, ScreenRenderContext renderContext, int mouseX, int mouseY, float partialTicks);
+	protected abstract void drawItemToolTip(PoseStack matrixStack, T item, int mouseX, int mouseY, float partialTicks);
 
 	/**
 	 *
@@ -246,7 +244,7 @@ public abstract class TabBar<T> extends AbstractControl<TabBar<T>> {
 
 	protected abstract void tearDownItemRendering();
 
-	protected abstract void drawItem(PoseStack matrixStack, T item, Minecraft mc, ItemRenderer itemRender, double left, double top, float partialTicks, boolean isHighlighted);
+	protected abstract void drawItem(PoseStack matrixStack, T item, double left, double top, float partialTicks, boolean isHighlighted);
 
 	private void updateMouseLocation(double mouseX, double mouseY) {
 		if (items == null) {

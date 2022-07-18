@@ -20,59 +20,14 @@
 
 package grondag.ab.ux.client;
 
-import java.util.ArrayList;
-
-import com.mojang.blaze3d.vertex.PoseStack;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.ItemStack;
-
 import grondag.ab.ux.client.control.AbstractControl;
 
 public interface ScreenRenderContext {
-	Minecraft minecraft();
-
-	ItemRenderer renderItem();
-
-	Screen screen();
-
-	Font fontRenderer();
-
 	/**
 	 * controls that are being hovered over while rendering should call this to
 	 * receive a callback after all controls have been rendered to draw a tooltip.
 	 */
 	void setHoverControl(AbstractControl<?> control);
-
-	default void renderTooltip(PoseStack matrixStack, ItemStack itemStack, int i, int j) {
-		screen().renderComponentTooltip(matrixStack, screen().getTooltipFromItem(itemStack), i, j);
-	}
-
-	default void drawLocalizedToolTip(PoseStack matrixStack, String lang_key, int mouseX, int mouseY) {
-		screen().renderTooltip(matrixStack, Component.translatable(lang_key), mouseX, mouseY);
-	}
-
-	default void drawLocalizedToolTip(PoseStack matrixStack, int mouseX, int mouseY, String... lang_keys) {
-		if (lang_keys.length == 0) {
-			return;
-		}
-
-		final ArrayList<Component> list = new ArrayList<>(lang_keys.length);
-
-		for (final String key : lang_keys) {
-			list.add(Component.translatable(key));
-		}
-
-		screen().renderComponentTooltip(matrixStack, list, mouseX, mouseY);
-	}
-
-	default void drawLocalizedToolTipBoolean(PoseStack matrixStack, boolean bool, String true_key, String false_key, int mouseX, int mouseY) {
-		screen().renderTooltip(matrixStack, Component.translatable(bool ? true_key : false_key), mouseX, mouseY);
-	}
 
 	int screenLeft();
 

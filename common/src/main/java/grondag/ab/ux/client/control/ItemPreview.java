@@ -45,7 +45,7 @@ public class ItemPreview extends AbstractControl<ItemPreview> {
 	@Override
 	public void drawContent(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 		if (previewItem != null) {
-			GuiUtil.renderItemAndEffectIntoGui(renderContext, previewItem, contentLeft, contentTop, contentSize);
+			GuiUtil.renderItemAndEffectIntoGui(previewItem, contentLeft, contentTop, contentSize);
 		}
 	}
 

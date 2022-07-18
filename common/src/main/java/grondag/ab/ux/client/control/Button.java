@@ -55,7 +55,7 @@ public abstract class Button extends AbstractButton {
 			final int color = i == 0 ? theme.buttonColorInactive : i == 2 ? theme.buttonColorFocus : theme.buttonColorActive;
 
 			GuiUtil.drawRect(matrixStack.last().pose(), x, y, x + width - 1, y + height - 1, color);
-			GuiUtil.drawAlignedStringNoShadow(matrixStack, renderContext.fontRenderer(), getMessage(), x, y, width, height, theme.textColorActive, CENTER, MIDDLE);
+			GuiUtil.drawAlignedStringNoShadow(matrixStack, getMessage(), x, y, width, height, theme.textColorActive, CENTER, MIDDLE);
 		}
 	}
 

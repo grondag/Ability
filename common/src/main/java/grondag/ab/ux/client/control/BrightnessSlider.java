@@ -22,8 +22,6 @@ package grondag.ab.ux.client.control;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.network.chat.Component;
 
 import net.fabricmc.api.EnvType;
@@ -55,14 +53,14 @@ public class BrightnessSlider extends Slider {
 	}
 
 	@Override
-	protected void drawChoice(PoseStack matrixStack, Minecraft mc, ItemRenderer itemRender, float partialTicks) {
+	protected void drawChoice(PoseStack matrixStack, float partialTicks) {
 		final int color = 0xFFFECE | (((255 * selectedTabIndex / 15) & 0xFF) << 24);
 
 		GuiUtil.drawRect(matrixStack.last().pose(), labelRight, top, labelRight + choiceWidth, bottom, color);
 
 		final int textColor = selectedTabIndex > 6 ? 0xFF000000 : 0xFFFFFFFF;
 
-		GuiUtil.drawAlignedStringNoShadow(matrixStack, mc.font, Component.literal(Integer.toString(selectedTabIndex)), labelRight, top, choiceWidth, height,
+		GuiUtil.drawAlignedStringNoShadow(matrixStack, Component.literal(Integer.toString(selectedTabIndex)), labelRight, top, choiceWidth, height,
 				textColor, HorizontalAlignment.CENTER, VerticalAlignment.MIDDLE);
 	}
 }

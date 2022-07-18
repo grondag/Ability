@@ -384,6 +384,7 @@ public class TextField extends AbstractWidget implements Widget, GuiEventListene
 		}
 	}
 
+	@SuppressWarnings("resource")
 	@Override
 	public boolean mouseClicked(double d, double e, int i) {
 		if (!isVisible()) {
@@ -402,9 +403,9 @@ public class TextField extends AbstractWidget implements Widget, GuiEventListene
 					j -= 4;
 				}
 
-				final Font textRenderer = renderContext.fontRenderer();
-				final String string = textRenderer.plainSubstrByWidth(text.substring(firstCharacterIndex), getInnerWidth());
-				setCursor(textRenderer.plainSubstrByWidth(string, j).length() + firstCharacterIndex);
+				final Font font = Minecraft.getInstance().font;
+				final String string = font.plainSubstrByWidth(text.substring(firstCharacterIndex), getInnerWidth());
+				setCursor(font.plainSubstrByWidth(string, j).length() + firstCharacterIndex);
 				return true;
 			} else {
 				return false;
@@ -418,7 +419,8 @@ public class TextField extends AbstractWidget implements Widget, GuiEventListene
 
 	@Override
 	public void renderButton(PoseStack matrixStack, int i, int j, float f) {
-		final Font textRenderer = renderContext.fontRenderer();
+		@SuppressWarnings("resource")
+		final Font font = Minecraft.getInstance().font;
 
 		if (isVisible()) {
 			if (hasBorder()) {
@@ -431,7 +433,7 @@ public class TextField extends AbstractWidget implements Widget, GuiEventListene
 			final int textColor = editable ? theme.textColorActive : theme.textColorInactive;
 			final int startIndex = selectionStart - firstCharacterIndex;
 			int selectionLength = selectionEnd - firstCharacterIndex;
-			final String textToRender = textRenderer.plainSubstrByWidth(text.substring(firstCharacterIndex), getInnerWidth());
+			final String textToRender = font.plainSubstrByWidth(text.substring(firstCharacterIndex), getInnerWidth());
 			final boolean caretFlag = startIndex >= 0 && startIndex <= textToRender.length();
 			final boolean shouldCaretBlink = isFocused() && focusedTicks / 6 % 2 == 0 && caretFlag;
 			final int n = focused ? x + 4 : x;
@@ -444,7 +446,7 @@ public class TextField extends AbstractWidget implements Widget, GuiEventListene
 
 			if (!textToRender.isEmpty()) {
 				final String string2 = caretFlag ? textToRender.substring(0, startIndex) : textToRender;
-				p = textRenderer.draw(matrixStack, string2, n, o, textColor);
+				p = font.draw(matrixStack, string2, n, o, textColor);
 			}
 
 			final boolean bl3 = selectionStart < text.length() || text.length() >= getMaxLength();
@@ -458,11 +460,11 @@ public class TextField extends AbstractWidget implements Widget, GuiEventListene
 			}
 
 			if (!textToRender.isEmpty() && caretFlag && startIndex < textToRender.length()) {
-				textRenderer.draw(matrixStack, textToRender.substring(startIndex), p, o, textColor);
+				font.draw(matrixStack, textToRender.substring(startIndex), p, o, textColor);
 			}
 
 			if (!bl3 && suggestion != null) {
-				textRenderer.draw(matrixStack, suggestion, q - 1, o, -8355712);
+				font.draw(matrixStack, suggestion, q - 1, o, -8355712);
 			}
 
 			int var10002;
@@ -473,19 +475,19 @@ public class TextField extends AbstractWidget implements Widget, GuiEventListene
 					final int var10001 = o - 1;
 					var10002 = q + 1;
 					var10003 = o + 1;
-					textRenderer.getClass();
+					font.getClass();
 					GuiComponent.fill(matrixStack, q, var10001, var10002, var10003 + 9, -3092272);
 				} else {
-					textRenderer.draw(matrixStack, "_", q, o, textColor);
+					font.draw(matrixStack, "_", q, o, textColor);
 				}
 			}
 
 			if (selectionLength != startIndex) {
-				final int r = n + textRenderer.width(textToRender.substring(0, selectionLength));
+				final int r = n + font.width(textToRender.substring(0, selectionLength));
 				var10002 = o - 1;
 				var10003 = r - 1;
 				final int var10004 = o + 1;
-				textRenderer.getClass();
+				font.getClass();
 				drawSelectionHighlight(q, var10002, var10003, var10004 + 9);
 			}
 		}
@@ -588,19 +590,20 @@ public class TextField extends AbstractWidget implements Widget, GuiEventListene
 	public void setSelectionEnd(int i) {
 		final int j = text.length();
 		selectionEnd = Mth.clamp(i, 0, j);
-		final Font textRenderer = renderContext.fontRenderer();
+		@SuppressWarnings("resource")
+		final Font font = Minecraft.getInstance().font;
 
-		if (textRenderer != null) {
+		if (font != null) {
 			if (firstCharacterIndex > j) {
 				firstCharacterIndex = j;
 			}
 
 			final int k = getInnerWidth();
-			final String string = textRenderer.plainSubstrByWidth(text.substring(firstCharacterIndex), k);
+			final String string = font.plainSubstrByWidth(text.substring(firstCharacterIndex), k);
 			final int l = string.length() + firstCharacterIndex;
 
 			if (selectionEnd == firstCharacterIndex) {
-				firstCharacterIndex -= textRenderer.plainSubstrByWidth(text, k, true).length();
+				firstCharacterIndex -= font.plainSubstrByWidth(text, k, true).length();
 			}
 
 			if (selectionEnd > l) {
@@ -630,7 +633,7 @@ public class TextField extends AbstractWidget implements Widget, GuiEventListene
 	}
 
 	public int getCharacterX(int i) {
-		return i > text.length() ? x : x + renderContext.fontRenderer().width(text.substring(0, i));
+		return i > text.length() ? x : x + Minecraft.getInstance().font.width(text.substring(0, i));
 	}
 
 	public void setX(int i) {

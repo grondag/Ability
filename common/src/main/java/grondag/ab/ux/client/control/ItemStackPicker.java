@@ -33,7 +33,6 @@ import com.mojang.math.Matrix4f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.world.item.ItemStack;
 
 import net.fabricmc.api.EnvType;
@@ -82,16 +81,17 @@ public class ItemStackPicker<T> extends TabBar<T> {
 	}
 
 	@Override
-	protected void drawItem(PoseStack matrixStack, T item, Minecraft mc, ItemRenderer itemRenderer, double left, double top, float partialTicks, boolean isHighlighted) {
+	protected void drawItem(PoseStack matrixStack, T item, double left, double top, float partialTicks, boolean isHighlighted) {
 		final int x = (int) left;
 		final int y = (int) top;
 
 		final ItemStack itemStack = stackFunc.apply(item);
+		final var itemRenderer = Minecraft.getInstance().getItemRenderer();
 
 		setBlitOffset(200);
 		itemRenderer.blitOffset = 200.0F;
 
-		GuiUtil.renderItemAndEffectIntoGui(mc, itemRenderer, itemStack, x, y, itemSize);
+		GuiUtil.renderItemAndEffectIntoGui(itemStack, x, y, itemSize);
 		// TODO: support for dragging
 
 		drawQuantity(matrixStack, countFunc.applyAsLong(item), x, y);
@@ -105,7 +105,8 @@ public class ItemStackPicker<T> extends TabBar<T> {
 			return;
 		}
 
-		final Font fontRenderer = renderContext.fontRenderer();
+		@SuppressWarnings("resource")
+		final Font fontRenderer = Minecraft.getInstance().font;
 		final String qtyLabel = getQuantityLabel(qty);
 
 		fontMatrix.setIdentity();
@@ -120,10 +121,11 @@ public class ItemStackPicker<T> extends TabBar<T> {
 		immediate.endBatch();
 	}
 
+	@SuppressWarnings("resource")
 	@Override
 	protected void computeCoordinates() {
 		super.computeCoordinates();
-		fontDrawScale = 6f / renderContext.fontRenderer().lineHeight;
+		fontDrawScale = 6f / Minecraft.getInstance().font.lineHeight;
 	}
 
 	// FIX: remove or repair
@@ -156,8 +158,8 @@ public class ItemStackPicker<T> extends TabBar<T> {
 	}
 
 	@Override
-	protected void drawItemToolTip(PoseStack matrixStack, T item, ScreenRenderContext renderContext, int mouseX, int mouseY, float partialTicks) {
-		renderContext.renderTooltip(matrixStack, stackFunc.apply(item), mouseX, mouseY);
+	protected void drawItemToolTip(PoseStack matrixStack, T item, int mouseX, int mouseY, float partialTicks) {
+		GuiUtil.renderTooltip(matrixStack, stackFunc.apply(item), mouseX, mouseY);
 	}
 
 	@Override

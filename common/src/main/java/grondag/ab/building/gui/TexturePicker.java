@@ -26,9 +26,7 @@ import java.util.function.Consumer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.ItemRenderer;
-
+import grondag.ab.ux.client.GuiUtil;
 import grondag.ab.ux.client.ScreenRenderContext;
 import grondag.ab.ux.client.control.TabBar;
 import grondag.xm.api.texture.TextureGroup;
@@ -61,8 +59,8 @@ public class TexturePicker extends TabBar<TextureSet> {
 	}
 
 	@Override
-	protected void drawItemToolTip(PoseStack matrixStack, TextureSet item, ScreenRenderContext renderContext, int mouseX, int mouseY, float partialTicks) {
-		renderContext.drawLocalizedToolTip(matrixStack, item.displayNameToken(), mouseX, mouseY);
+	protected void drawItemToolTip(PoseStack matrixStack, TextureSet item, int mouseX, int mouseY, float partialTicks) {
+		GuiUtil.drawLocalizedToolTip(matrixStack, item.displayNameToken(), mouseX, mouseY);
 	}
 
 	@Override
@@ -76,7 +74,7 @@ public class TexturePicker extends TabBar<TextureSet> {
 	}
 
 	@Override
-	protected void drawItem(PoseStack matrixStack, TextureSet item, Minecraft mc, ItemRenderer itemRender, double left, double top, float partialTicks, boolean isHighlighted) {
+	protected void drawItem(PoseStack matrixStack, TextureSet item, double left, double top, float partialTicks, boolean isHighlighted) {
 		TextureUtil.bufferTexture(Tesselator.getInstance().getBuilder(), left, top, itemSize, rgb, item);
 	}
 

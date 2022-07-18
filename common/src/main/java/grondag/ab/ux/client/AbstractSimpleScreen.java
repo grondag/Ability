@@ -25,11 +25,8 @@ import java.util.Optional;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
@@ -111,26 +108,6 @@ public abstract class AbstractSimpleScreen extends Screen implements ScreenRende
 	@Override
 	public void addControls() {
 		// NOOP
-	}
-
-	@Override
-	public Minecraft minecraft() {
-		return minecraft;
-	}
-
-	@Override
-	public ItemRenderer renderItem() {
-		return itemRenderer;
-	}
-
-	@Override
-	public Screen screen() {
-		return this;
-	}
-
-	@Override
-	public Font fontRenderer() {
-		return font;
 	}
 
 	@Override

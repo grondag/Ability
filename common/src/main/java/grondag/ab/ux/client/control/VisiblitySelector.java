@@ -58,7 +58,7 @@ public class VisiblitySelector extends AbstractControl<VisiblitySelector> {
 			GuiUtil.drawRect(matrixStack.last().pose(), left + 2, y + 2, right - 2, y + buttonHeight - 2, buttonColor);
 
 			final int textColor = i == hoverIndex ? theme.textColorFocus : i == target.getVisiblityIndex() ? theme.textColorActive : theme.textColorInactive;
-			GuiUtil.drawAlignedStringNoShadow(matrixStack, renderContext.fontRenderer(), label, left, y, width, buttonHeight,
+			GuiUtil.drawAlignedStringNoShadow(matrixStack, label, left, y, width, buttonHeight,
 					textColor, CENTER, MIDDLE);
 
 			y += buttonHeight;

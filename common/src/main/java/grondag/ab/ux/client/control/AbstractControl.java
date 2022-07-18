@@ -101,12 +101,12 @@ public abstract class AbstractControl<T extends AbstractControl<T>> extends GuiC
 		this.top = top;
 		this.width = width;
 		this.height = height;
-		this.setCoordinatesDirty();
+		setCoordinatesDirty();
 	}
 
 	@Override
 	public final void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-		this.computeCoordinatesIfNeeded();
+		computeCoordinatesIfNeeded();
 
 		if (this.isVisible) {
 			// set hover start, so that controls further down the stack can overwrite
@@ -118,17 +118,10 @@ public abstract class AbstractControl<T extends AbstractControl<T>> extends GuiC
 		}
 	}
 
-	@Override
-	public void updateNarration(NarrationElementOutput builder) {
-		// TODO whatever this is
-	}
-
-	@Override
-	public NarrationPriority narrationPriority() {
-		// TODO: implement
-		return NarrationPriority.NONE;
-	}
-
+	/**
+	 * Will be rendered by screen after everything else is rendered if the control calls
+	 * {@link ScreenRenderContext#setHoverControl(AbstractControl)}.
+	 */
 	public abstract void drawToolTip(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks);
 
 	protected abstract void drawContent(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks);
@@ -353,6 +346,17 @@ public abstract class AbstractControl<T extends AbstractControl<T>> extends GuiC
 
 	protected final void setCoordinatesDirty() {
 		coordinatesDirty = true;
+	}
+
+	@Override
+	public void updateNarration(NarrationElementOutput builder) {
+		// TODO implement
+	}
+
+	@Override
+	public NarrationPriority narrationPriority() {
+		// TODO: implement
+		return NarrationPriority.NONE;
 	}
 
 	/** Used in child classes with integer selection indexes to indicate no choice or empty state. */

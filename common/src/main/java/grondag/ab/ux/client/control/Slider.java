@@ -25,7 +25,6 @@ import it.unimi.dsi.fastutil.ints.IntConsumer;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 
@@ -89,12 +88,13 @@ public class Slider extends AbstractControl<Slider> {
 	 * needed to set height to font height. labelWidth is in range 0-1 and allows
 	 * for alignment of stacked controls.
 	 */
+	@SuppressWarnings("resource")
 	public Slider(ScreenRenderContext renderContext, int size, Component label, float labelWidthFactor) {
 		super(renderContext);
 		this.size = size;
 		this.label = label;
 		this.labelWidthFactor = labelWidthFactor;
-		height(Math.max(TAB_WIDTH, renderContext.fontRenderer().lineHeight + theme.internalMargin));
+		height(Math.max(TAB_WIDTH, Minecraft.getInstance().font.lineHeight + theme.internalMargin));
 		verticalLayout(Layout.FIXED);
 	}
 
@@ -102,7 +102,7 @@ public class Slider extends AbstractControl<Slider> {
 		this.size = size;
 	}
 
-	protected void drawChoice(PoseStack matrixStack, Minecraft mc, ItemRenderer itemRender, float partialTicks) {
+	protected void drawChoice(PoseStack matrixStack, float partialTicks) {
 		// not drawn in base implementation
 	}
 
@@ -116,12 +116,12 @@ public class Slider extends AbstractControl<Slider> {
 
 		// draw label if there is one
 		if (label != null && labelWidth > 0) {
-			GuiUtil.drawAlignedStringNoShadow(matrixStack, renderContext.fontRenderer(), label, left, top, labelWidth, height, theme.textColorLabel,
+			GuiUtil.drawAlignedStringNoShadow(matrixStack, label, left, top, labelWidth, height, theme.textColorLabel,
 					HorizontalAlignment.LEFT, VerticalAlignment.MIDDLE);
 		}
 
 		if (choiceWidthFactor > 0) {
-			drawChoice(matrixStack, renderContext.minecraft(), renderContext.renderItem(), partialTicks);
+			drawChoice(matrixStack, partialTicks);
 		}
 
 		// skip drawing tabs if there is only one

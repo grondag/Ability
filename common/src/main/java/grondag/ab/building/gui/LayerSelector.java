@@ -114,7 +114,7 @@ public class LayerSelector extends AbstractControl<LayerSelector> {
 		updateMouseLocation(mouseX, mouseY);
 
 		if (currentMouseLocation == MouseLocation.TEXTURE && tex != null) {
-			renderContext.drawLocalizedToolTip(matrixStack, tex.displayNameToken(), mouseX, mouseY);
+			GuiUtil.drawLocalizedToolTip(matrixStack, tex.displayNameToken(), mouseX, mouseY);
 		}
 	}
 
