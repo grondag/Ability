@@ -30,7 +30,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
 import grondag.ab.ux.client.Layout;
-import grondag.ab.ux.client.ScreenRenderContext;
 
 @Environment(EnvType.CLIENT)
 public class Panel extends AbstractParentControl<Panel> implements ContainerEventHandler {
@@ -46,8 +45,8 @@ public class Panel extends AbstractParentControl<Panel> implements ContainerEven
 	 */
 	private boolean isLayoutDisabled = false;
 
-	public Panel(ScreenRenderContext renderContext, boolean isVertical) {
-		super(renderContext);
+	public Panel(boolean isVertical) {
+		super();
 		this.isVertical = isVertical;
 	}
 

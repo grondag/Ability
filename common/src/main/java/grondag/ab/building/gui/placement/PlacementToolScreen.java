@@ -73,7 +73,7 @@ public class PlacementToolScreen extends AbstractSimpleScreen {
 	}
 
 	protected void addPreview() {
-		modelPreview = new ModelPreview(this);
+		modelPreview = new ModelPreview();
 		modelPreview.left(layout.leftMargin);
 		modelPreview.top(layout.topMargin);
 		modelPreview.width(layout.previewSize);
@@ -86,7 +86,7 @@ public class PlacementToolScreen extends AbstractSimpleScreen {
 	protected void addMainMenuButtons() {
 		int menuY = layout.topMargin + layout.previewSize + layout.margin;
 
-		this.addRenderableWidget(new Button(this, layout.leftMargin, menuY, layout.previewSize, layout.buttonHeight, Component.translatable("gui.ab.material")) {
+		this.addRenderableWidget(new Button(layout.leftMargin, menuY, layout.previewSize, layout.buttonHeight, Component.translatable("gui.ab.material")) {
 			@Override
 			public void onPress() {
 				final var material = FormedBlockMaterials.CONVENTIONAL.get(ThreadLocalRandom.current().nextInt(FormedBlockMaterials.CONVENTIONAL.size()));
@@ -97,7 +97,7 @@ public class PlacementToolScreen extends AbstractSimpleScreen {
 
 		menuY += (layout.buttonHeight + layout.margin);
 
-		this.addRenderableWidget(new Button(this, layout.leftMargin, menuY, layout.previewSize, layout.buttonHeight, Component.translatable("gui.ab.shape")) {
+		this.addRenderableWidget(new Button(layout.leftMargin, menuY, layout.previewSize, layout.buttonHeight, Component.translatable("gui.ab.shape")) {
 			@Override
 			public void onPress() {
 				final var shape = FormedBlockShape.get(ThreadLocalRandom.current().nextInt(FormedBlockShape.count()));
@@ -108,7 +108,7 @@ public class PlacementToolScreen extends AbstractSimpleScreen {
 
 		menuY += (layout.buttonHeight + layout.margin);
 
-		this.addRenderableWidget(new Button(this, layout.leftMargin, menuY, layout.previewSize, layout.buttonHeight, Component.translatable("gui.ab.paint")) {
+		this.addRenderableWidget(new Button(layout.leftMargin, menuY, layout.previewSize, layout.buttonHeight, Component.translatable("gui.ab.paint")) {
 			@Override
 			public void onPress() {
 
@@ -117,14 +117,14 @@ public class PlacementToolScreen extends AbstractSimpleScreen {
 
 		menuY += (layout.buttonHeight + layout.margin);
 
-		this.addRenderableWidget(new Button(this, layout.leftMargin, menuY, layout.previewSize, layout.buttonHeight, Component.translatable("gui.ab.placement")) {
+		this.addRenderableWidget(new Button(layout.leftMargin, menuY, layout.previewSize, layout.buttonHeight, Component.translatable("gui.ab.placement")) {
 			@Override
 			public void onPress() {
 
 			}
 		});
 
-		this.addRenderableWidget(new Button(this, layout.leftMargin, layout.bottomMargin - layout.buttonHeight, layout.previewSize, layout.buttonHeight, Component.translatable("gui.ab.load")) {
+		this.addRenderableWidget(new Button(layout.leftMargin, layout.bottomMargin - layout.buttonHeight, layout.previewSize, layout.buttonHeight, Component.translatable("gui.ab.load")) {
 			@Override
 			public void onPress() {
 
@@ -134,7 +134,7 @@ public class PlacementToolScreen extends AbstractSimpleScreen {
 
 	protected void addPrimaryFooter() {
 		this.addRenderableWidget(new Button(
-				this, layout.rightMargin - layout.margin - layout.buttonWidth * 2, layout.bottomMargin - layout.buttonHeight,
+				layout.rightMargin - layout.margin - layout.buttonWidth * 2, layout.bottomMargin - layout.buttonHeight,
 				layout.buttonWidth, layout.buttonHeight, Component.translatable("gui.ab.cancel")
 			) {
 				@Override
@@ -144,7 +144,7 @@ public class PlacementToolScreen extends AbstractSimpleScreen {
 			});
 
 		this.addRenderableWidget(new Button(
-			this, layout.rightMargin - layout.buttonWidth, layout.bottomMargin - layout.buttonHeight,
+			layout.rightMargin - layout.buttonWidth, layout.bottomMargin - layout.buttonHeight,
 			layout.buttonWidth, layout.buttonHeight, Component.translatable("gui.ab.save")
 		) {
 			@Override

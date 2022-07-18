@@ -33,17 +33,14 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
 import grondag.ab.ux.client.GuiUtil;
-import grondag.ab.ux.client.ScreenRenderContext;
 import grondag.ab.ux.client.ScreenTheme;
 
 @Environment(EnvType.CLIENT)
 public abstract class Button extends AbstractButton {
-	protected final ScreenRenderContext renderContext;
 	protected final ScreenTheme theme = ScreenTheme.current();
 
-	public Button(ScreenRenderContext renderContext, int x, int y, int width, int height, Component buttonText) {
+	public Button(int x, int y, int width, int height, Component buttonText) {
 		super(x, y, width, height, buttonText);
-		this.renderContext = renderContext;
 	}
 
 	// TODO: add narration logic

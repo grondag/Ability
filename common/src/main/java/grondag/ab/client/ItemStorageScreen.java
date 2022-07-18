@@ -34,7 +34,6 @@ import grondag.ab.AbilityConfig;
 import grondag.ab.storage.ux.WitBaseContainerMenu;
 import grondag.ab.ux.client.AbstractSimpleContainerScreen;
 import grondag.ab.ux.client.GuiUtil;
-import grondag.ab.ux.client.ScreenRenderContext;
 import grondag.ab.ux.client.control.Button;
 import grondag.ab.ux.client.control.ItemStackPicker;
 import grondag.ab.ux.client.control.TextField;
@@ -45,7 +44,7 @@ import grondag.fluidity.base.synch.DisplayDelegate;
 import grondag.fluidity.base.synch.ItemStorageActionClientHelper;
 import grondag.fluidity.impl.DiscreteDisplayDelegateImpl;
 
-public class ItemStorageScreen extends AbstractSimpleContainerScreen<WitBaseContainerMenu<DiscreteStorageServerDelegate>> implements ScreenRenderContext {
+public class ItemStorageScreen extends AbstractSimpleContainerScreen<WitBaseContainerMenu<DiscreteStorageServerDelegate>> {
 	private static DiscreteStorageClientDelegate DELEGATE = DiscreteStorageClientDelegate.INSTANCE;
 
 	protected int headerHeight;
@@ -131,7 +130,7 @@ public class ItemStorageScreen extends AbstractSimpleContainerScreen<WitBaseCont
 	protected void addControls() {
 		capacityBarLeft = leftPos + theme.externalMargin;
 		itemPickerTop = topPos + headerHeight;
-		stackPicker = new ItemStackPicker<>(this, DELEGATE.LIST, ItemStorageActionClientHelper::selectAndSend, d -> d.article().toStack(), DiscreteDisplayDelegate::getCount);
+		stackPicker = new ItemStackPicker<>(DELEGATE.LIST, ItemStorageActionClientHelper::selectAndSend, d -> d.article().toStack(), DiscreteDisplayDelegate::getCount);
 		stackPicker.setItemsPerRow(9);
 
 		stackPicker.left(leftPos + inventoryLeft);
@@ -140,7 +139,7 @@ public class ItemStorageScreen extends AbstractSimpleContainerScreen<WitBaseCont
 		stackPicker.height(storageHeight);
 		addWidget(stackPicker);
 
-		final Button butt = new Button(this,
+		final Button butt = new Button(
 				leftPos + imageWidth - 40 - theme.externalMargin, topPos + theme.externalMargin,
 				40, theme.singleLineWidgetHeight,
 				DisplayDelegate.getSortText(DELEGATE.getSortIndex())
@@ -157,7 +156,7 @@ public class ItemStorageScreen extends AbstractSimpleContainerScreen<WitBaseCont
 
 		addRenderableWidget(butt);
 
-		filterField = new TextField(this,
+		filterField = new TextField(
 				leftPos + inventoryLeft, topPos + theme.externalMargin,
 				80, theme.singleLineWidgetHeight, Component.empty());
 		filterField.setMaxLength(32);

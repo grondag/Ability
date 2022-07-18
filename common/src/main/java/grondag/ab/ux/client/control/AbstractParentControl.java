@@ -28,17 +28,11 @@ import org.jetbrains.annotations.Nullable;
 import net.minecraft.client.gui.components.events.ContainerEventHandler;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 
-import grondag.ab.ux.client.ScreenRenderContext;
-
 public abstract class AbstractParentControl<T extends AbstractParentControl<T>> extends AbstractControl<T> implements ContainerEventHandler {
 	@Nullable
 	private GuiEventListener focused;
 	private boolean isDragging;
 	protected ArrayList<AbstractControl<?>> children = new ArrayList<>();
-
-	public AbstractParentControl(ScreenRenderContext renderContext) {
-		super(renderContext);
-	}
 
 	@Override
 	public final boolean isDragging() {

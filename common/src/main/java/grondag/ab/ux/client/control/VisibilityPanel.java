@@ -28,8 +28,6 @@ import net.minecraft.network.chat.Component;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
-import grondag.ab.ux.client.ScreenRenderContext;
-
 @Environment(EnvType.CLIENT)
 public class VisibilityPanel extends Panel {
 	private final ArrayList<ArrayList<AbstractControl<?>>> groups = new ArrayList<>();
@@ -38,8 +36,8 @@ public class VisibilityPanel extends Panel {
 
 	private int visiblityIndex = VisiblitySelector.NO_SELECTION;
 
-	public VisibilityPanel(ScreenRenderContext renderContext, boolean isVertical) {
-		super(renderContext, isVertical);
+	public VisibilityPanel(boolean isVertical) {
+		super(isVertical);
 	}
 
 	public int getVisiblityIndex() {

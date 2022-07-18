@@ -32,7 +32,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
 import grondag.ab.ux.client.Layout;
-import grondag.ab.ux.client.ScreenRenderContext;
 import grondag.ab.ux.client.ScreenTheme;
 
 /**
@@ -88,13 +87,7 @@ public abstract class AbstractControl<T extends AbstractControl<T>> extends GuiC
 	 */
 	protected float aspectRatio = 1.0f;
 
-	protected final ScreenRenderContext renderContext;
-
 	protected final ScreenTheme theme = ScreenTheme.current();
-
-	public AbstractControl(ScreenRenderContext renderContext) {
-		this.renderContext = renderContext;
-	}
 
 	public void resize(float left, float top, float width, float height) {
 		this.left = left;
@@ -109,9 +102,9 @@ public abstract class AbstractControl<T extends AbstractControl<T>> extends GuiC
 		computeCoordinatesIfNeeded();
 
 		if (this.isVisible) {
-			// set hover start, so that controls further down the stack can overwrite
-			if (this.isMouseOver(mouseX, mouseY)) {
-				renderContext.setHoverControl(this);
+			// set hover before drawing contents, so that controls further down the stack can overwrite
+			if (isMouseOver(mouseX, mouseY)) {
+				hoverControl = this;
 			}
 
 			this.drawContent(matrixStack, mouseX, mouseY, partialTicks);
@@ -361,4 +354,17 @@ public abstract class AbstractControl<T extends AbstractControl<T>> extends GuiC
 
 	/** Used in child classes with integer selection indexes to indicate no choice or empty state. */
 	public static final int NO_SELECTION = -1;
+
+	/**
+	 * Non-null when should render tooltip because mouse is over this control.
+	 * Updated, used and cleared each render pass.
+	 */
+	protected static AbstractControl<?> hoverControl;
+
+	public static void drawHoveredControlTooltip(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+		if (hoverControl != null) {
+			hoverControl.drawToolTip(matrixStack, mouseX, mouseY, partialTicks);
+			hoverControl = null;
+		}
+	}
 }

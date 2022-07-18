@@ -34,11 +34,10 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.world.inventory.InventoryMenu;
 
-import grondag.ab.ux.client.ScreenRenderContext;
 import grondag.xm.api.texture.TextureSet;
 
 public class TextureUtil {
-	public static BufferBuilder setupRendering(ScreenRenderContext renderContext) {
+	public static BufferBuilder setupRendering() {
 		final var textureManager = Minecraft.getInstance().getTextureManager();
 		textureManager.bindForSetup(InventoryMenu.BLOCK_ATLAS);
 		textureManager.getTexture(InventoryMenu.BLOCK_ATLAS).setFilter(false, false);

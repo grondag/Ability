@@ -44,7 +44,6 @@ import net.minecraft.util.Mth;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
-import grondag.ab.ux.client.ScreenRenderContext;
 import grondag.ab.ux.client.ScreenTheme;
 
 //UGLY needs less copypasta
@@ -65,13 +64,11 @@ public class TextField extends AbstractWidget implements Widget, GuiEventListene
 	protected Predicate<String> textPredicate;
 	protected final ScreenTheme theme = ScreenTheme.current();
 
-	protected final ScreenRenderContext renderContext;
-
-	public TextField(ScreenRenderContext context, int left, int top, int width, int height, Component string) {
-		this(context, left, top, width, height, null, string);
+	public TextField(int left, int top, int width, int height, Component string) {
+		this(left, top, width, height, null, string);
 	}
 
-	public TextField(ScreenRenderContext context, int left, int top, int width, int height, @Nullable TextField textField, Component string) {
+	public TextField(int left, int top, int width, int height, @Nullable TextField textField, Component string) {
 		super(left, top, width, height, string);
 		text = "";
 		maxLength = 32;
@@ -79,7 +76,6 @@ public class TextField extends AbstractWidget implements Widget, GuiEventListene
 		focusUnlocked = true;
 		editable = true;
 		textPredicate = Predicates.alwaysTrue();
-		renderContext = context;
 
 		if (textField != null) {
 			setText(textField.getText());

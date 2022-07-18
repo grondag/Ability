@@ -28,14 +28,9 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
 import grondag.ab.ux.client.GuiUtil;
-import grondag.ab.ux.client.ScreenRenderContext;
 
 @Environment(EnvType.CLIENT)
 public class ItemPreview extends AbstractControl<ItemPreview> {
-	public ItemPreview(ScreenRenderContext renderContext) {
-		super(renderContext);
-	}
-
 	public ItemStack previewItem;
 
 	private float contentLeft;

@@ -21,7 +21,6 @@
 package grondag.ab.ux.client;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
@@ -32,9 +31,8 @@ import net.minecraft.world.item.ItemStack;
 
 import grondag.ab.ux.client.control.AbstractControl;
 
-public abstract class AbstractSimpleScreen extends Screen implements ScreenRenderContext {
+public abstract class AbstractSimpleScreen extends Screen {
 	protected final ScreenTheme theme = ScreenTheme.current();
-	protected AbstractControl<?> hoverControl;
 
 	protected int screenLeft;
 	protected int screenTop;
@@ -77,8 +75,6 @@ public abstract class AbstractSimpleScreen extends Screen implements ScreenRende
 		// ensure we get updates
 		//te.notifyServerPlayerWatching();
 
-		hoverControl = null;
-
 		renderBackground(matrixStack);
 
 		// shouldn't do anything but call in case someone is hooking it
@@ -86,9 +82,7 @@ public abstract class AbstractSimpleScreen extends Screen implements ScreenRende
 
 		drawControls(matrixStack, mouseX, mouseY, partialTicks);
 
-		if (hoverControl != null) {
-			hoverControl.drawToolTip(matrixStack, mouseX, mouseY, partialTicks);
-		}
+		AbstractControl.drawHoveredControlTooltip(matrixStack, mouseX, mouseY, partialTicks);
 	}
 
 	// WIP: should not need this if add controls as renderable widgets
@@ -106,16 +100,6 @@ public abstract class AbstractSimpleScreen extends Screen implements ScreenRende
 	}
 
 	protected abstract void addControls();
-
-	@Override
-	public void setHoverControl(AbstractControl<?> control) {
-		hoverControl = control;
-	}
-
-	@Override
-	public Optional<GuiEventListener> getChildAt(double double_1, double double_2) {
-		return Optional.ofNullable(hoverControl);
-	}
 
 	@Override
 	public void renderTooltip(PoseStack matrixStack, ItemStack itemStack, int i, int j) {

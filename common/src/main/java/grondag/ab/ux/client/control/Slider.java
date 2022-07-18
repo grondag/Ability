@@ -34,7 +34,6 @@ import net.fabricmc.api.Environment;
 import grondag.ab.ux.client.GuiUtil;
 import grondag.ab.ux.client.HorizontalAlignment;
 import grondag.ab.ux.client.Layout;
-import grondag.ab.ux.client.ScreenRenderContext;
 import grondag.ab.ux.client.VerticalAlignment;
 
 @Environment(EnvType.CLIENT)
@@ -89,8 +88,8 @@ public class Slider extends AbstractControl<Slider> {
 	 * for alignment of stacked controls.
 	 */
 	@SuppressWarnings("resource")
-	public Slider(ScreenRenderContext renderContext, int size, Component label, float labelWidthFactor) {
-		super(renderContext);
+	public Slider(int size, Component label, float labelWidthFactor) {
+		super();
 		this.size = size;
 		this.label = label;
 		this.labelWidthFactor = labelWidthFactor;

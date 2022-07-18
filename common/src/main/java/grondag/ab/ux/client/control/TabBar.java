@@ -33,7 +33,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
 import grondag.ab.ux.client.GuiUtil;
-import grondag.ab.ux.client.ScreenRenderContext;
 import grondag.ab.ux.client.ScreenTheme;
 
 @Environment(EnvType.CLIENT)
@@ -73,8 +72,8 @@ public abstract class TabBar<T> extends AbstractControl<TabBar<T>> {
 	protected MouseLocation currentMouseLocation;
 	protected int currentMouseIndex;
 
-	public TabBar(ScreenRenderContext renderContext, List<T> items) {
-		super(renderContext);
+	public TabBar(List<T> items) {
+		super();
 		this.items = items;
 	}
 

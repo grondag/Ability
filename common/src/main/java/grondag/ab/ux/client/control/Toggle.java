@@ -32,15 +32,10 @@ import net.fabricmc.api.Environment;
 
 import grondag.ab.ux.client.GuiUtil;
 import grondag.ab.ux.client.HorizontalAlignment;
-import grondag.ab.ux.client.ScreenRenderContext;
 import grondag.ab.ux.client.VerticalAlignment;
 
 @Environment(EnvType.CLIENT)
 public class Toggle extends AbstractControl<Toggle> {
-	public Toggle(ScreenRenderContext renderContext) {
-		super(renderContext);
-	}
-
 	protected boolean isOn = false;
 	protected Component label = Component.literal("yes?");
 

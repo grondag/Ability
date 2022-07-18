@@ -66,7 +66,7 @@ public class PlacementToolScreenOld extends PlacementToolScreen {
 		addMainMenuButtons();
 
 		// NB: need to come before color picker in child list to get mouse events
-		aoToggle = new Toggle(this);
+		aoToggle = new Toggle();
 		// TODO: localize, also below
 		aoToggle.setLabel(Component.literal("AO"));
 		aoToggle.left(screenLeft + screenWidth - MARGIN - 65);
@@ -76,7 +76,7 @@ public class PlacementToolScreenOld extends PlacementToolScreen {
 		aoToggle.onChanged(this::updateAo);
 		addRenderableWidget(aoToggle);
 
-		diffuseToggle = new Toggle(this);
+		diffuseToggle = new Toggle();
 		diffuseToggle.setLabel(Component.literal("Diffuse"));
 		diffuseToggle.left(screenLeft + screenWidth - MARGIN - 65);
 		diffuseToggle.top(screenTop + MARGIN + BUTTON_HEIGHT + BUTTON_HEIGHT);
@@ -85,7 +85,7 @@ public class PlacementToolScreenOld extends PlacementToolScreen {
 		diffuseToggle.onChanged(this::updateDiffuse);
 		addRenderableWidget(diffuseToggle);
 
-		emissiveToggle = new Toggle(this);
+		emissiveToggle = new Toggle();
 		emissiveToggle.setLabel(Component.literal("Emissive"));
 		emissiveToggle.left(screenLeft + screenWidth - MARGIN - 65);
 		emissiveToggle.top(screenTop + MARGIN + BUTTON_HEIGHT + BUTTON_HEIGHT + BUTTON_HEIGHT);
@@ -94,7 +94,7 @@ public class PlacementToolScreenOld extends PlacementToolScreen {
 		emissiveToggle.onChanged(this::updateEmissive);
 		addRenderableWidget(emissiveToggle);
 
-		colorPicker = new ColorPicker(this);
+		colorPicker = new ColorPicker();
 		colorPicker.left(screenLeft + MARGIN + PREVIEW_SIZE + SPACING);
 		colorPicker.top(screenTop + MARGIN);
 		colorPicker.width(screenWidth - MARGIN - PREVIEW_SIZE - SPACING - MARGIN);
@@ -102,7 +102,7 @@ public class PlacementToolScreenOld extends PlacementToolScreen {
 		colorPicker.onChange(this::updateColor);
 		addRenderableWidget(colorPicker);
 
-		texturePicker = new TexturePicker(this);
+		texturePicker = new TexturePicker();
 		texturePicker.left(screenLeft + MARGIN + PREVIEW_SIZE + SPACING);
 		texturePicker.top(screenTop + MARGIN + PREVIEW_SIZE + SPACING);
 		texturePicker.width(screenWidth - MARGIN - PREVIEW_SIZE - SPACING - MARGIN);
@@ -113,7 +113,7 @@ public class PlacementToolScreenOld extends PlacementToolScreen {
 		texturePicker.onChanged(this::updateTexture);
 		addRenderableWidget(texturePicker);
 
-		final LayerSelector layer0 = new LayerSelector(this);
+		final LayerSelector layer0 = new LayerSelector();
 		layer0.left(screenLeft + MARGIN);
 		layer0.top(screenTop + MARGIN + PREVIEW_SIZE + SPACING);
 		layer0.width(PREVIEW_SIZE);
@@ -126,7 +126,7 @@ public class PlacementToolScreenOld extends PlacementToolScreen {
 		layers[0] = layer0;
 		addRenderableWidget(layer0);
 
-		final LayerSelector layer1 = new LayerSelector(this);
+		final LayerSelector layer1 = new LayerSelector();
 		layer1.left(screenLeft + MARGIN);
 		layer1.top(screenTop + MARGIN + PREVIEW_SIZE + SPACING + TEXTURE_SIZE + MARGIN);
 		layer1.width(PREVIEW_SIZE);
@@ -138,7 +138,7 @@ public class PlacementToolScreenOld extends PlacementToolScreen {
 		addRenderableWidget(layer1);
 
 
-		final LayerSelector layer2 = new LayerSelector(this);
+		final LayerSelector layer2 = new LayerSelector();
 		layer2.left(screenLeft + MARGIN);
 		layer2.top(screenTop + MARGIN + PREVIEW_SIZE + SPACING + TEXTURE_SIZE + MARGIN + TEXTURE_SIZE + MARGIN);
 		layer2.width(PREVIEW_SIZE);
@@ -152,7 +152,7 @@ public class PlacementToolScreenOld extends PlacementToolScreen {
 
 		addPrimaryFooter();
 
-		alphaSlider = new Slider(this, 256, Component.literal("Alpha"), 0.15f);
+		alphaSlider = new Slider(256, Component.literal("Alpha"), 0.15f);
 		alphaSlider.left(screenLeft + MARGIN);
 		alphaSlider.top(layout.bottomMargin - layout.buttonHeight);
 		alphaSlider.height(12);

@@ -39,7 +39,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
 import grondag.ab.ux.client.GuiUtil;
-import grondag.ab.ux.client.ScreenRenderContext;
 import grondag.ab.ux.client.ScreenTheme;
 
 @Environment(EnvType.CLIENT)
@@ -54,8 +53,8 @@ public class ItemStackPicker<T> extends TabBar<T> {
 	// scales the glyphs
 	protected float fontDrawScale;
 
-	public ItemStackPicker(ScreenRenderContext renderContext, List<T> items, MouseHandler<T> itemClickHandler, Function<T, ItemStack> stackFunc, ToLongFunction<T> countFunc) {
-		super(renderContext, items);
+	public ItemStackPicker(List<T> items, MouseHandler<T> itemClickHandler, Function<T, ItemStack> stackFunc, ToLongFunction<T> countFunc) {
+		super(items);
 		this.itemClickHandler = itemClickHandler;
 		this.stackFunc = stackFunc;
 		this.countFunc = countFunc;

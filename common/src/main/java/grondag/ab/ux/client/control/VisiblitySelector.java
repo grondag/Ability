@@ -31,7 +31,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
 import grondag.ab.ux.client.GuiUtil;
-import grondag.ab.ux.client.ScreenRenderContext;
 
 @Environment(EnvType.CLIENT)
 public class VisiblitySelector extends AbstractControl<VisiblitySelector> {
@@ -39,8 +38,8 @@ public class VisiblitySelector extends AbstractControl<VisiblitySelector> {
 
 	private float buttonHeight;
 
-	public VisiblitySelector(ScreenRenderContext renderContext, VisibilityPanel target) {
-		super(renderContext);
+	public VisiblitySelector(VisibilityPanel target) {
+		super();
 		this.target = target;
 	}
 

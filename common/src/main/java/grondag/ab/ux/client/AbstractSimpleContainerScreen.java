@@ -20,13 +20,10 @@
 
 package grondag.ab.ux.client;
 
-import java.util.Optional;
-
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.gui.components.Widget;
-import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -36,8 +33,7 @@ import net.minecraft.world.item.ItemStack;
 
 import grondag.ab.ux.client.control.AbstractControl;
 
-public abstract class AbstractSimpleContainerScreen<T extends AbstractContainerMenu> extends AbstractContainerScreen<T> implements ScreenRenderContext {
-	protected AbstractControl<?> hoverControl;
+public abstract class AbstractSimpleContainerScreen<T extends AbstractContainerMenu> extends AbstractContainerScreen<T> {
 	protected final ScreenTheme theme = ScreenTheme.current();
 
 	public AbstractSimpleContainerScreen(T container, Inventory playerInventory, Component title) {
@@ -81,8 +77,6 @@ public abstract class AbstractSimpleContainerScreen<T extends AbstractContainerM
 		// ensure we get updates
 		//te.notifyServerPlayerWatching();
 
-		hoverControl = null;
-
 		super.render(matrixStack, mouseX, mouseY, partialTicks);
 
 		for (int k = 0; k < children().size(); ++k) {
@@ -91,9 +85,7 @@ public abstract class AbstractSimpleContainerScreen<T extends AbstractContainerM
 
 		drawControls(matrixStack, mouseX, mouseY, partialTicks);
 
-		if (hoverControl != null) {
-			hoverControl.drawToolTip(matrixStack, mouseX, mouseY, partialTicks);
-		}
+		AbstractControl.drawHoveredControlTooltip(matrixStack, mouseX, mouseY, partialTicks);
 
 		RenderSystem.disableBlend();
 
@@ -113,18 +105,8 @@ public abstract class AbstractSimpleContainerScreen<T extends AbstractContainerM
 	protected abstract void addControls();
 
 	@Override
-	public void setHoverControl(AbstractControl<?> control) {
-		hoverControl = control;
-	}
-
-	@Override
 	public void renderTooltip(PoseStack matrixStack, ItemStack hoverStack, int mouseX, int mouseY) {
 		super.renderTooltip(matrixStack, hoverStack, mouseX, mouseY);
-	}
-
-	@Override
-	public Optional<GuiEventListener> getChildAt(double double_1, double double_2) {
-		return Optional.ofNullable(hoverControl);
 	}
 
 	// like private vanilla method but doesn't test isActive for the slot
