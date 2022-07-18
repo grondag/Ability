@@ -23,7 +23,6 @@ package grondag.ab.ux.client;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -79,11 +78,7 @@ public abstract class AbstractSimpleContainerScreen<T extends AbstractContainerM
 
 		super.render(matrixStack, mouseX, mouseY, partialTicks);
 
-		for (int k = 0; k < children().size(); ++k) {
-			((Widget) children().get(k)).render(matrixStack, mouseX, mouseY, partialTicks);
-		}
-
-		drawControls(matrixStack, mouseX, mouseY, partialTicks);
+		drawDirectContent(matrixStack, mouseX, mouseY, partialTicks);
 
 		AbstractControl.drawHoveredControlTooltip(matrixStack, mouseX, mouseY, partialTicks);
 
@@ -96,11 +91,10 @@ public abstract class AbstractSimpleContainerScreen<T extends AbstractContainerM
 					sy + theme.itemSize + theme.itemSelectionMargin, 1, theme.buttonColorFocus);
 		}
 
-		//	      this.nameField.render(i, j, f);
 		renderTooltip(matrixStack, mouseX, mouseY);
 	}
 
-	protected abstract void drawControls(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks);
+    protected abstract void drawDirectContent(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks);
 
 	protected abstract void addControls();
 

@@ -137,7 +137,7 @@ public class ItemStorageScreen extends AbstractSimpleContainerScreen<WitBaseCont
 		stackPicker.width(ItemStackPicker.idealWidth(theme, 9));
 		stackPicker.top(itemPickerTop);
 		stackPicker.height(storageHeight);
-		addWidget(stackPicker);
+		addRenderableWidget(stackPicker);
 
 		final Button butt = new Button(
 				leftPos + imageWidth - 40 - theme.externalMargin, topPos + theme.externalMargin,
@@ -163,17 +163,17 @@ public class ItemStorageScreen extends AbstractSimpleContainerScreen<WitBaseCont
 		filterField.setSelected(true);
 		filterField.setChangedListener(s -> DELEGATE.setFilter(s));
 
-		this.addWidget(filterField);
+		addRenderableWidget(filterField);
 
 		setInitialFocus(filterField);
 	}
 
 	@Override
-	protected void drawControls(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+	protected void drawDirectContent(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 		//PERF: do less frequently
 		DELEGATE.refreshListIfNeeded();
-		stackPicker.render(matrixStack, mouseX, mouseY, partialTicks);
-		filterField.render(matrixStack, mouseX, mouseY, partialTicks);
+		//stackPicker.render(matrixStack, mouseX, mouseY, partialTicks);
+		//filterField.render(matrixStack, mouseX, mouseY, partialTicks);
 
 		final int barHeight = imageHeight - theme.externalMargin * 2;
 		final int fillHeight = DELEGATE.capacity() == 0 ? 0 : (int) (barHeight * DELEGATE.usedCapacity() / DELEGATE.capacity());

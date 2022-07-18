@@ -20,11 +20,8 @@
 
 package grondag.ab.ux.client;
 
-import java.util.List;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -77,26 +74,9 @@ public abstract class AbstractSimpleScreen extends Screen {
 
 		renderBackground(matrixStack);
 
-		// shouldn't do anything but call in case someone is hooking it
 		super.render(matrixStack, mouseX, mouseY, partialTicks);
 
-		drawControls(matrixStack, mouseX, mouseY, partialTicks);
-
 		AbstractControl.drawHoveredControlTooltip(matrixStack, mouseX, mouseY, partialTicks);
-	}
-
-	// WIP: should not need this if add controls as renderable widgets
-	protected void drawControls(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-		final List<? extends GuiEventListener> children = children();
-		final int limit = children.size();
-
-		for (int i = 0; i < limit; ++i) {
-			final GuiEventListener e = children.get(i);
-
-			if (e instanceof AbstractControl) {
-				((AbstractControl<?>) children.get(i)).render(matrixStack, mouseX, mouseY, partialTicks);
-			}
-		}
 	}
 
 	protected abstract void addControls();
