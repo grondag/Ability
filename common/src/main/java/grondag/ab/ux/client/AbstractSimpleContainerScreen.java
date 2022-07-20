@@ -28,7 +28,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.ItemStack;
 
 import grondag.ab.ux.client.control.AbstractControl;
 
@@ -42,14 +41,6 @@ public abstract class AbstractSimpleContainerScreen<T extends AbstractContainerM
 	@Override
 	public void init() {
 		super.init();
-		computeScreenBounds();
-		addControls();
-	}
-
-	/**
-	 * Called during init before controls are created.
-	 */
-	protected void computeScreenBounds() {
 		topPos = (height - imageHeight) / 2;
 		leftPos = (width - imageWidth) / 2;
 	}
@@ -94,29 +85,19 @@ public abstract class AbstractSimpleContainerScreen<T extends AbstractContainerM
 		renderTooltip(matrixStack, mouseX, mouseY);
 	}
 
+	// WIP: remove when no longer needed
     protected abstract void drawDirectContent(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks);
-
-	protected abstract void addControls();
-
-	@Override
-	public void renderTooltip(PoseStack matrixStack, ItemStack hoverStack, int mouseX, int mouseY) {
-		super.renderTooltip(matrixStack, hoverStack, mouseX, mouseY);
-	}
 
 	// like private vanilla method but doesn't test isActive for the slot
 	public Slot findHoveredSlot(double x, double y) {
 		for (int i = 0; i < menu.slots.size(); ++i) {
 			final Slot slot = menu.slots.get(i);
 
-			if (this.isHovering(slot, x, y)) {
+			if (isHovering(slot.x, slot.y, 16, 16, x, y)) {
 				return slot;
 			}
 		}
 
 		return null;
-	}
-
-	public boolean isHovering(Slot slot, double x, double y) {
-		return isHovering(slot.x, slot.y, 16, 16, x, y);
 	}
 }

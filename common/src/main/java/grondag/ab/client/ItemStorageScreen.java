@@ -69,6 +69,8 @@ public class ItemStorageScreen extends AbstractSimpleContainerScreen<WitBaseCont
 		font = minecraft.font;
 		preInitLayout();
 		super.init();
+		computeScreenBounds();
+		addControls();
 	}
 
 	protected void preInitLayout() {
@@ -109,7 +111,6 @@ public class ItemStorageScreen extends AbstractSimpleContainerScreen<WitBaseCont
 		}
 	}
 
-	@Override
 	protected void computeScreenBounds() {
 		topPos = (height - imageHeight) / 2;
 
@@ -126,7 +127,6 @@ public class ItemStorageScreen extends AbstractSimpleContainerScreen<WitBaseCont
 		}
 	}
 
-	@Override
 	protected void addControls() {
 		capacityBarLeft = leftPos + theme.externalMargin;
 		itemPickerTop = topPos + headerHeight;
@@ -172,12 +172,11 @@ public class ItemStorageScreen extends AbstractSimpleContainerScreen<WitBaseCont
 	protected void drawDirectContent(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 		//PERF: do less frequently
 		DELEGATE.refreshListIfNeeded();
-		//stackPicker.render(matrixStack, mouseX, mouseY, partialTicks);
-		//filterField.render(matrixStack, mouseX, mouseY, partialTicks);
 
 		final int barHeight = imageHeight - theme.externalMargin * 2;
 		final int fillHeight = DELEGATE.capacity() == 0 ? 0 : (int) (barHeight * DELEGATE.usedCapacity() / DELEGATE.capacity());
 
+		// WIP: make this a proper control
 		// capacity bar
 		final int barBottom = topPos + theme.externalMargin + barHeight;
 		GuiUtil.drawRect(matrixStack.last().pose(), capacityBarLeft, topPos + theme.externalMargin,

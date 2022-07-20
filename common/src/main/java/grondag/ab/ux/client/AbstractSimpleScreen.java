@@ -31,34 +31,12 @@ import grondag.ab.ux.client.control.AbstractControl;
 public abstract class AbstractSimpleScreen extends Screen {
 	protected final ScreenTheme theme = ScreenTheme.current();
 
-	protected int screenLeft;
-	protected int screenTop;
-	protected int screenWidth;
-	protected int screenHeight;
-
 	public AbstractSimpleScreen() {
 		super(Component.empty());
 	}
 
 	public AbstractSimpleScreen(Component title) {
 		super(title);
-	}
-
-	@Override
-	public void init() {
-		super.init();
-		computeScreenBounds();
-		addControls();
-	}
-
-	/**
-	 * Called during init before controls are created.
-	 */
-	protected void computeScreenBounds() {
-		screenHeight = height * 4 / 5;
-		screenTop = (height - screenHeight) / 2;
-		screenWidth = (int) (screenHeight * GuiUtil.GOLDEN_RATIO);
-		screenLeft = (width - screenWidth) / 2;
 	}
 
 	@Override
@@ -71,15 +49,10 @@ public abstract class AbstractSimpleScreen extends Screen {
 		// TODO: make generic
 		// ensure we get updates
 		//te.notifyServerPlayerWatching();
-
 		renderBackground(matrixStack);
-
 		super.render(matrixStack, mouseX, mouseY, partialTicks);
-
 		AbstractControl.drawHoveredControlTooltip(matrixStack, mouseX, mouseY, partialTicks);
 	}
-
-	protected abstract void addControls();
 
 	@Override
 	public void renderTooltip(PoseStack matrixStack, ItemStack itemStack, int i, int j) {

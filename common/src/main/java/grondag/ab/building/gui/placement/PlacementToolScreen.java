@@ -55,18 +55,9 @@ public class PlacementToolScreen extends AbstractSimpleScreen {
 	}
 
 	@Override
-	protected void computeScreenBounds() {
-		layout.initiatlize(width, height, font);
-		screenWidth = layout.screenWidth;
-		screenLeft = layout.screenLeft;
-		screenHeight = layout.screenHeight;
-		screenTop = layout.screenTop;
-	}
-
-	@Override
 	public void renderBackground(PoseStack matrices) {
 		super.renderBackground(matrices);
-		GuiUtil.drawRect(matrices.last().pose(), screenLeft, screenTop, screenLeft + screenWidth, screenTop + screenHeight, 0xFF202020);
+		GuiUtil.drawRect(matrices.last().pose(), layout.screenLeft, layout.screenTop, layout.screenRight, layout.screenBottom, 0xFF202020);
 	}
 
 	protected void addPreview() {
@@ -153,7 +144,8 @@ public class PlacementToolScreen extends AbstractSimpleScreen {
 	}
 
 	@Override
-	protected void addControls() {
+	public void init() {
+		super.init();
 		addPreview();
 		addMainMenuButtons();
 		toolTab.accept(this);

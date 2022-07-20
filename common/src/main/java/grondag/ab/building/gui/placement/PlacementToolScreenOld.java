@@ -27,6 +27,7 @@ import net.minecraft.world.item.ItemStack;
 import grondag.ab.building.gui.ColorPicker;
 import grondag.ab.building.gui.LayerSelector;
 import grondag.ab.building.gui.TexturePicker;
+import grondag.ab.ux.client.GuiUtil;
 import grondag.ab.ux.client.color.BlockColors;
 import grondag.ab.ux.client.control.Slider;
 import grondag.ab.ux.client.control.Toggle;
@@ -50,6 +51,11 @@ public class PlacementToolScreenOld extends PlacementToolScreen {
 	protected Toggle emissiveToggle;
 	protected Slider alphaSlider;
 
+	protected int screenLeft;
+	protected int screenTop;
+	protected int screenWidth;
+	protected int screenHeight;
+
 	private int selectedLayer =  0;
 
 	protected LayerSelector[] layers = new LayerSelector[3];
@@ -60,8 +66,17 @@ public class PlacementToolScreenOld extends PlacementToolScreen {
 		super(stack, hand);
 	}
 
+	protected void computeScreenBounds() {
+		screenHeight = height * 4 / 5;
+		screenTop = (height - screenHeight) / 2;
+		screenWidth = (int) (screenHeight * GuiUtil.GOLDEN_RATIO);
+		screenLeft = (width - screenWidth) / 2;
+	}
+
 	@Override
-	protected void addControls() {
+	public void init() {
+		super.init();
+		computeScreenBounds();
 		addPreview();
 		addMainMenuButtons();
 
