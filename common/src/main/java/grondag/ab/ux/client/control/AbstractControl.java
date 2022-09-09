@@ -87,7 +87,11 @@ public abstract class AbstractControl<T extends AbstractControl<T>> extends GuiC
 	 */
 	protected float aspectRatio = 1.0f;
 
-	protected final ScreenTheme theme = ScreenTheme.current();
+	protected final ScreenTheme theme;
+
+	public AbstractControl(ScreenTheme theme) {
+		this.theme = theme;
+	}
 
 	public void resize(float left, float top, float width, float height) {
 		this.left = left;

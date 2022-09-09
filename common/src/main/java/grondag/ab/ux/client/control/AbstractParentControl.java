@@ -28,7 +28,13 @@ import org.jetbrains.annotations.Nullable;
 import net.minecraft.client.gui.components.events.ContainerEventHandler;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 
+import grondag.ab.ux.client.ScreenTheme;
+
 public abstract class AbstractParentControl<T extends AbstractParentControl<T>> extends AbstractControl<T> implements ContainerEventHandler {
+	public AbstractParentControl(ScreenTheme theme) {
+		super(theme);
+	}
+
 	@Nullable
 	private GuiEventListener focused;
 	private boolean isDragging;

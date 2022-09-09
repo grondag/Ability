@@ -130,7 +130,7 @@ public class ItemStorageScreen extends AbstractSimpleContainerScreen<WitBaseCont
 	protected void addControls() {
 		capacityBarLeft = leftPos + theme.externalMargin;
 		itemPickerTop = topPos + headerHeight;
-		stackPicker = new ItemStackPicker<>(DELEGATE.LIST, ItemStorageActionClientHelper::selectAndSend, d -> d.article().toStack(), DiscreteDisplayDelegate::getCount);
+		stackPicker = new ItemStackPicker<>(theme, DELEGATE.LIST, ItemStorageActionClientHelper::selectAndSend, d -> d.article().toStack(), DiscreteDisplayDelegate::getCount);
 		stackPicker.setItemsPerRow(9);
 
 		stackPicker.left(leftPos + inventoryLeft);
@@ -139,7 +139,7 @@ public class ItemStorageScreen extends AbstractSimpleContainerScreen<WitBaseCont
 		stackPicker.height(storageHeight);
 		addRenderableWidget(stackPicker);
 
-		final Button butt = new Button(
+		final Button butt = new Button(theme,
 				leftPos + imageWidth - 40 - theme.externalMargin, topPos + theme.externalMargin,
 				40, theme.singleLineWidgetHeight,
 				DisplayDelegate.getSortText(DELEGATE.getSortIndex())
@@ -156,7 +156,7 @@ public class ItemStorageScreen extends AbstractSimpleContainerScreen<WitBaseCont
 
 		addRenderableWidget(butt);
 
-		filterField = new TextField(
+		filterField = new TextField(theme,
 				leftPos + inventoryLeft, topPos + theme.externalMargin,
 				80, theme.singleLineWidgetHeight, Component.empty());
 		filterField.setMaxLength(32);

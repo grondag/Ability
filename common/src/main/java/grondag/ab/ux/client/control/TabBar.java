@@ -46,13 +46,6 @@ public abstract class TabBar<T> extends AbstractControl<TabBar<T>> {
 	private int selectedItemIndex = NO_SELECTION;
 	private int selectedTabIndex = 0;
 
-	protected int itemSize = ScreenTheme.current().itemSize;
-	protected int itemSpacing = ScreenTheme.current().itemSpacing;
-	protected int itemSelectionMargin = ScreenTheme.current().itemSelectionMargin;
-
-	protected int itemSlotSpacing = ScreenTheme.current().itemSlotSpacing;
-	protected int itemRowHeightWithCaption = ScreenTheme.current().itemRowHeightWithCaption;
-
 	private boolean allowSelection = true;
 
 	protected float tabSize;
@@ -72,8 +65,8 @@ public abstract class TabBar<T> extends AbstractControl<TabBar<T>> {
 	protected MouseLocation currentMouseLocation;
 	protected int currentMouseIndex;
 
-	public TabBar(List<T> items) {
-		super();
+	public TabBar(ScreenTheme theme, List<T> items) {
+		super(theme);
 		this.items = items;
 	}
 
@@ -127,7 +120,7 @@ public abstract class TabBar<T> extends AbstractControl<TabBar<T>> {
 		// skip drawing tabs if there is only one
 		if (this.tabCount > 1) {
 			// if tabs are too small, just do a continuous bar
-			float tabCenter = top + theme.tabWidth + itemSpacing;
+			float tabCenter = top + theme.tabWidth + theme.itemSpacing;
 
 			if (this.tabSize == 0.0) {
 				GuiUtil.drawRect(matrix, right - theme.tabWidth, tabCenter, right, tabCenter + this.scrollHeight, theme.buttonColorInactive);
@@ -174,10 +167,10 @@ public abstract class TabBar<T> extends AbstractControl<TabBar<T>> {
 
 			if (++column == this.columnsPerRow) {
 				column = 0;
-				itemY += itemRowHeightWithCaption;
+				itemY += theme.itemRowHeightWithCaption;
 				itemX = left;
 			} else {
-				itemX += itemSlotSpacing;
+				itemX += theme.itemSlotSpacing;
 			}
 		}
 
@@ -222,8 +215,8 @@ public abstract class TabBar<T> extends AbstractControl<TabBar<T>> {
 		}
 
 		final int idx = index - start;
-		final int x = (int) (left + (idx % this.columnsPerRow) * itemSlotSpacing);
-		final int y = (int) (top + (idx / this.columnsPerRow) * itemRowHeightWithCaption);
+		final int x = (int) (left + (idx % this.columnsPerRow) * theme.itemSlotSpacing);
+		final int y = (int) (top + (idx / this.columnsPerRow) * theme.itemRowHeightWithCaption);
 
 		this.drawHighlight(matrixStack, index, x, y, isHighlight);
 	}
@@ -234,8 +227,8 @@ public abstract class TabBar<T> extends AbstractControl<TabBar<T>> {
 	 * selected.
 	 */
 	protected void drawHighlight(PoseStack matrixStack, int index, float x, float y, boolean isHighlight) {
-		GuiUtil.drawBoxRightBottom(matrixStack.last().pose(), x - itemSelectionMargin, y - itemSelectionMargin, x + itemSize + itemSelectionMargin,
-				y + itemSize + itemSelectionMargin, 1, isHighlight ? theme.buttonColorFocus : theme.buttonColorActive);
+		GuiUtil.drawBoxRightBottom(matrixStack.last().pose(), x - theme.itemSelectionMargin, y - theme.itemSelectionMargin, x + theme.itemSize + theme.itemSelectionMargin,
+				y + theme.itemSize + theme.itemSelectionMargin, 1, isHighlight ? theme.buttonColorFocus : theme.buttonColorActive);
 	}
 
 	/** Set (non-matrix) GL state needed for proper rending of this tab's items. */
@@ -253,13 +246,13 @@ public abstract class TabBar<T> extends AbstractControl<TabBar<T>> {
 		if (mouseX < left || mouseX > right || mouseY < top || mouseY > bottom) {
 			this.currentMouseLocation = MouseLocation.NONE;
 		} else if (mouseX >= right - theme.tabWidth) {
-			if (mouseY <= top + theme.tabWidth + itemSpacing / 2.0) {
+			if (mouseY <= top + theme.tabWidth + theme.itemSpacing / 2.0) {
 				this.currentMouseLocation = MouseLocation.TOP_ARROW;
-			} else if (mouseY < scrollBottom - itemSpacing / 2.0) {
+			} else if (mouseY < scrollBottom - theme.itemSpacing / 2.0) {
 				this.currentMouseLocation = MouseLocation.TAB;
 				this.currentMouseIndex = Mth
-						.clamp((int) ((mouseY - top - theme.tabWidth - itemSpacing / 2) / (this.scrollHeight) * this.tabCount), 0, this.tabCount - 1);
-			} else if (mouseY > scrollBottom + theme.tabWidth + itemSpacing / 2.0) {
+						.clamp((int) ((mouseY - top - theme.tabWidth - theme.itemSpacing / 2) / (this.scrollHeight) * this.tabCount), 0, this.tabCount - 1);
+			} else if (mouseY > scrollBottom + theme.tabWidth + theme.itemSpacing / 2.0) {
 				this.currentMouseLocation = MouseLocation.NONE;
 			} else {
 				this.currentMouseLocation = MouseLocation.BOTTOM_ARROW;
@@ -268,8 +261,8 @@ public abstract class TabBar<T> extends AbstractControl<TabBar<T>> {
 			this.currentMouseLocation = MouseLocation.ITEM;
 
 			final int newIndex = this.getFirstDisplayedIndex()
-					+ (int) ((mouseY - top - itemSpacing / 2) / itemRowHeightWithCaption) * this.columnsPerRow
-					+ Math.min((int) ((mouseX - left - itemSpacing / 2) / itemSlotSpacing), this.columnsPerRow - 1);
+					+ (int) ((mouseY - top - theme.itemSpacing / 2) / theme.itemRowHeightWithCaption) * this.columnsPerRow
+					+ Math.min((int) ((mouseX - left - theme.itemSpacing / 2) / theme.itemSlotSpacing), this.columnsPerRow - 1);
 
 			this.currentMouseIndex = (newIndex >= 0 && newIndex < this.items.size()) ? newIndex : NO_SELECTION;
 		}
@@ -280,9 +273,9 @@ public abstract class TabBar<T> extends AbstractControl<TabBar<T>> {
 		super.computeCoordinates();
 
 		if (this.items != null) {
-			rowsPerTab = (int) ((height + itemSpacing) / itemRowHeightWithCaption);
-			scrollHeight = rowsPerTab * itemRowHeightWithCaption - itemSpacing - (theme.tabWidth + itemSpacing) * 2;
-			scrollBottom = top + theme.tabWidth + itemSpacing * 2 + scrollHeight;
+			rowsPerTab = (int) ((height + theme.itemSpacing) / theme.itemRowHeightWithCaption);
+			scrollHeight = rowsPerTab * theme.itemRowHeightWithCaption - theme.itemSpacing - (theme.tabWidth + theme.itemSpacing) * 2;
+			scrollBottom = top + theme.tabWidth + theme.itemSpacing * 2 + scrollHeight;
 			itemsPerTab = columnsPerRow * rowsPerTab;
 
 			handleListSizeUpdateIfNeeded();
@@ -463,18 +456,18 @@ public abstract class TabBar<T> extends AbstractControl<TabBar<T>> {
 	}
 
 	public void setItemSize(int itemSize) {
-		this.itemSize = itemSize;
+		theme.itemSize = itemSize;
 		computeSpacing();
 	}
 
 	public void setItemSpacing(int itemSpacing) {
-		this.itemSpacing = itemSpacing;
+		theme.itemSpacing = itemSpacing;
 		computeSpacing();
 	}
 
 	protected void computeSpacing() {
-		itemSlotSpacing = itemSize + itemSpacing;
-		itemRowHeightWithCaption = itemSize + itemSpacing;
+		theme.itemSlotSpacing = theme.itemSize + theme.itemSpacing;
+		theme.itemRowHeightWithCaption = theme.itemSize + theme.itemSpacing;
 	}
 
 	public void setItemsPerRow(int itemsPerRow) {
@@ -486,7 +479,7 @@ public abstract class TabBar<T> extends AbstractControl<TabBar<T>> {
 	 * Automatic layout version.
 	 */
 	public void setItemsPerRow() {
-		setItemsPerRow((int) (width - theme.tabWidth) / itemSlotSpacing);
+		setItemsPerRow((int) (width - theme.tabWidth) / theme.itemSlotSpacing);
 	}
 
 	public int getItemsPerTab() {

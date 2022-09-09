@@ -53,8 +53,8 @@ public class ItemStackPicker<T> extends TabBar<T> {
 	// scales the glyphs
 	protected float fontDrawScale;
 
-	public ItemStackPicker(List<T> items, MouseHandler<T> itemClickHandler, Function<T, ItemStack> stackFunc, ToLongFunction<T> countFunc) {
-		super(items);
+	public ItemStackPicker(ScreenTheme theme, List<T> items, MouseHandler<T> itemClickHandler, Function<T, ItemStack> stackFunc, ToLongFunction<T> countFunc) {
+		super(theme, items);
 		this.itemClickHandler = itemClickHandler;
 		this.stackFunc = stackFunc;
 		this.countFunc = countFunc;
@@ -90,7 +90,7 @@ public class ItemStackPicker<T> extends TabBar<T> {
 		setBlitOffset(200);
 		itemRenderer.blitOffset = 200.0F;
 
-		GuiUtil.renderItemAndEffectIntoGui(itemStack, x, y, itemSize);
+		GuiUtil.renderItemAndEffectIntoGui(itemStack, x, y, theme.itemSize);
 		// TODO: support for dragging
 
 		drawQuantity(matrixStack, countFunc.applyAsLong(item), x, y);

@@ -29,6 +29,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
 import grondag.ab.ux.client.GuiUtil;
+import grondag.ab.ux.client.ScreenTheme;
 import grondag.ab.ux.client.control.AbstractControl;
 import grondag.xm.api.item.XmItem;
 import grondag.xm.modelstate.AbstractPrimitiveModelState;
@@ -41,6 +42,10 @@ public class ModelPreview extends AbstractControl<ModelPreview> {
 	private float contentLeft;
 	private float contentTop;
 	private float contentSize;
+
+	public ModelPreview(ScreenTheme theme) {
+		super(theme);
+	}
 
 	@SuppressWarnings("resource")
 	public void setStack(ItemStack stack) {

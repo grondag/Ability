@@ -37,10 +37,11 @@ import grondag.ab.ux.client.ScreenTheme;
 
 @Environment(EnvType.CLIENT)
 public abstract class Button extends AbstractButton {
-	protected final ScreenTheme theme = ScreenTheme.current();
+	protected final ScreenTheme theme;
 
-	public Button(int x, int y, int width, int height, Component buttonText) {
+	public Button(ScreenTheme theme, int x, int y, int width, int height, Component buttonText) {
 		super(x, y, width, height, buttonText);
+		this.theme = theme;
 	}
 
 	// TODO: add narration logic

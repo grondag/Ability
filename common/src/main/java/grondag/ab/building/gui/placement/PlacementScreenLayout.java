@@ -44,21 +44,21 @@ class PlacementScreenLayout {
 	int topMargin;
 	int bottomMargin;
 
-	void initiatlize(int width, int height, Font font) {
+	void initiatlize(int width, int height, Font font, ScreenTheme theme) {
 		previewSize = Math.max(40, Math.min(width / 5, height / 4));
 		textureSize = previewSize / 2;
 
 		buttonWidth = Math.max(50, Math.max(font.width(Component.translatable("gui.ab.save")), font.width(Component.translatable("gui.ab.cancel"))) + 4);
 		buttonHeight = Math.max(20, font.lineHeight + 4);
 
-		final var fixedScreenWidth = previewSize + spacing + margin * 2 + buttonWidth * 2 + ScreenTheme.current().tabMargin + ScreenTheme.current().tabWidth;
-		final var availableContentWidth = width - 20 - fixedScreenWidth;
-		final var contentColumns = Math.min(8, availableContentWidth / (textureSize + margin));
+		final int fixedScreenWidth = previewSize + spacing + margin * 2 + buttonWidth * 2 + theme.tabMargin + theme.tabWidth;
+		final int availableContentWidth = width - 20 - fixedScreenWidth;
+		final int contentColumns = Math.min(8, availableContentWidth / (textureSize + margin));
 		screenWidth = fixedScreenWidth + contentColumns * (textureSize + margin);
 
-		final var menuFixedScreenHeight = previewSize + spacing + margin * 8 + buttonHeight;
-		final var contentFixedScreenHeight = previewSize + spacing + margin * 4 + buttonHeight + (textureSize + margin) * 3;
-		final var idealVisualHeight = Math.min(height * 10 / 8, height - 40);
+		final int menuFixedScreenHeight = previewSize + spacing + margin * 8 + buttonHeight;
+		final int contentFixedScreenHeight = previewSize + spacing + margin * 4 + buttonHeight + (textureSize + margin) * 3;
+		final int idealVisualHeight = Math.min(height * 10 / 8, height - 40);
 		screenHeight = Math.max(idealVisualHeight, Math.max(menuFixedScreenHeight, contentFixedScreenHeight));
 
 		screenLeft = (width - screenWidth) / 2;

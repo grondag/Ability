@@ -29,6 +29,7 @@ import net.fabricmc.api.Environment;
 
 import grondag.ab.ux.client.GuiUtil;
 import grondag.ab.ux.client.HorizontalAlignment;
+import grondag.ab.ux.client.ScreenTheme;
 import grondag.ab.ux.client.VerticalAlignment;
 
 @Environment(EnvType.CLIENT)
@@ -36,8 +37,8 @@ public class BrightnessSlider extends Slider {
 	// TODO: localize or remove this class
 	private static final Component LABEL = Component.literal("Brightness");
 
-	public BrightnessSlider() {
-		super(16, LABEL, 0.22f);
+	public BrightnessSlider(ScreenTheme theme) {
+		super(theme, 16, LABEL, 0.22f);
 		choiceWidthFactor = 0.1f;
 	}
 

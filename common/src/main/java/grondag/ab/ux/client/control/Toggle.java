@@ -32,10 +32,15 @@ import net.fabricmc.api.Environment;
 
 import grondag.ab.ux.client.GuiUtil;
 import grondag.ab.ux.client.HorizontalAlignment;
+import grondag.ab.ux.client.ScreenTheme;
 import grondag.ab.ux.client.VerticalAlignment;
 
 @Environment(EnvType.CLIENT)
 public class Toggle extends AbstractControl<Toggle> {
+	public Toggle(ScreenTheme theme) {
+		super(theme);
+	}
+
 	protected boolean isOn = false;
 	protected Component label = Component.literal("yes?");
 

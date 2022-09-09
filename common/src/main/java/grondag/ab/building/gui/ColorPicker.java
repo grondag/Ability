@@ -46,6 +46,7 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
+import grondag.ab.ux.client.ScreenTheme;
 import grondag.ab.ux.client.control.AbstractControl;
 
 @Environment(EnvType.CLIENT)
@@ -93,8 +94,8 @@ public class ColorPicker extends AbstractControl<ColorPicker> {
 		this.onRgbChange = onRgbChange;
 	}
 
-	public ColorPicker() {
-		super();
+	public ColorPicker(ScreenTheme theme) {
+		super(theme);
 		aspectRatio(1.0f);
 		rebuildMix();
 	}

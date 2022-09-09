@@ -27,6 +27,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 
 import grondag.ab.ux.client.GuiUtil;
+import grondag.ab.ux.client.ScreenTheme;
 import grondag.ab.ux.client.control.TabBar;
 import grondag.xm.api.texture.TextureGroup;
 import grondag.xm.api.texture.TextureSet;
@@ -37,10 +38,10 @@ public class TexturePicker extends TabBar<TextureSet> {
 	protected int rgb = -1;
 	protected boolean notify = false;
 
-	public TexturePicker() {
-		super(new ArrayList<TextureSet>());
-		itemSize = 40;
-		itemSpacing = 4;
+	public TexturePicker(ScreenTheme theme) {
+		super(theme, new ArrayList<TextureSet>());
+		theme.itemSize = 40;
+		theme.itemSpacing = 4;
 		computeSpacing();
 		setItemsPerRow(5);
 
@@ -74,7 +75,7 @@ public class TexturePicker extends TabBar<TextureSet> {
 
 	@Override
 	protected void drawItem(PoseStack matrixStack, TextureSet item, double left, double top, float partialTicks, boolean isHighlighted) {
-		TextureUtil.bufferTexture(Tesselator.getInstance().getBuilder(), left, top, itemSize, rgb, item);
+		TextureUtil.bufferTexture(Tesselator.getInstance().getBuilder(), left, top, theme.itemSize, rgb, item);
 	}
 
 	@Override

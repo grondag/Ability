@@ -62,14 +62,15 @@ public class TextField extends AbstractWidget implements Widget, GuiEventListene
 	protected String suggestion;
 	protected Consumer<String> changedListener;
 	protected Predicate<String> textPredicate;
-	protected final ScreenTheme theme = ScreenTheme.current();
+	protected final ScreenTheme theme;
 
-	public TextField(int left, int top, int width, int height, Component string) {
-		this(left, top, width, height, null, string);
+	public TextField(ScreenTheme theme, int left, int top, int width, int height, Component string) {
+		this(theme, left, top, width, height, null, string);
 	}
 
-	public TextField(int left, int top, int width, int height, @Nullable TextField textField, Component string) {
+	public TextField(ScreenTheme theme, int left, int top, int width, int height, @Nullable TextField textField, Component string) {
 		super(left, top, width, height, string);
+		this.theme = theme;
 		text = "";
 		maxLength = 32;
 		focused = true;

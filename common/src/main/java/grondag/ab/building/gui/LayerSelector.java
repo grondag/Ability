@@ -36,9 +36,6 @@ import grondag.xm.api.texture.tech.TechTextures;
 
 @Environment(EnvType.CLIENT)
 public class LayerSelector extends AbstractControl<LayerSelector> {
-	protected int itemSize = ScreenTheme.current().itemSize;
-	protected int itemSpacing = ScreenTheme.current().itemSpacing;
-	protected int itemSelectionMargin = ScreenTheme.current().itemSelectionMargin;
 	protected boolean isSelected = false;
 	protected boolean isClearable = true;
 	protected int rgb = -1;
@@ -46,6 +43,10 @@ public class LayerSelector extends AbstractControl<LayerSelector> {
 	Consumer<Action> onAction = a -> {};
 
 	protected TextureSet tex;
+
+	public LayerSelector(ScreenTheme theme) {
+		super(theme);
+	}
 
 	protected enum MouseLocation {
 		NONE, TEXTURE, CLEAR
@@ -69,19 +70,19 @@ public class LayerSelector extends AbstractControl<LayerSelector> {
 		RenderSystem.disableDepthTest();
 
 		if (isSelected || currentMouseLocation == MouseLocation.TEXTURE) {
-			GuiUtil.drawBoxRightBottom(matrixStack.last().pose(), left, top, left + itemSelectionMargin + itemSize + itemSelectionMargin,
+			GuiUtil.drawBoxRightBottom(matrixStack.last().pose(), left, top, left + theme.itemSelectionMargin + theme.itemSize + theme.itemSelectionMargin,
 					bottom, 1, currentMouseLocation == MouseLocation.TEXTURE ? theme.buttonColorFocus : theme.buttonColorActive);
 		}
 
 		final BufferBuilder buffer =  TextureUtil.setupRendering();
 
 		if (tex == null) {
-			TextureUtil.bufferTexture(buffer, left + itemSelectionMargin + 4, top + itemSelectionMargin + 4, itemSize - 8, 0xFF50FF50, TechTextures.DECAL_PLUS);
+			TextureUtil.bufferTexture(buffer, left + theme.itemSelectionMargin + 4, top + theme.itemSelectionMargin + 4, theme.itemSize - 8, 0xFF50FF50, TechTextures.DECAL_PLUS);
 		} else {
-			TextureUtil.bufferTexture(buffer, left + itemSelectionMargin, top + itemSelectionMargin, itemSize, rgb, tex);
+			TextureUtil.bufferTexture(buffer, left + theme.itemSelectionMargin, top + theme.itemSelectionMargin, theme.itemSize, rgb, tex);
 
 			if (isClearable) {
-				TextureUtil.bufferTexture(buffer, left + itemSize + itemSelectionMargin * 2 + 4, top + itemSelectionMargin + 4, itemSize - 8, 0xFFFF5050, TechTextures.DECAL_MINUS);
+				TextureUtil.bufferTexture(buffer, left + theme.itemSize + theme.itemSelectionMargin * 2 + 4, top + theme.itemSelectionMargin + 4, theme.itemSize - 8, 0xFFFF5050, TechTextures.DECAL_MINUS);
 			}
 		}
 
@@ -100,7 +101,7 @@ public class LayerSelector extends AbstractControl<LayerSelector> {
 	private void updateMouseLocation(double mouseX, double mouseY) {
 		if (mouseX < left || mouseX > right || mouseY < top || mouseY > bottom) {
 			currentMouseLocation = MouseLocation.NONE;
-		} else if (mouseX <= left + itemSpacing + itemSize + itemSpacing) {
+		} else if (mouseX <= left + theme.itemSpacing + theme.itemSize + theme.itemSpacing) {
 			currentMouseLocation = MouseLocation.TEXTURE;
 		} else {
 			currentMouseLocation = MouseLocation.CLEAR;
@@ -110,7 +111,7 @@ public class LayerSelector extends AbstractControl<LayerSelector> {
 	@Override
 	protected void computeCoordinates() {
 		super.computeCoordinates();
-		height = top + itemSelectionMargin * 2 + itemSize;
+		height = top + theme.itemSelectionMargin * 2 + theme.itemSize;
 	}
 
 	@Override
@@ -143,11 +144,11 @@ public class LayerSelector extends AbstractControl<LayerSelector> {
 	}
 
 	public void setItemSize(int itemSize) {
-		this.itemSize = itemSize;
+		theme.itemSize = itemSize;
 	}
 
 	public void setItemSpacing(int itemSpacing) {
-		this.itemSpacing = itemSpacing;
+		theme.itemSpacing = itemSpacing;
 	}
 
 	public void setSelected(boolean isSelected) {

@@ -32,7 +32,7 @@ import net.minecraft.world.inventory.Slot;
 import grondag.ab.ux.client.control.AbstractControl;
 
 public abstract class AbstractSimpleContainerScreen<T extends AbstractContainerMenu> extends AbstractContainerScreen<T> {
-	protected final ScreenTheme theme = ScreenTheme.current();
+	protected final ScreenTheme theme = new ScreenTheme();
 
 	public AbstractSimpleContainerScreen(T container, Inventory playerInventory, Component title) {
 		super(container, playerInventory, title);

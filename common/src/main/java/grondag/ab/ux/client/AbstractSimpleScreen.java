@@ -24,15 +24,14 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.ItemStack;
 
 import grondag.ab.ux.client.control.AbstractControl;
 
 public abstract class AbstractSimpleScreen extends Screen {
-	protected final ScreenTheme theme = ScreenTheme.current();
+	protected final ScreenTheme theme = new ScreenTheme();
 
 	public AbstractSimpleScreen() {
-		super(Component.empty());
+		this(Component.empty());
 	}
 
 	public AbstractSimpleScreen(Component title) {
@@ -52,10 +51,5 @@ public abstract class AbstractSimpleScreen extends Screen {
 		renderBackground(matrixStack);
 		super.render(matrixStack, mouseX, mouseY, partialTicks);
 		AbstractControl.drawHoveredControlTooltip(matrixStack, mouseX, mouseY, partialTicks);
-	}
-
-	@Override
-	public void renderTooltip(PoseStack matrixStack, ItemStack itemStack, int i, int j) {
-		super.renderTooltip(matrixStack, itemStack, i, j);
 	}
 }

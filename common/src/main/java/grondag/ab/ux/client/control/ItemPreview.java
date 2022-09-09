@@ -28,9 +28,14 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
 import grondag.ab.ux.client.GuiUtil;
+import grondag.ab.ux.client.ScreenTheme;
 
 @Environment(EnvType.CLIENT)
 public class ItemPreview extends AbstractControl<ItemPreview> {
+	public ItemPreview(ScreenTheme theme) {
+		super(theme);
+	}
+
 	public ItemStack previewItem;
 
 	private float contentLeft;
