@@ -146,6 +146,7 @@ public class PlacementToolScreen extends AbstractSimpleScreen {
 	@Override
 	public void init() {
 		super.init();
+		layout.initiatlize(width, height, font, theme);
 		addPreview();
 		addMainMenuButtons();
 		toolTab.accept(this);
