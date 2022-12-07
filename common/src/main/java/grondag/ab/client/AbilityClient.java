@@ -37,7 +37,7 @@ import io.vram.frex.api.world.BlockEntityRenderData;
 import io.vram.modkeys.api.client.ModKeyBinding;
 
 import grondag.ab.Ability;
-import grondag.ab.building.gui.placement.PlacementToolScreen;
+import grondag.ab.building.gui.placement.PlacementToolPaintScreen;
 import grondag.ab.storage.init.BinBlocks;
 import grondag.ab.storage.init.CrateBlocks;
 import grondag.ab.storage.init.MenuTypes;
@@ -82,7 +82,7 @@ public abstract class AbilityClient {
 				SectionPos.blockToSectionCoord(p.getY()),
 				SectionPos.blockToSectionCoord(p.getZ()));
 
-		SafePlacementScreen.PROXY = (itemStack, hand) -> Minecraft.getInstance().setScreen(new PlacementToolScreen(itemStack, hand));
+		SafePlacementScreen.PROXY = (itemStack, hand) -> Minecraft.getInstance().setScreen(new PlacementToolPaintScreen(itemStack, hand));
 	}
 
 	private static <E extends BlockEntity> void registerBeType(BlockEntityType<E> type, BlockEntityRendererProvider<E> blockEntityRendererFactory) {

@@ -20,8 +20,6 @@
 
 package grondag.ab.building.gui.placement;
 
-import java.util.function.Consumer;
-
 import io.netty.util.internal.ThreadLocalRandom;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -42,15 +40,14 @@ import grondag.ab.ux.client.GuiUtil;
 import grondag.ab.ux.client.control.Button;
 import grondag.xm.api.modelstate.primitive.PrimitiveState;
 
-public class PlacementToolScreen extends AbstractSimpleScreen {
+public abstract class PlacementToolBaseScreen extends AbstractSimpleScreen {
 	protected final PlacementScreenLayout layout = new PlacementScreenLayout();
 	protected final PlacementToolState toolState = new PlacementToolState();
 
 	private ModelPreview modelPreview;
-	private Consumer<PlacementToolScreen> toolTab = s -> { };
 
 	@SuppressWarnings("resource")
-	public PlacementToolScreen(ItemStack stack, InteractionHand hand) {
+	public PlacementToolBaseScreen(ItemStack stack, InteractionHand hand) {
 		toolState.fromItem(stack, hand, Minecraft.getInstance().level);
 	}
 
@@ -74,7 +71,8 @@ public class PlacementToolScreen extends AbstractSimpleScreen {
 	protected void addMainMenuButtons() {
 		int menuY = layout.topMargin + layout.previewSize + layout.margin;
 
-		addRenderableWidget(new Button(theme, layout.leftMargin, menuY, layout.previewSize, layout.buttonHeight, Component.translatable("gui.ab.material")) {
+		//Component.translatable("gui.ab.material")
+		addRenderableWidget(new Button(theme, layout.leftMargin, menuY, layout.buttonHeight, layout.buttonHeight, Component.literal("M")) {
 			@Override
 			public void onPress() {
 				final var material = FormedBlockMaterials.CONVENTIONAL.get(ThreadLocalRandom.current().nextInt(FormedBlockMaterials.CONVENTIONAL.size()));
@@ -85,7 +83,8 @@ public class PlacementToolScreen extends AbstractSimpleScreen {
 
 		menuY += (layout.buttonHeight + layout.margin);
 
-		addRenderableWidget(new Button(theme,layout.leftMargin, menuY, layout.previewSize, layout.buttonHeight, Component.translatable("gui.ab.shape")) {
+		//Component.translatable("gui.ab.shape")
+		addRenderableWidget(new Button(theme,layout.leftMargin, menuY, layout.buttonHeight, layout.buttonHeight, Component.literal("S")) {
 			@Override
 			public void onPress() {
 				final var shape = FormedBlockShape.get(ThreadLocalRandom.current().nextInt(FormedBlockShape.count()));
@@ -96,7 +95,8 @@ public class PlacementToolScreen extends AbstractSimpleScreen {
 
 		menuY += (layout.buttonHeight + layout.margin);
 
-		addRenderableWidget(new Button(theme,layout.leftMargin, menuY, layout.previewSize, layout.buttonHeight, Component.translatable("gui.ab.paint")) {
+		//Component.translatable("gui.ab.paint")
+		addRenderableWidget(new Button(theme,layout.leftMargin, menuY, layout.buttonHeight, layout.buttonHeight, Component.literal("A")) {
 			@Override
 			public void onPress() {
 
@@ -105,14 +105,16 @@ public class PlacementToolScreen extends AbstractSimpleScreen {
 
 		menuY += (layout.buttonHeight + layout.margin);
 
-		addRenderableWidget(new Button(theme,layout.leftMargin, menuY, layout.previewSize, layout.buttonHeight, Component.translatable("gui.ab.placement")) {
+		//Component.translatable("gui.ab.placement")
+		addRenderableWidget(new Button(theme,layout.leftMargin, menuY, layout.buttonHeight, layout.buttonHeight, Component.literal("P")) {
 			@Override
 			public void onPress() {
 
 			}
 		});
 
-		addRenderableWidget(new Button(theme,layout.leftMargin, layout.bottomMargin - layout.buttonHeight, layout.previewSize, layout.buttonHeight, Component.translatable("gui.ab.load")) {
+		//Component.translatable("gui.ab.load")
+		addRenderableWidget(new Button(theme,layout.leftMargin, layout.bottomMargin - layout.buttonHeight, layout.buttonHeight, layout.buttonHeight, Component.literal("L")) {
 			@Override
 			public void onPress() {
 
@@ -127,7 +129,7 @@ public class PlacementToolScreen extends AbstractSimpleScreen {
 			) {
 				@Override
 				public void onPress() {
-					PlacementToolScreen.this.onClose();
+					PlacementToolBaseScreen.this.onClose();
 				}
 			});
 
@@ -138,18 +140,20 @@ public class PlacementToolScreen extends AbstractSimpleScreen {
 			@Override
 			public void onPress() {
 				UpdateStackPaintC2S.send(toolState);
-				PlacementToolScreen.this.onClose();
+				PlacementToolBaseScreen.this.onClose();
 			}
 		});
 	}
 
+	protected abstract void addControlsForThisTab();
+
 	@Override
-	public void init() {
+	public final void init() {
 		super.init();
 		layout.initiatlize(width, height, font, theme);
 		addPreview();
 		addMainMenuButtons();
-		toolTab.accept(this);
+		addControlsForThisTab();
 		addPrimaryFooter();
 		readMaterial();
 	}

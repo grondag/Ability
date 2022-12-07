@@ -44,6 +44,10 @@ class PlacementScreenLayout {
 	int topMargin;
 	int bottomMargin;
 
+	int contentLeft;
+	int contentWidth;
+	int contentHeight;
+
 	void initiatlize(int width, int height, Font font, ScreenTheme theme) {
 		previewSize = Math.max(40, Math.min(width / 5, height / 4));
 		textureSize = previewSize / 2;
@@ -70,5 +74,9 @@ class PlacementScreenLayout {
 		rightMargin = screenRight - margin;
 		topMargin = screenTop + margin;
 		bottomMargin = screenBottom - margin;
+
+		contentLeft = leftMargin + previewSize + margin;
+		contentWidth = rightMargin - contentLeft;
+		contentHeight = bottomMargin - topMargin - margin - buttonHeight;
 	}
 }
